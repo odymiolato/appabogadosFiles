@@ -4,13 +4,13 @@
     </div>
     <div class="mt-4 flex flex-col px-4 py-4 bg-white rounded-md">
         <div class="flex bg-white mb-4 w-full h-10 gap-5">
-            <Inputs typeinput="search" labeltext="Buscar" />
+            <Inputs id="input-search" typeinput="search" labeltext="Buscar" />
             <input id="input-setfile" type="file" hidden>
             <Buttons Buttonstext='Agregar Documento' @click="setFile()" />
         </div>
         <div id="file"
             class="flex bg-gray-200 overflow-y-auto overflow-x-hidden w-full px-4 py-4 rounded-md max-h-[423px] flex-wrap">
-            <div class=" text-center w-20 px-2 py-2 ml-2 cursor-pointer hover:bg-gray-300 rounded-md relative"
+            <div class="file-item text-center w-20 px-2 py-2 ml-2 cursor-pointer hover:bg-gray-300 rounded-md relative"
                 v-for="item in files">
                 <a target="_blank" :href="item?.path"><img :src="item.image" alt=""></a>
                 <label class="block w-full text-ellipsis whitespace-nowrap overflow-clip truncate text-sm">
@@ -33,7 +33,33 @@ const props = defineProps({
 });
 
 
-const files = ref<Array<any>>([]);
+let files = ref<Array<any>>([]);
+let filesCopy = ref<Array<any>>([]);
+const inpuntSearch: any = document.getElementById('input-search');
+if (inpuntSearch) {
+    inpuntSearch.addEventListener('keyup', function () {  
+        console.log('hola');
+    }
+    );
+}
+// const ElementFile: any = document.getElementsByClassName('file-item');
+
+// if (inpuntSearch && ElementFile) {
+//     inpuntSearch.addEventListener('keyup', function () {
+//         const filter = inpuntSearch.toLowerCase();
+
+//         for (let index = 0; index < ElementFile.length; index++) {
+//             const textItem = ElementFile[index].innerText.toLowerCase();
+//             if (textItem.includes(filter)) {
+//                 ElementFile[index].classList.remove('hidden');
+//             } else {
+//                 ElementFile[index].classList.add('hidden');
+//             }
+//         }
+//     });
+// }
+
+
 
 async function GetFiles() {
     const response = await fetch(props.path, {
@@ -42,10 +68,7 @@ async function GetFiles() {
 
     const values = await response.json();
     files.value = values;
-}
-
-function presentAlert(){
-    
+    filesCopy.value = values;
 }
 
 function setFile() {

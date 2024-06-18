@@ -74,13 +74,13 @@
       </div>
     </div>
     <div class="mt-8">
-      <files path="http://192.168.1.189/test.php" />
+      <Files path="http://192.168.1.189/test.php" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import files from '../components/files.vue';
+import Files from '../components/files.vue';
 import Inputs from '../components/Inputs.vue';
 import Buttons from '../components/Buttons.vue';
 import Alerts from '../components/Alerts.vue';
