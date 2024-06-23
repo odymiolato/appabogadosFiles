@@ -18,20 +18,19 @@ class file
         $this->image = $image;
     }
 }
-$directory = 'test';
+$directory = '../abogadosfiles/exp01';
 
-$baseUrl = 'http://192.168.1.189/' . $directory . '/';
-
+$baseUrl = 'http://localhost/abogadosfiles/' . $directory . '/';
 $files = array_diff(scandir($directory), array('..', '.'));
 $test = [];
 foreach ($files as &$value) {
     $c = 0;
     $ext = (explode('.', $value)[1]);
-    // while ($c < 100) {
-    //     $test[] = new file((explode('.', $value)[0]), $ext, $baseUrl . $value, "img/" . $ext . ".png");
-    //     $c += 1;
-    // }
-    $test[] = new file((explode('.', $value)[0]), $ext, $baseUrl . $value, "img/" . $ext . ".png");
+    while ($c < 100) {
+        $test[] = new file((explode('.', $value)[0]), $ext, $baseUrl . $value, "img/" . $ext . ".png");
+        $c += 1;
+    }
+    // $test[] = new file((explode('.', $value)[0]), $ext, $baseUrl . $value, "img/" . $ext . ".png");
 }
 
 echo json_encode($test);

@@ -5,7 +5,7 @@ header('Access-Control-Allow-Headers: Content-Type');
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $target_dir = "test/";
+    $target_dir = "../abogadosfiles/exp01/";
     $target_file = $target_dir . basename($_FILES["file"]["name"]);
 
     if (file_exists($target_file)) {
