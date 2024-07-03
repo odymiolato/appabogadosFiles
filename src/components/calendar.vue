@@ -1,135 +1,152 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
-import axios from 'axios';
-import labelcomponet from './label.vue';
-import dropdown from './dropdown.vue';
-import modal from './modalcontroller.vue';
-import { useStore } from '@nanostores/vue';
-import { $MonthIndex, UpdateMonthIndex, ShowModal } from '../stores/counter';
-import moment from 'moment';
+import { onMounted, ref, watch } from 'vue'
+import axios from 'axios'
+import { useStore } from '@nanostores/vue'
+import moment from 'moment'
+import { $MonthIndex, ShowModal, UpdateMonthIndex } from '../stores/counter'
+import labelcomponet from './label.vue'
+import dropdown from './dropdown.vue'
+import modal from './modalcontroller.vue'
 
-const tempobj = ref<Array<any>>([]);
-const test = useStore($MonthIndex);
-const nameMonth = ref<string>("");
-const meses: Array<string> = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+const tempobj = ref<Array<any>>([])
+const test = useStore($MonthIndex)
+const nameMonth = ref<string>('')
+const meses: Array<string> = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
 
-const fetchData = async (date: string) => {
-    try {
-        const response = await axios.get('http://192.168.1.189:3000/calendar/' + date);
-        tempobj.value = response.data;
-    } catch (error) {
-        console.error('Error fetching data:', error);
-    }
-};
+async function fetchData(date: string) {
+  try {
+    const response = await axios.get(`http://192.168.1.189:3000/calendar/${date}`)
+    tempobj.value = response.data
+  }
+  catch (error) {
+    console.error('Error fetching data:', error)
+  }
+}
 
-const changeMonth = (index: number) => {
-    UpdateMonthIndex(index);
-    fetchData(ReturnDate((index + 1).toString()));
-};
+function changeMonth(index: number) {
+  UpdateMonthIndex(index)
+  fetchData(ReturnDate((index + 1).toString()))
+}
 
-const nextMonth = () => {
-    if (test.value.index < 11) {
-        changeMonth(test.value.index + 1);
-    }
-};
+function nextMonth() {
+  if (test.value.index < 11)
+    changeMonth(test.value.index + 1)
+}
 
-const previousMonth = () => {
-    if (test.value.index > 0) {
-        changeMonth(test.value.index - 1);
-    }
-};
+function previousMonth() {
+  if (test.value.index > 0)
+    changeMonth(test.value.index - 1)
+}
 
-const ReturnDate = (month: string) => {
-    const date = new Date();
-    let year: string = date.getFullYear().toString();
-    return year + ((month.length === 1) ? '0' + month : month) + '01';
-};
+function ReturnDate(month: string) {
+  const date = new Date()
+  const year: string = date.getFullYear().toString()
+  return `${year + ((month.length === 1) ? `0${month}` : month)}01`
+}
 
 onMounted(() => {
-    fetchData(ReturnDate((test.value.index + 1).toString()));
-    nameMonth.value = meses[test.value.index];
-});
+  fetchData(ReturnDate((test.value.index + 1).toString()))
+  nameMonth.value = meses[test.value.index]
+})
 
 watch(test, (newVal) => {
-    nameMonth.value = meses[newVal.index];
-    fetchData(ReturnDate((test.value.index + 1).toString()));
-});
+  nameMonth.value = meses[newVal.index]
+  fetchData(ReturnDate((test.value.index + 1).toString()))
+})
 </script>
 
 <template>
-    <div id='app-calendar'>
-        <div id="toolbar" class='flex' style='justify-content: space-between;'>
-            <div class="flex">
-                <labelcomponet labeltext="" />
-            </div>
-            <div class="flex btn-cal">
-                <div style="user-select: none; display: flex; justify-content: center; width: 30px">
-                    <button v-if="test.index !== 0" @click="previousMonth()"
-                        style="font-size: 20px; margin-right: 15px;" class="btn-arrow">{{ '<' }}</button>
-                </div>
-                <div style="display: flex; justify-content: center; width: 100px">
-                    <labelcomponet style="font-size: 20px; margin-top: 5px;" :labeltext="nameMonth" />
-                </div>
-                <div style="user-select: none; display: flex; justify-content: center; width: 30px">
-                    <button v-if="test.index !== 11" @click="nextMonth()" style="font-size: 20px; margin-left: 15px;"
-                        class="btn-arrow">{{ '>' }}</button>
-                </div>
-            </div>
-            <div class="flex">
-                <dropdown labeltext="Meses" :event="meses" />
-                <button class="btn-add-event" @click="ShowModal(true)">Agregar Evento</button>
-            </div>
+  <div id="app-calendar">
+    <div id="toolbar" class="flex" style="justify-content: space-between;">
+      <div class="flex">
+        <labelcomponet labeltext="" />
+      </div>
+      <div class="flex btn-cal">
+        <div style="user-select: none; display: flex; justify-content: center; width: 30px">
+          <button
+            v-if="test.index !== 0" style="font-size: 20px; margin-right: 15px;"
+            class="btn-arrow" @click="previousMonth()"
+          >
+            {{ '<' }}
+          </button>
         </div>
-        <div id='weekdays' class="grid cols-7">
-            <span class='col'>lunes</span>
-            <span class='col'>martes</span>
-            <span class='col'>miércoles</span>
-            <span class='col'>jueves</span>
-            <span class='col'>viernes</span>
-            <span class='col'>sábado</span>
-            <span class='col'>domingo</span>
+        <div style="display: flex; justify-content: center; width: 100px">
+          <labelcomponet style="font-size: 20px; margin-top: 5px;" :labeltext="nameMonth" />
         </div>
-        <div id='days' class="grid same-height-rows cols-7">
-            <span v-for="(obj, index) in tempobj" :key="index"
-                :class="((index < 5 || (index > 34 && obj.day !== 31))) ? 'col col-previous' : 'col'">
-                <var
-                    :class="((moment(obj.date).format('MMM Do YY') === moment(new Date().setDate(new Date().getDate() - 1)).format('MMM Do YY')) && (index > 4 && index < 37)) ? 'indicator' : ''">{{
-                        obj?.day }}</var>
-                <ul class="items">
-                    <li :style="'background:' + temp.color + ';'" v-for="temp in obj?.event" :key="temp.id">{{
-                        temp?.Titulo }}
-                        <span>
-                            <div class="tooltip-header">
-                                <h3>{{ temp?.Titulo }}</h3>
-                            </div>
-                            <div class="tooltip-body">
-                                <div class="description">
-                                    <p>
-                                        {{ temp?.Descripcion }}
-                                    </p>
-                                </div>
-                                <div class="dates">
-                                    <div>
-                                        <labelcomponet labelclass="label-date" labeltext="Fecha de Inicio:" />
-                                        <labelcomponet labelclass=""
-                                            :labeltext="moment(new Date()).format('DD/MM/yyyy')" />
-
-                                    </div>
-                                    <div>
-                                        <labelcomponet labelclass="label-date" labeltext="Fecha de fin:" />
-                                        <labelcomponet labelclass=""
-                                            :labeltext="moment(new Date()).format('DD/MM/yyyy')" />
-                                    </div>
-                                </div>
-                            </div>
-                        </span>
-                    </li>
-                </ul>
-            </span>
+        <div style="user-select: none; display: flex; justify-content: center; width: 30px">
+          <button
+            v-if="test.index !== 11" style="font-size: 20px; margin-left: 15px;" class="btn-arrow"
+            @click="nextMonth()"
+          >
+            {{ '>' }}
+          </button>
         </div>
+      </div>
+      <div class="flex">
+        <dropdown labeltext="Meses" :event="meses" />
+        <button class="btn-add-event" @click="ShowModal(true)">
+          Agregar Evento
+        </button>
+      </div>
     </div>
-    <modal />
+    <div id="weekdays" class="grid cols-7">
+      <span class="col">lunes</span>
+      <span class="col">martes</span>
+      <span class="col">miércoles</span>
+      <span class="col">jueves</span>
+      <span class="col">viernes</span>
+      <span class="col">sábado</span>
+      <span class="col">domingo</span>
+    </div>
+    <div id="days" class="grid same-height-rows cols-7">
+      <span
+        v-for="(obj, index) in tempobj" :key="index"
+        :class="((index < 5 || (index > 34 && obj.day !== 31))) ? 'col col-previous' : 'col'"
+      >
+        <var
+          :class="((moment(obj.date).format('MMM Do YY') === moment(new Date().setDate(new Date().getDate() - 1)).format('MMM Do YY')) && (index > 4 && index < 37)) ? 'indicator' : ''"
+        >{{
+          obj?.day }}</var>
+        <ul class="items">
+          <li v-for="temp in obj?.event" :key="temp.id" :style="`background:${temp.color};`">{{
+                                                                                               temp?.Titulo }}
+            <span>
+              <div class="tooltip-header">
+                <h3>{{ temp?.Titulo }}</h3>
+              </div>
+              <div class="tooltip-body">
+                <div class="description">
+                  <p>
+                    {{ temp?.Descripcion }}
+                  </p>
+                </div>
+                <div class="dates">
+                  <div>
+                    <labelcomponet labelclass="label-date" labeltext="Fecha de Inicio:" />
+                    <labelcomponet
+                      labelclass=""
+                      :labeltext="moment(new Date()).format('DD/MM/yyyy')"
+                    />
+
+                  </div>
+                  <div>
+                    <labelcomponet labelclass="label-date" labeltext="Fecha de fin:" />
+                    <labelcomponet
+                      labelclass=""
+                      :labeltext="moment(new Date()).format('DD/MM/yyyy')"
+                    />
+                  </div>
+                </div>
+              </div>
+            </span>
+          </li>
+        </ul>
+      </span>
+    </div>
+  </div>
+  <modal />
 </template>
+
 <style scoped>
 * {
     box-sizing: border-box;
@@ -169,7 +186,6 @@ html {
     transform: scale(0.9);
 }
 
-
 .btn-arrow:hover {
     transform: scale(1.5);
 }
@@ -189,7 +205,6 @@ html {
         flex-direction: column;
         gap: 0.25rem;
         color: #fff;
-
 
         &>li {
             display: flex;

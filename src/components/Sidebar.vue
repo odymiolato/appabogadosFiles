@@ -1,14 +1,20 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useSidebar } from '../composables/useSidebar'
+import MenuItem from './SideBar/MenuItem.vue'
+import MenuDesplegable from './SideBar/MenuDesplegable.vue'
 
 const { isOpen } = useSidebar()
 const activeClass = ref(
-  'bg-sky-500 bg-opacity-25 text-gray-100 border-gray-100',
+  'duration-700  bg-sky-500 bg-opacity-25 text-gray-100 border-gray-100',
 )
 const inactiveClass = ref(
-  'border-sky-900 text-white hover:bg-sky-500 hover:bg-opacity-25 hover:text-gray-100',
+  'duration-700  border-sky-900 text-white transition duration-700 hover:bg-sky-500 hover:bg-opacity-25 hover:text-gray-100 hover:duration-200',
 )
+const IsActive = ref(false)
+function changeStatus(valor: boolean) {
+  IsActive.value = valor
+}
 </script>
 
 <template>
@@ -53,7 +59,32 @@ const inactiveClass = ref(
       </div>
 
       <nav class="mt-10">
-        <router-link
+        <MenuItem to="/dashboard" name="Dashboard" label="Dashboard" imagen="dashboard" />
+
+        <MenuItem to="/ui-elements" name="UIElements" label="Elements" imagen="elements" />
+
+        <MenuItem to="/eventos" name="Eventos" label="Eventos" imagen="elements" />
+
+        <MenuItem to="/tables" name="Tables" label="Tables" imagen="tables" />
+
+        <MenuItem to="/forms" name="Forms" label="Forms" imagen="forms" />
+
+        <MenuItem to="/cards" name="Cards" label="Cards" imagen="cards" />
+
+        <MenuItem to="/modal" name="Modal" label="Modal" imagen="modal" />
+
+        <MenuItem to="/blank" name="Blank" label="Blank" imagen="blank" />
+
+        <MenuDesplegable class="transition duration-700" imagen="maintenance" :is-active="IsActive" @change-status="changeStatus">
+          <MenuItem to="/modal" name="Modal" label="funciona" imagen="dashboard" :class="IsActive ? 'opacity-100' : 'opacity-0'" />
+          <MenuItem to="/modal" name="Modal" label="funciona" imagen="dashboard" :class="IsActive ? 'opacity-100' : 'opacity-0'" />
+          <MenuItem to="/modal" name="Modal" label="funciona" imagen="dashboard" :class="IsActive ? 'opacity-100' : 'opacity-0'" />
+          <MenuItem to="/modal" name="Modal" label="funciona" imagen="dashboard" :class="IsActive ? 'opacity-100' : 'opacity-0'" />
+          <MenuItem to="/modal" name="Modal" label="funciona" imagen="dashboard" :class="IsActive ? 'opacity-100' : 'opacity-0'" />
+          <MenuItem to="/modal" name="Modal" label="funciona" imagen="dashboard" :class="IsActive ? 'opacity-100' : 'opacity-0'" />
+        </MenuDesplegable>
+
+        <!-- <router-link
           class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4"
           :class="[$route.name === 'Dashboard' ? activeClass : inactiveClass]"
           to="/dashboard"
@@ -75,9 +106,9 @@ const inactiveClass = ref(
           </svg>
 
           <span class="mx-4">Dashboard</span>
-        </router-link>
+        </router-link> -->
 
-        <router-link
+        <!-- <router-link
           class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4"
           :class="[$route.name === 'UIElements' ? activeClass : inactiveClass]"
           to="/ui-elements"
@@ -107,9 +138,9 @@ const inactiveClass = ref(
           </svg>
 
           <span class="mx-4">Elements</span>
-        </router-link>
+        </router-link> -->
 
-        <router-link
+        <!-- <router-link
           class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4"
           :class="[$route.name === 'Eventos' ? activeClass : inactiveClass]"
           to="/eventos"
@@ -139,9 +170,8 @@ const inactiveClass = ref(
           </svg>
 
           <span class="mx-4">Eventos</span>
-        </router-link>
-
-        <router-link
+        </router-link> -->
+        <!-- <router-link
           class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4 "
           :class="[$route.name === 'Tables' ? activeClass : inactiveClass]"
           to="/tables"
@@ -167,9 +197,8 @@ const inactiveClass = ref(
           </svg>
 
           <span class="mx-4">Tables</span>
-        </router-link>
-
-        <router-link
+        </router-link> -->
+        <!-- <router-link
           class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4 "
           :class="[$route.name === 'Forms' ? activeClass : inactiveClass]"
           to="/forms"
@@ -186,9 +215,8 @@ const inactiveClass = ref(
           </svg>
 
           <span class="mx-4">Forms</span>
-        </router-link>
-
-        <router-link
+        </router-link> -->
+        <!-- <router-link
           class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4 "
           :class="[$route.name === 'Cards' ? activeClass : inactiveClass]"
           to="/cards"
@@ -199,9 +227,8 @@ const inactiveClass = ref(
           </svg>
 
           <span class="mx-4">Cards</span>
-        </router-link>
-
-        <router-link
+        </router-link> -->
+        <!-- <router-link
           class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4 "
           :class="[$route.name === 'Modal' ? activeClass : inactiveClass]"
           to="/modal"
@@ -213,9 +240,8 @@ const inactiveClass = ref(
           </svg>
 
           <span class="mx-4">Modal</span>
-        </router-link>
-
-        <router-link
+        </router-link> -->
+        <!-- <router-link
           class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4 "
           :class="[$route.name === 'Blank' ? activeClass : inactiveClass]"
           to="/blank"
@@ -227,8 +253,42 @@ const inactiveClass = ref(
           </svg>
 
           <span class="mx-4">Blank</span>
-        </router-link>
+        </router-link> -->
+        <!-- <li
+          :class="IsActive ? `list-none items-center px-6 py-2 mt-4 duration-300  border-l-4` : 'duration-300  list-none items-center px-6 py-2 mt-4 border-sky-900 text-white hover:bg-sky-500 hover:bg-opacity-25 hover:text-gray-100 hover:duration-200'"
+        >
+          <div class="flex items-center " @click="IsActive = !IsActive">
+            <img src="../assets/img/maintenance.svg" class="w-5 h-5">
+            <a href="#" class="pl-4 text-white">Mantenimientos</a>
+            <img src="../assets/img/arrow.svg" class="h-6 w-5" :class="IsActive ? 'origin-center rotate-90 transition duration-500' : 'duration-500'">
+          </div>
+          <ul class="transition-all duration-700" :class="[IsActive ? 'opacity-100 max-h-screen' : 'hidden']">
+            <router-link
+              class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4 "
+              :class="[$route.name === 'Blank' ? activeClass : inactiveClass]"
+              to="/blank"
+            >
+              <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"
+                />
+              </svg>
+
+              <span class="mx-4">Blank</span>
+            </router-link>
+          </ul>
+        </li> -->
       </nav>
     </div>
   </div>
 </template>
+
+<!-- <img class="w-5 h-5" src="../assets/img/dashboard.svg">
+<img class="w-5 h-5" src="../assets/img/elements.svg">
+<img class="w-5 h-5" src="../assets/img/elements.svg">
+<img class="w-5 h-5" src="../assets/img/tables.svg">
+<img class="w-5 h-5" src="../assets/img/forms.svg">
+<img class="w-5 h-5" src="../assets/img/cards.svg">
+<img class="w-5 h-5" src="../assets/img/modal.svg">
+<img class="w-5 h-5" src="../assets/img/blank.svg">
+<img class="w-5 h-5" src="../assets/img/maintenance.svg"> -->

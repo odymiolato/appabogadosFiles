@@ -74,7 +74,7 @@
       </div>
     </div>
     <div class="mt-8">
-      <Files path="http://localhost:8081/test.php" />
+      <Files path="http://192.168.1.189/test.php" />
     </div>
   </div>
 </template>

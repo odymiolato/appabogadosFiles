@@ -1,48 +1,46 @@
-<template>
-    <details>
-        <summary :style="StyleDropDown">
-            {{ (NameSelectd !== '') ? NameSelectd : labalItemNoselected }}
-            <span>></span>
-        </summary>
-        <div class="dropmenu">
-            <ul class="data">
-                <li v-for="(item, index) in event" @click="CloseDropDowun(index)">
-                    {{ item }}
-                </li>
-            </ul>
-        </div>
-    </details>
-    <link rel='stylesheet' href='https://api.fontshare.com/css?f[]=satoshi&display=swap' />
-</template>
-
 <script lang="ts" setup>
-import { defineProps, ref, watch } from 'vue';
-import { UpdateMonthIndex, $MonthIndex } from '../stores/counter';
-import { useStore } from '@nanostores/vue';
+import { defineProps, ref, watch } from 'vue'
+import { useStore } from '@nanostores/vue'
+import { $MonthIndex, UpdateMonthIndex } from '../stores/counter'
 
 const props = defineProps({
-    labalItemNoselected: { type: String, default: '' },
-    labeltext: { type: String, default: 'text example' },
-    value: { type: Number, default: 1 },
-    event: { type: Array<any>, default: [] },
-    StyleDropDown: { type: String, default: '' }
-});
+  labalItemNoselected: { type: String, default: '' },
+  labeltext: { type: String, default: 'text example' },
+  value: { type: Number, default: 1 },
+  event: { type: Array<any>, default: [] },
+  StyleDropDown: { type: String, default: '' },
+})
 
-let store = useStore($MonthIndex);
-let NameSelectd = ref<string>(props.event[store.value.index])
+const store = useStore($MonthIndex)
+const NameSelectd = ref<string>(props.event[store.value.index])
 
 watch(store, (newVal) => {
-    console.log(newVal);
-    NameSelectd.value = props.event[newVal.index];
-});
+  console.log(newVal)
+  NameSelectd.value = props.event[newVal.index]
+})
 
 function CloseDropDowun(index: number) {
-    document.querySelector('details')?.removeAttribute('open');
-    UpdateMonthIndex(index);
+  document.querySelector('details')?.removeAttribute('open')
+  UpdateMonthIndex(index)
 }
-
-
 </script>
+
+<template>
+  <details>
+    <summary :style="StyleDropDown">
+      {{ (NameSelectd !== '') ? NameSelectd : labalItemNoselected }}
+      <span>></span>
+    </summary>
+    <div class="dropmenu">
+      <ul class="data">
+        <li v-for="(item, index) in event" @click="CloseDropDowun(index)">
+          {{ item }}
+        </li>
+      </ul>
+    </div>
+  </details>
+  <link rel="stylesheet" href="https://api.fontshare.com/css?f[]=satoshi&display=swap">
+</template>
 
 <style scoped>
 * {
