@@ -60,6 +60,11 @@ function changeStatus(valor: boolean) {
 
       <nav class="mt-10">
         <MenuItem to="/dashboard" name="Dashboard" label="Dashboard" imagen="dashboard" />
+        <MenuItem to="/expediente" name="Expediente" label="Expedientes" imagen="dashboard" />
+
+        <!-- <MenuDesplegable class="transition duration-700" imagen="maintenance" :is-active="IsActive" @change-status="changeStatus">
+          <MenuItem to="/modal" name="Modal" label="funciona" imagen="dashboard" :class="IsActive ? 'opacity-100' : 'opacity-0'" />
+        </MenuDesplegable> -->
 
         <MenuItem to="/ui-elements" name="UIElements" label="Elements" imagen="elements" />
 

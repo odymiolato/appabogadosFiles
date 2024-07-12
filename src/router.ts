@@ -10,6 +10,7 @@ import Modal from './views/Modal.vue'
 import Card from './views/Card.vue'
 import Blank from './views/Blank.vue'
 import Calendar from './components/calendar.vue'
+import Expediente from './views/expDepToAbo.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -57,6 +58,11 @@ const routes: RouteRecordRaw[] = [
     path: '/eventos',
     name: 'Eventos',
     component: Calendar,
+  },
+  {
+    path: '/expediente',
+    name: 'Expediente',
+    component: Expediente,
   },
 ]
 
