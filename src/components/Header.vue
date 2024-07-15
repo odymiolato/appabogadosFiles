@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useSidebar } from '../composables/useSidebar'
-import Inputs from './Inputs.vue';
+// import Inputs from './Inputs.vue';
 
 const dropdownOpen = ref(false)
 const { isOpen } = useSidebar()
@@ -33,7 +33,7 @@ const { isOpen } = useSidebar()
       </button>
 
       <div class="relative mx-4 lg:mx-0">
-        <Inputs typeinput="Search"/>
+        <!-- <Inputs typeinput="Search"/> -->
       </div>
     </div>
 

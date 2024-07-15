@@ -9,9 +9,7 @@ let tap = ref<number>(1);
 import { useTableData } from '../composables/useTableData'
 
 const {
-  simpleTableData,
-  paginatedTableData,
-  wideTableData,
+  simpleTableData
 } = useTableData()
 
 function ChageTaps(value: number) {
@@ -221,11 +219,11 @@ function ChageTaps(value: number) {
                     <tr>
                       <th
                         class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
-                        Cliente
+                        Codigo
                       </th>
                       <th
                         class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
-                        Numero Expediente
+                        tipo
                       </th>
                       <th
                         class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
@@ -233,11 +231,11 @@ function ChageTaps(value: number) {
                       </th>
                       <th
                         class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
-                        Estado
+                        Debito
                       </th>
                       <th
                         class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
-                        Contraparte
+                        Credito
                       </th>
                     </tr>
                   </thead>
@@ -290,21 +288,24 @@ function ChageTaps(value: number) {
                   <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
                     <div>
                       <h3 class="font-bold" for="username">Honorarios</h3>
-                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center" for="username">
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center"
+                        for="username">
                         <Strong>Ingresos:</Strong>
                         <input
                           class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
                           type="text" value="1500.00" readonly>
                       </label>
 
-                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center " for="username">
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center "
+                        for="username">
                         <Strong>Gastos:</Strong>
                         <input
                           class="text-end w-48 mt-2 font-normal border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
                           type="text" value="1500.00" readonly>
                       </label>
 
-                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center" for="username">
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center"
+                        for="username">
                         <Strong>Total:</Strong>
                         <input
                           class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
@@ -315,21 +316,24 @@ function ChageTaps(value: number) {
 
                     <div>
                       <h3 class="font-bold" for="username">Judiciales</h3>
-                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center" for="username">
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center"
+                        for="username">
                         <Strong>Ingresos:</Strong>
                         <input
                           class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
                           type="text" value="1500.00" readonly>
                       </label>
 
-                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center " for="username">
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center "
+                        for="username">
                         <Strong>Gastos:</Strong>
                         <input
                           class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
                           type="text" value="1500.00" readonly>
                       </label>
 
-                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center" for="username">
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center"
+                        for="username">
                         <Strong>Total:</Strong>
                         <input
                           class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
@@ -339,21 +343,24 @@ function ChageTaps(value: number) {
 
                     <div>
                       <h3 class="font-bold" for="username">Operacionales</h3>
-                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center" for="username">
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center"
+                        for="username">
                         <Strong>Ingresos:</Strong>
                         <input
                           class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
                           type="text" value="1500.00" readonly>
                       </label>
 
-                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center " for="username">
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center "
+                        for="username">
                         <Strong>Gastos:</Strong>
                         <input
                           class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
                           type="text" value="1500.00" readonly>
                       </label>
 
-                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center" for="username">
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center"
+                        for="username">
                         <Strong>Total:</Strong>
                         <input
                           class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
@@ -363,21 +370,24 @@ function ChageTaps(value: number) {
 
                     <div>
                       <h3 class="font-bold" for="username">Terceros</h3>
-                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center" for="username">
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center"
+                        for="username">
                         <Strong>Ingresos:</Strong>
                         <input
                           class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
                           type="text" value="1500.00" readonly>
                       </label>
 
-                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center " for="username">
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center "
+                        for="username">
                         <Strong>Gastos:</Strong>
                         <input
                           class="text-end w-48 mt-2 border-gray-200 font-normal  rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
                           type="text" value="1500.00" readonly>
                       </label>
 
-                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center" for="username">
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center"
+                        for="username">
                         <Strong>Total:</Strong>
                         <input
                           class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
@@ -411,15 +421,55 @@ function ChageTaps(value: number) {
         </div>
         <div id="tap-2"
           :class="`p-6 bg-white text-medium text-gray-500 rounded-lg w-full h-[27em] max-h-[27em] ${+ (tap === 4) ? '' : 'hidden'}`">
-          test 3
+          <Inputs typeinput="search" labeltext="Buscar" />
+          <div class="my-6 rounded-md shadow bg-white h-[17.9em] max-h-[17.9em] overflow-auto">
+            <table class="w-full text-left border-collapse">
+              <thead class="sticky top-0">
+                <tr>
+                  <th
+                    class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
+                    Codigo
+                  </th>
+                  <th
+                    class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
+                    Fecha
+                  </th>
+                  <th
+                    class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
+                    Usuario
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(i, index) in simpleTableData" :key="index" class="hover:bg-gray-200">
+                  <td class="px-6 py-4 text-lg text-gray-700 border-b">
+                    {{ i.city }}
+                  </td>
+                  <td class="px-6 py-4 text-gray-500 border-b">
+                    {{ i.totalOrders }}
+                  </td>
+                  <td class="px-6 py-4 text-lg text-gray-700 border-b">
+                    {{ i.city }}
+                  </td>
+                </tr>
+                <tr v-for="(i, index) in simpleTableData" :key="index" class="hover:bg-gray-200">
+                  <td class="px-6 py-4 text-lg text-gray-700 border-b">
+                    {{ i.city }}
+                  </td>
+                  <td class="px-6 py-4 text-gray-500 border-b">
+                    {{ i.totalOrders }}
+                  </td>
+                  <td class="px-6 py-4 text-lg text-gray-700 border-b">
+                    {{ i.city }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<style scoped>
-/* .class-form-total {
-  box-shadow: 1px 1px 6px 1px #8f8f8fab;
-} */
-</style>
+<style scoped></style>

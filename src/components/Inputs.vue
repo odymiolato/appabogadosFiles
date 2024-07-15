@@ -33,7 +33,7 @@
         </span>
 
         <input
-            class="w-32 pl-10 pr-4 text-sky-600 border-gray-200 rounded-md sm:w-64 focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+            class="w-32 pl-10 pr-4 border-gray-200 rounded-md sm:w-64 focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
             type="text" :placeholder="labeltext">
     </div>
 </template>
