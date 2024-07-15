@@ -15,7 +15,7 @@
     </label>
 
     <label class="block" v-if="typeinput === 'text'">
-        <input type="text" placeholder="Text"
+        <input type="text" placeholder="Text" :readonly="isReadonly"
             class="block w-full mt-1 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
     </label>
     <label class="block" v-if="typeinput === 'file'">
@@ -33,7 +33,7 @@
         </span>
 
         <input
-            class="w-32 pl-10 pr-4 border-gray-200 rounded-md sm:w-64 focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+            class="w-32 pl-10 pr-4 text-sky-600 border-gray-200 rounded-md sm:w-64 focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
             type="text" :placeholder="labeltext">
     </div>
 </template>
@@ -41,8 +41,9 @@
 import { defineProps } from 'vue'
 
 const props = defineProps({
-    labeltext: { type: String, default: 'label text' },
+    labeltext: { type: String, default: 'text' },
     typeinput: { type: String, default: 'text' },
-    inputClass: { type:String, default: '' }
+    inputClass: { type: String, default: '' },
+    isReadonly: { type: Boolean, default: false }
 });
 </script>

@@ -280,136 +280,140 @@ function ChageTaps(value: number) {
                 </table>
               </div>
             </div>
-            <div class="flex flex-row">
+            <div class="flex flex-row gap-5">
               <div class="flex-[60%] flex flex-col gap-4 py-5">
                 <div class="class-form-total p-6 rounded-md shadow">
                   <h2 class="text-xl tesxt-lg font-semibold text-gray-700 capitalize">
                     Totales de los Movimientos
                   </h2>
 
-
                   <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
                     <div>
-                      <label class="text-black font-bold text-xl" for="username">Honorarios</label>
-                      <label class="text-gray-700 grid grid-cols-[100px,1fr] items-center" for="username">
+                      <h3 class="font-bold" for="username">Honorarios</h3>
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center" for="username">
                         <Strong>Ingresos:</Strong>
                         <input
-                          class="text-end w-48 mt-2 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500"
+                          class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
                           type="text" value="1500.00" readonly>
                       </label>
 
-                      <label class="text-gray-700 grid grid-cols-[100px,1fr] items-center " for="username">
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center " for="username">
                         <Strong>Gastos:</Strong>
                         <input
-                          class="text-end w-48 mt-2 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500"
+                          class="text-end w-48 mt-2 font-normal border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
                           type="text" value="1500.00" readonly>
                       </label>
 
-                      <label class="text-gray-700 grid grid-cols-[100px,1fr] items-center" for="username">
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center" for="username">
                         <Strong>Total:</Strong>
                         <input
-                          class="text-end w-48 mt-2 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500"
+                          class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
                           type="text" value="1500.00" readonly>
                       </label>
 
                     </div>
 
                     <div>
-                      <label class="text-black font-bold text-xl" for="username">Judiciales</label>
-                      <label class="text-gray-700 grid grid-cols-[100px,1fr] items-center" for="username">
+                      <h3 class="font-bold" for="username">Judiciales</h3>
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center" for="username">
                         <Strong>Ingresos:</Strong>
                         <input
-                          class="text-end w-48 mt-2 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500"
+                          class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
                           type="text" value="1500.00" readonly>
                       </label>
 
-                      <label class="text-gray-700 grid grid-cols-[100px,1fr] items-center " for="username">
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center " for="username">
                         <Strong>Gastos:</Strong>
                         <input
-                          class="text-end w-48 mt-2 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500"
+                          class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
                           type="text" value="1500.00" readonly>
                       </label>
 
-                      <label class="text-gray-700 grid grid-cols-[100px,1fr] items-center" for="username">
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center" for="username">
                         <Strong>Total:</Strong>
                         <input
-                          class="text-end w-48 mt-2 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500"
+                          class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
                           type="text" value="1500.00" readonly>
                       </label>
                     </div>
 
                     <div>
-                      <label class="text-black font-bold text-xl" for="username">Operacionales</label>
-                      <label class="text-gray-700 grid grid-cols-[100px,1fr] items-center" for="username">
+                      <h3 class="font-bold" for="username">Operacionales</h3>
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center" for="username">
                         <Strong>Ingresos:</Strong>
                         <input
-                          class="text-end w-48 mt-2 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500"
+                          class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
                           type="text" value="1500.00" readonly>
                       </label>
 
-                      <label class="text-gray-700 grid grid-cols-[100px,1fr] items-center " for="username">
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center " for="username">
                         <Strong>Gastos:</Strong>
                         <input
-                          class="text-end w-48 mt-2 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500"
+                          class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
                           type="text" value="1500.00" readonly>
                       </label>
 
-                      <label class="text-gray-700 grid grid-cols-[100px,1fr] items-center" for="username">
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center" for="username">
                         <Strong>Total:</Strong>
                         <input
-                          class="text-end w-48 mt-2 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500"
+                          class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
                           type="text" value="1500.00" readonly>
                       </label>
                     </div>
 
                     <div>
-                      <label class="text-black font-bold text-xl" for="username">Terceros</label>
-                      <label class="text-gray-700 grid grid-cols-[100px,1fr] items-center" for="username">
+                      <h3 class="font-bold" for="username">Terceros</h3>
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center" for="username">
                         <Strong>Ingresos:</Strong>
                         <input
-                          class="text-end w-48 mt-2 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500"
+                          class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
                           type="text" value="1500.00" readonly>
                       </label>
 
-                      <label class="text-gray-700 grid grid-cols-[100px,1fr] items-center " for="username">
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center " for="username">
                         <Strong>Gastos:</Strong>
                         <input
-                          class="text-end w-48 mt-2 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500"
+                          class="text-end w-48 mt-2 border-gray-200 font-normal  rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
                           type="text" value="1500.00" readonly>
                       </label>
 
-                      <label class="text-gray-700 grid grid-cols-[100px,1fr] items-center" for="username">
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center" for="username">
                         <Strong>Total:</Strong>
                         <input
-                          class="text-end w-48 mt-2 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500"
+                          class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
                           type="text" value="1500.00" readonly>
                       </label>
                     </div>
                   </div>
-
-                  <!-- <div class="flex justify-end mt-4">
-                    <button
-                      class="px-4 py-2 text-gray-200 bg-gray-800 rounded-md hover:bg-gray-700 focus:outline-none focus:bg-gray-700">
-                      Save
-                    </button>
-                  </div> -->
-
                 </div>
               </div>
               <div class="flex-[40%]">
-                test 2
+                <div class="flex-[60%] flex flex-col gap-4 py-5">
+                  <div class="class-form-total p-6 rounded-md shadow ">
+                    <h2 class="text-xl tesxt-lg font-semibold text-gray-700 capitalize">
+                      Balance Generales
+                    </h2>
+                    <div class="grid grid-cols-[100px,1fr] items-center mt-3 gap-3">
+                      <label class="">Creditos:</label>
+                      <Inputs typeinput="text" :isReadonly="true" />
+
+                      <label class="">Debitos:</label>
+                      <Inputs typeinput="text" :isReadonly="true" />
+
+                      <label class="">Balace:</label>
+                      <Inputs typeinput="text" :isReadonly="true" />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-
         <div id="tap-2"
           :class="`p-6 bg-white text-medium text-gray-500 rounded-lg w-full h-[27em] max-h-[27em] ${+ (tap === 4) ? '' : 'hidden'}`">
           test 3
         </div>
-
       </div>
-
     </div>
   </div>
 </template>
