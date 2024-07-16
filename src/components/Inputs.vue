@@ -29,7 +29,7 @@
                 <path
                     d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
+2            </svg>
         </span>
 
         <input class="w-32 pl-10 pr-4 border-gray-200 rounded-md sm:w-64 focus:border-sky-600 focus:ring focus
