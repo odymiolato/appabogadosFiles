@@ -1,7 +1,7 @@
 <?php
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
-header('Access-Control-Allow-Methods: POST, GET, DELETE, PUT, PATCH, OPTIONS');
+header('Access-Control-Allow-Methods: POST');
 
 class file
 {
@@ -18,19 +18,31 @@ class file
         $this->image = $image;
     }
 }
-$directory = '../abogadosfiles/exp01';
 
-$baseUrl = 'http://localhost/abogadosfiles/' . $directory . '/';
-$files = array_diff(scandir($directory), array('..', '.'));
+if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+    echo  json_encode(['message' => 'incorrect method']);
+    return;
+}
+
+$data = json_decode(file_get_contents('php://input'));
+
+if (!isset($data) && empty($data)) {
+    return;
+}
+
+$directory = $data->URL;
+
+$baseUrl = 'http://localhost' . $directory . '/';
+$files = array_diff(scandir(".." . $directory), array('..', '.'));
 $test = [];
 foreach ($files as &$value) {
     $c = 0;
     $ext = (explode('.', $value)[1]);
-    while ($c < 100) {
-        $test[] = new file((explode('.', $value)[0]), $ext, $baseUrl . $value, "img/" . $ext . ".png");
-        $c += 1;
-    }
-    // $test[] = new file((explode('.', $value)[0]), $ext, $baseUrl . $value, "img/" . $ext . ".png");
+    // while ($c < 100) {
+    //     $test[] = new file((explode('.', $value)[0]), $ext, $baseUrl . $value, "img/" . $ext . ".png");
+    //     $c += 1;
+    // }
+    $test[] = new file((explode('.', $value)[0]), $ext, $baseUrl . $value, "img/" . $ext . ".png");
 }
 
 echo json_encode($test);
