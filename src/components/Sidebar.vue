@@ -40,6 +40,7 @@ function changeStatus(valor: boolean) {
 
       <nav class="mt-10">
         <MenuItem to="/dashboard" name="Dashboard" label="Dashboard" imagen="dashboard" />
+        
         <MenuItem to="/expediente" name="Expediente" label="Expedientes" imagen="dashboard" />
 
         <MenuItem to="/ui-elements" name="UIElements" label="Elements" imagen="elements" />
@@ -58,17 +59,15 @@ function changeStatus(valor: boolean) {
 
         <MenuDesplegable class="transition duration-700" label="Revisar" imagen="maintenance" :is-active="IsActive" @change-status="changeStatus">
           <MenuItem to="/expedientes" name="Expendientes" label="Expendientes" imagen="dashboard" :class="IsActive ? 'opacity-100' : 'opacity-0'" />
-          <MenuItem to="/asignacionexpediente" name="AsignacionExpediente" label="Asignacion de Expedientes" imagen="dashboard" :class="IsActive ? 'opacity-100' : 'opacity-0'" />
           <MenuItem to="/audiencia" name="Audiencia" label="Gestion de Audiencias" imagen="dashboard" :class="IsActive ? 'opacity-100' : 'opacity-0'" />
           <MenuItem to="/gestioncliente" name="GestionCliente" label="Gestion Clientes" imagen="dashboard" :class="IsActive ? 'opacity-100' : 'opacity-0'" />
-          <MenuItem to="/interaccioncliente" name="InteraccionCliente" label="Interacciones con CLientes" imagen="dashboard" :class="IsActive ? 'opacity-100' : 'opacity-0'" />
-          <MenuItem to="/gestiondocumento" name="GestionDocumento" label="Gestion de documentos" imagen="dashboard" :class="IsActive ? 'opacity-100' : 'opacity-0'" />
-          <MenuItem to="/facturacionfinanza" name="FacturacionFinanza" label="Facturacion y Finanzas" imagen="dashboard" :class="IsActive ? 'opacity-100' : 'opacity-0'" />
-          <MenuItem to="/gestionpago" name="GestionPago" label="Gestion de Pagos" imagen="dashboard" :class="IsActive ? 'opacity-100' : 'opacity-0'" />
-          <MenuItem to="/usuariopermiso" name="UsuarioPermiso" label="Usuarios y Permisos" imagen="dashboard" :class="IsActive ? 'opacity-100' : 'opacity-0'" />
+          <MenuItem to="/gestionabogados" name="GestionAbogados" label="Abogados" imagen="dashboard" :class="IsActive ? 'opacity-100' : 'opacity-0'" />
+          <MenuItem to="/gestioncontraparte" name="GestionContraparte" label="Contrapartes" imagen="dashboard" :class="IsActive ? 'opacity-100' : 'opacity-0'" />
+          <MenuItem to="/especialidades" name="Especialidades" label="Especialidades" imagen="dashboard" :class="IsActive ? 'opacity-100' : 'opacity-0'" />
+          <MenuItem to="/tipomovimientos" name="TipoMovimientos" label="Tipo Movimientos" imagen="dashboard" :class="IsActive ? 'opacity-100' : 'opacity-0'" />
+          <MenuItem to="/tribunales" name="Tribunales" label="Tribunales" imagen="dashboard" :class="IsActive ? 'opacity-100' : 'opacity-0'" />
+          <MenuItem to="/tiposgastos" name="TiposGastos" label="Tipos Gastos" imagen="dashboard" :class="IsActive ? 'opacity-100' : 'opacity-0'" />
           <MenuItem to="/" name="" label="" imagen="dashboard" :class="IsActive ? 'opacity-100' : 'opacity-0'" />
-
-          <MenuItem to="/facturacion" name="Facturacion" label="Facturacion" imagen="dashboard" :class="IsActive ? 'opacity-100' : 'opacity-0'" />
         </MenuDesplegable>
       </nav>
     </div>

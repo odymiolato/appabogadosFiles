@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { ref } from 'vue'
 import Inputs from '../../../components/Inputs.vue'
 import PaginationTable from '../../../components/tablas/PaginationTable.vue'
@@ -111,4 +111,4 @@ const paginationtabledata = [
 
     <PaginationTable default-image="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80" :columns="paginationtablecolumns" :tabledata="paginationtabledata" />
   </div>
-</template>
+</template> -->

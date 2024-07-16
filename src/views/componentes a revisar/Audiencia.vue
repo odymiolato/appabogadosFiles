@@ -87,32 +87,32 @@ const paginationtabledata = [
                 <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
                     <div>
                         <label class="text-gray-700" for="codaud_aud">Código de Audiencia</label>
-                        <input id="codaud_aud" type="text" class="w-full mt-2 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500">
+                        <input id="codaud_aud" type="text" class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
                     </div>
 
                     <div>
                         <label class="text-gray-700" for="fecha_aud">Fecha</label>
-                        <input id="fecha_aud" type="date" class="w-full mt-2 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500">
+                        <input id="fecha_aud" type="date" class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
                     </div>
 
                     <div>
                         <label class="text-gray-700" for="numexp_aud">Número de Expediente</label>
-                        <input id="numexp_aud" type="text" class="w-full mt-2 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500">
+                        <input id="numexp_aud" type="text" class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
                     </div>
 
                     <div>
                         <label class="text-gray-700" for="codtri_aud">Código del Tribunal</label>
-                        <input id="codtri_aud" type="text" class="w-full mt-2 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500">
+                        <input id="codtri_aud" type="text" class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
                     </div>
 
                     <div>
                         <label class="text-gray-700" for="estado_aud">Estado</label>
-                        <input id="estado_aud" type="text" value="A" class="w-full mt-2 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500">
+                        <input id="estado_aud" type="text" value="A" class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
                     </div>
 
                     <div>
                         <label class="text-gray-700" for="hora_aud">Hora</label>
-                        <input id="hora_aud" type="time" class="w-full mt-2 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500">
+                        <input id="hora_aud" type="time" class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
                     </div>
                 </div>
 

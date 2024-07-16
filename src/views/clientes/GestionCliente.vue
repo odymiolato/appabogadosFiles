@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import Inputs from '../../../components/Inputs.vue';
-import PaginationTable from '../../../components/tablas/PaginationTable.vue'
-import Buttons from '../../../components/Buttons.vue'
+// import Inputs from '../../../components/Inputs.vue';
+// import PaginationTable from '../../../components/tablas/PaginationTable.vue'
+// import Buttons from '../../../components/Buttons.vue'
 
 const events = ref([
   { index: 1, item: 'ejemplo' },
@@ -136,18 +136,6 @@ const paginationtabledata = [
           <div>
             <label class="text-gray-700" for="fecini_cli">Fecha de Inicio</label>
             <input id="fecini_cli" type="date"
-              class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
-          </div>
-
-          <div>
-            <label class="text-gray-700" for="usercrea">Usuario Creador</label>
-            <input id="usercrea" type="number"
-              class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
-          </div>
-
-          <div>
-            <label class="text-gray-700" for="usermod">Usuario Modificador</label>
-            <input id="usermod" type="number"
               class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
           </div>
         </div>
