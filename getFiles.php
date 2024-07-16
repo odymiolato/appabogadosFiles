@@ -32,17 +32,18 @@ if (!isset($data) && empty($data)) {
 
 $directory = $data->URL;
 
-$baseUrl = 'http://localhost' . $directory . '/';
+$baseUrl = 'http://localhost:8081' . $directory . '/';
 $files = array_diff(scandir(".." . $directory), array('..', '.'));
 $test = [];
 foreach ($files as &$value) {
     $c = 0;
     $ext = (explode('.', $value)[1]);
+    $image = "img/" .  (($ext == 'jpg' || $ext == 'png' || $ext == 'gif' || $ext == 'svg') ? 'image' : $ext)  . ".png";
     // while ($c < 100) {
-    //     $test[] = new file((explode('.', $value)[0]), $ext, $baseUrl . $value, "img/" . $ext . ".png");
+    //     $test[] = new file((explode('.', $value)[0]), $ext, $baseUrl . $value, $image);
     //     $c += 1;
     // }
-    $test[] = new file((explode('.', $value)[0]), $ext, $baseUrl . $value, "img/" . $ext . ".png");
+    $test[] = new file((explode('.', $value)[0]), $ext, $baseUrl . $value, $image);
 }
 
 echo json_encode($test);
