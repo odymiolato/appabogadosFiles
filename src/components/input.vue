@@ -1,17 +1,17 @@
-<template>
-    <input :type="InputType" :value="InputValue" :class="'input ' + InputClass" :placeholder="InputPlace" />
-</template>
-
 <script lang="ts" setup>
-import { defineProps } from 'vue';
-const props = defineProps({
-    InputType: { type: String, default: 'text' },
-    InputClass: { type: String, default: '' },
-    InputPlace: { type: String, default: '' },
-    InputValue: { type: String, default: '' }
-});
+import { defineProps } from 'vue'
 
+const props = defineProps({
+  InputType: { type: String, default: 'text' },
+  InputClass: { type: String, default: '' },
+  InputPlace: { type: String, default: '' },
+  InputValue: { type: String, default: '' },
+})
 </script>
+
+<template>
+  <input :type="InputType" :value="InputValue" :class="`input ${InputClass}`" :placeholder="InputPlace">
+</template>
 
 <style scoped>
 .input {

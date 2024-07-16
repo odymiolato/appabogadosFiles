@@ -8,18 +8,18 @@ const props = defineProps({
   labeltext: { type: String, default: 'text example' },
   value: { type: Number, default: 1 },
   event: { type: Array<any>, default: [] },
-  StyleDropDown: { type: String, default: '' },
+  styledropdown: { type: String, default: '' },
 })
 
 const store = useStore($MonthIndex)
-const NameSelectd = ref<string>(props.event[store.value.index])
+const NameSelectd = ref<string>(props.event[store.value.index]?.item || '')
 
 watch(store, (newVal) => {
-  console.log(newVal)
-  NameSelectd.value = props.event[newVal.index]
+  NameSelectd.value = props.event[newVal.index]?.item || ''
 })
 
 function CloseDropDowun(index: number) {
+  NameSelectd.value = props.event[index]?.item || ''
   document.querySelector('details')?.removeAttribute('open')
   UpdateMonthIndex(index)
 }
@@ -27,14 +27,14 @@ function CloseDropDowun(index: number) {
 
 <template>
   <details>
-    <summary :style="StyleDropDown">
+    <summary :style="styledropdown">
       {{ (NameSelectd !== '') ? NameSelectd : labalItemNoselected }}
       <span>></span>
     </summary>
     <div class="dropmenu">
       <ul class="data">
-        <li v-for="(item, index) in event" @click="CloseDropDowun(index)">
-          {{ item }}
+        <li v-for="(item, index) in event" :key="index" @click="CloseDropDowun(index)">
+          {{ item.item }}
         </li>
       </ul>
     </div>

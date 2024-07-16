@@ -4,6 +4,7 @@ import { onMounted, ref, watch } from 'vue'
 interface Props {
   imagen: string
   isActive: boolean
+  label: string
 }
 
 const props = defineProps<Props>()
@@ -53,7 +54,7 @@ onMounted(() => {
   >
     <div class="flex items-center " @click="changeValue">
       <img :src="iconPath" class="w-5 h-5">
-      <a href="#" class="pl-4 text-white">Mantenimientos</a>
+      <a href="#" class="pl-4 text-white">{{ label }}</a>
       <img src="../../assets/img/arrow.svg" class="h-6 w-5" :class="isActive ? 'origin-center rotate-90 transition duration-500' : 'duration-500'">
     </div>
     <ul

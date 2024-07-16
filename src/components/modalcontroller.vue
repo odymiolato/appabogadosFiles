@@ -1,62 +1,23 @@
-<template>
-    <div v-if="showModal" class="modal-overlay" @click.self="closeModal">
-        <div class="modal-content">
-            <h2>Agregar Evento</h2>
-            <form @submit.prevent="addEvent">
-                <div class="form-group">
-                    <label for="titulo">Título:</label>
-                    <input type="text" id="titulo" v-model="evento.Titulo" required />
-                </div>
-                <div class="form-group">
-                    <label for="descripcion">Descripción:</label>
-                    <textarea id="descripcion" v-model="evento.Descripcion"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="fechaInicio">Fecha de Inicio:</label>
-                    <input type="date" id="fechaInicio" v-model="evento.FechaInicio" required />
-                </div>
-                <div class="form-group">
-                    <label for="fechaFin">Fecha de Fin:</label>
-                    <input type="date" id="fechaFin" v-model="evento.FechaFin" required />
-                </div>
-                <div class="form-group">
-                    <label for="lugar">Lugar:</label>
-                    <input type="text" id="lugar" v-model="evento.Lugar" />
-                </div>
-                <div class="form-group">
-                    <dropdown idDropDown="idDropDown-tipevent" labalItemNoselected="Tipo de Eventos"
-                        :items="listTipEvent" StyleDropDown="width: 100dvw;" />
-                </div>
-                <button type="submit" class="submit-button">Guardar</button>
-                <button type="button" class="close-modal-button" @click="closeModal">Cerrar</button>
-            </form>
-        </div>
-    </div>
-</template>
-
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue';
-import { useStore } from '@nanostores/vue';
-import { UpdateMonthIndex, $ShowModal, ShowModal } from '../stores/counter';
-import { $value } from '../stores/dropdown';
-import dropdown from './dropdown2.vue';
-import axios from 'axios';
+import { onMounted, ref, watch } from 'vue'
+import { useStore } from '@nanostores/vue'
+import axios from 'axios'
+import { $ShowModal, ShowModal, UpdateMonthIndex } from '../stores/counter'
+import { $value } from '../stores/dropdown'
+import dropdown from './dropdown2.vue'
 
-
-
-
-let store = useStore($ShowModal);
-let valuetipevent = useStore($value);
-const listTipEvent = ref<Array<{ id: Number, name: String }>>([]);
-let showModal = ref<boolean>(false);
+const store = useStore($ShowModal)
+const valuetipevent = useStore($value)
+const listTipEvent = ref<Array<{ id: number; name: string }>>([])
+const showModal = ref<boolean>(false)
 const evento = ref({
-    Titulo: '',
-    Descripcion: '',
-    FechaInicio: '',
-    FechaFin: '',
-    Lugar: '',
-    TipoEventoID: 1
-});
+  Titulo: '',
+  Descripcion: '',
+  FechaInicio: '',
+  FechaFin: '',
+  Lugar: '',
+  TipoEventoID: 1,
+})
 
 // async function saveEvent() {
 //     try {
@@ -70,61 +31,103 @@ const evento = ref({
 //     }
 // }
 
-
 async function GetTipEvent() {
-    try {
-        const response = await axios.get('http://192.168.1.189:3000/tiposeventos');
-        const temp: Array<any> = response.data;
-        temp.forEach((element) => {
-            let tempobj = { id: 0, name: '' };
-            tempobj.id = element?.TipoEventoID;
-            tempobj.name = element?.Descripcion;
-            listTipEvent.value.push(tempobj);
-        });
-    } catch (error) {
-        console.error(JSON.stringify(error))
-    }
+  try {
+    const response = await axios.get('http://192.168.1.189:3000/tiposeventos')
+    const temp: Array<any> = response.data
+    temp.forEach((element) => {
+      const tempobj = { id: 0, name: '' }
+      tempobj.id = element?.TipoEventoID
+      tempobj.name = element?.Descripcion
+      listTipEvent.value.push(tempobj)
+    })
+  }
+  catch (error) {
+    console.error(JSON.stringify(error))
+  }
 }
 
-const addEvent = () => {
-    // console.log('Evento a agregar:', evento.value);
-    axios.post('http://192.168.1.189:3000/eventos', JSON.stringify(evento.value), {
-        headers: {
-            "Content-type": "application/json"
-        }
-    });
-    closeModal();
-    resetEvento();
-    UpdateMonthIndex(new Date().getMonth());
-};
+function addEvent() {
+  // console.log('Evento a agregar:', evento.value);
+  axios.post('http://192.168.1.189:3000/eventos', JSON.stringify(evento.value), {
+    headers: {
+      'Content-type': 'application/json',
+    },
+  })
+  closeModal()
+  resetEvento()
+  UpdateMonthIndex(new Date().getMonth())
+}
 
-const closeModal = () => {
-    ShowModal(false);
-};
+function closeModal() {
+  ShowModal(false)
+}
 
-const resetEvento = () => {
-    evento.value = {
-        Titulo: '',
-        Descripcion: '',
-        FechaInicio: '',
-        FechaFin: '',
-        Lugar: '',
-        TipoEventoID: 1
-    };
-};
+function resetEvento() {
+  evento.value = {
+    Titulo: '',
+    Descripcion: '',
+    FechaInicio: '',
+    FechaFin: '',
+    Lugar: '',
+    TipoEventoID: 1,
+  }
+}
 
 watch(store, (newVal) => {
-    showModal.value = newVal;
-});
+  showModal.value = newVal
+})
 
 watch(valuetipevent, (newVal) => {
-    evento.value.TipoEventoID = newVal.id;
-});
+  evento.value.TipoEventoID = newVal.id
+})
 
 onMounted(() => {
-    GetTipEvent();
+  GetTipEvent()
 })
 </script>
+
+<template>
+  <div v-if="showModal" class="modal-overlay" @click.self="closeModal">
+    <div class="modal-content">
+      <h2>Agregar Evento</h2>
+      <form @submit.prevent="addEvent">
+        <div class="form-group">
+          <label for="titulo">Título:</label>
+          <input id="titulo" v-model="evento.Titulo" type="text" required>
+        </div>
+        <div class="form-group">
+          <label for="descripcion">Descripción:</label>
+          <textarea id="descripcion" v-model="evento.Descripcion" />
+        </div>
+        <div class="form-group">
+          <label for="fechaInicio">Fecha de Inicio:</label>
+          <input id="fechaInicio" v-model="evento.FechaInicio" type="date" required>
+        </div>
+        <div class="form-group">
+          <label for="fechaFin">Fecha de Fin:</label>
+          <input id="fechaFin" v-model="evento.FechaFin" type="date" required>
+        </div>
+        <div class="form-group">
+          <label for="lugar">Lugar:</label>
+          <input id="lugar" v-model="evento.Lugar" type="text">
+        </div>
+        <div class="form-group">
+          <dropdown
+            id-drop-down="idDropDown-tipevent" labal-item-noselected="Tipo de Eventos"
+            :items="listTipEvent" StyleDropDown="width: 100dvw;"
+          />
+        </div>
+        <button type="submit" class="submit-button">
+          Guardar
+        </button>
+        <button type="button" class="close-modal-button" @click="closeModal">
+          Cerrar
+        </button>
+      </form>
+    </div>
+  </div>
+</template>
 
 <style scoped>
 .modal-overlay {
@@ -172,8 +175,6 @@ onMounted(() => {
         box-shadow: 0 0 1px 0 rgb(14 165 233 / 0.4) !important;
     }
 }
-
-
 
 .submit-button,
 .close-modal-button {
