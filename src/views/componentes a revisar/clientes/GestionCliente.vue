@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import Inputs from '../../../components/Inputs.vue'
+import Inputs from '../../../components/Inputs.vue';
 import PaginationTable from '../../../components/tablas/PaginationTable.vue'
 import Buttons from '../../../components/Buttons.vue'
 
@@ -25,7 +25,7 @@ const currentEndpoint = ref('')
 
 const nombre = ref('')
 
-function openModal(type) {
+function openModal(type:any) {
   if (type === 'users') {
     modalTitle.value = 'Usuarios'
     currentEndpoint.value = 'https://tu-api.com/users'
@@ -41,7 +41,7 @@ function closeModal() {
   isModalOpen.value = false
 }
 
-function handleSelect(item) {
+function handleSelect(item:any) {
   nombre.value = item.name
   // Llenar otros campos si es necesario
 }
