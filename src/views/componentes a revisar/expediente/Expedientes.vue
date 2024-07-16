@@ -37,7 +37,7 @@ const tableData = ref([
 
     <Dropdown labeltext="dropdown 1" :event="events" labal-item-noselected="Tipo" />
     <!-- <Dropdown2 labeltext="dropdown 2" :items="events" labal-item-noselected="Estado" /> -->
-    <div label="estado">
+    <div class="flex flex-col gap-4" label="estado">
       <Inputs typeinput="Radio" labeltext="Pendiente" />
       <Inputs typeinput="Radio" labeltext="Proceso" />
       <Inputs typeinput="Radio" labeltext="Completado" />
