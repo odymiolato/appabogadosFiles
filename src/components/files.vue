@@ -5,7 +5,7 @@
     <div class="mt-4 flex flex-col px-4 py-4 bg-white rounded-md">
         <div class="flex bg-white mb-4 w-full h-10 gap-5">
             <Inputs id="input-search" typeinput="search" labeltext="Buscar" :Value="searchTerm" @update="searchFiles" />
-            <input id="input-setfile" type="file" accept=".pdf .doc .docx .xlsx .png .jpg" hidden>
+            <input id="input-setfile" type="file" accept=".pdf, .doc, .docx, .xlsx, .png, .jpg" hidden>
             <Buttons Buttonstext='Agregar Documento' @click="setFile()" />
         </div>
         <div id="file"
@@ -81,6 +81,7 @@ function setFile() {
 
                 const formData = new FormData();
                 formData.append('file', file);
+                formData.append('URL', props.path);
 
                 try {
                     const response = await fetch(URL + 'saveFile.php', {

@@ -183,7 +183,7 @@ function ChageTaps(value: number) {
         </div>
         <div id="tap-2"
           :class="`p-6 bg-white text-medium text-gray-500 rounded-lg w-full h-[27em] max-h-[27em] ${+ (tap === 2) ? '' : 'hidden'}`">
-          <Files  path = '/abogadosfiles/exp01'/>
+          <Files  path = '/abogadosfiles/exp01/'/>
         </div>
 
         <div id="tap-2"
