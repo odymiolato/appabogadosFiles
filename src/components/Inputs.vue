@@ -32,18 +32,26 @@
             </svg>
         </span>
 
-        <input
-            class="w-32 pl-10 pr-4 border-gray-200 rounded-md sm:w-64 focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-            type="text" :placeholder="labeltext">
+        <input class="w-32 pl-10 pr-4 border-gray-200 rounded-md sm:w-64 focus:border-sky-600 focus:ring focus
+            :ring-opacity-40 focus:ring-sky-500" type="text" :placeholder="labeltext" @input="set_value"
+            @change="set_value" @keydown="set_value" :value="Value">
     </div>
 </template>
 <script lang="ts" setup>
-import { defineProps } from 'vue'
+import { defineProps, defineEmits } from 'vue'
+
+const emits = defineEmits(["update"]);
 
 const props = defineProps({
     labeltext: { type: String, default: 'text' },
     typeinput: { type: String, default: 'text' },
     inputClass: { type: String, default: '' },
-    isReadonly: { type: Boolean, default: false }
+    isReadonly: { type: Boolean, default: false },
+    Value: { type: String, default: '' }
 });
+
+const set_value = ($event: any) => {
+    let value = $event.target.value;
+    emits("update", value);
+}
 </script>
