@@ -69,12 +69,12 @@ function changeStatus(valor: boolean) {
         <MenuItem to="/modal" name="Modal" label="Modal" imagen="modal" />
         <MenuItem to="/blank" name="Blank" label="Blank" imagen="blank" />
 
-        <MenuDesplegable class="transition duration-700" label="Revisar" imagen="maintenance" :is-active="IsActive"
+        <!-- <MenuDesplegable class="transition duration-700" label="Revisar" imagen="maintenance" :is-active="IsActive"
           @change-status="changeStatus">
           <MenuItem to="/gestioncliente" name="GestionCliente" label="Gestion Clientes" imagen="dashboard"
             :class="IsActive ? 'opacity-100' : 'opacity-0'" />
           <MenuItem to="/" name="" label="" imagen="dashboard" :class="IsActive ? 'opacity-100' : 'opacity-0'" />
-        </MenuDesplegable>
+        </MenuDesplegable> -->
       </nav>
     </div>
   </div>

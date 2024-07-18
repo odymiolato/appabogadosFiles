@@ -1,8 +1,26 @@
 <script lang="ts" setup>
-import Files from '../components/files.vue'
-import Inputs from '../components/Inputs.vue'
-import Buttons from '../components/Buttons.vue'
-import Alerts from '../components/Alerts.vue'
+import { ref } from 'vue';
+import Files from '../components/files.vue';
+import Inputs from '../components/Inputs.vue';
+import Buttons from '../components/Buttons.vue';
+import Alerts from '../components/Alerts.vue';
+import Modal from '../components/Modal.vue'; // Asegúrate de ajustar la ruta si es necesario
+
+const showModal = ref(false);
+
+const handleAccept = () => {
+    console.log('Accepted');
+    showModal.value = false;
+};
+
+const handleDecline = () => {
+    console.log('Declined');
+    showModal.value = false;
+};
+
+const handleClose = () => {
+    showModal.value = false;
+};
 </script>
 
 <template>
@@ -90,8 +108,26 @@ import Alerts from '../components/Alerts.vue'
       </div>
     </div>
 
+    <!-- Files -->
     <div class="mt-8">
       <Files path="http://192.168.1.189/test.php" />
     </div>
+
+    <!-- Modal Button -->
+    <div class="mt-8">
+      <button @click="showModal = true"
+        class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center  ">
+        Toggle modal
+      </button>
+    </div>
+
+    <!-- Modal Component -->
+    <Modal class="flex justify-center items-center" v-if="showModal" title="Modal Title" @close="handleClose" @accept="handleAccept" @decline="handleDecline">
+      <template #body>
+        <p class="text-base leading-relaxed text-gray-500">
+          Custom modal body content.
+        </p>
+      </template>
+    </Modal>
   </div>
 </template>
