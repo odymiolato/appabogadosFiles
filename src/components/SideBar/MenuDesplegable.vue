@@ -1,74 +1,49 @@
 <script lang="ts" setup>
-import { onMounted, ref, watch } from 'vue'
+import { ref, onMounted, watch } from 'vue';
+import Label from '../label.vue';
 
-interface Props {
-  imagen: string
-  isActive: boolean
-  label: string
-}
+const props = defineProps({
+  label: { type: String, default: '' },
+  imagen: { type: String, default: '' }
+});
 
-const props = defineProps<Props>()
-const emits = defineEmits(['changeStatus'])
-const iconPath = ref<string>('')
-const isHidden = ref(!props.isActive)
-const isSlotVisible = ref(false)
+let classIsActive: string = "border-l-4 duration-700 border-gray-100";
+let classInActive: string = "border-sky-900 text-white ";
+
+const isActive = ref<boolean>(false);
+const imagenLocal = ref<string>(props.imagen);
+const thisComponent = ref<HTMLDetailsElement | null>(null);
 
 async function loadImage() {
   try {
-    const module = await import(`../../assets/img/${props.imagen}.svg`)
-    iconPath.value = module.default as string
+    const module = await import(`../../assets/img/${props.imagen}.svg`);
+    imagenLocal.value = module.default as string;
+  } catch (error) {
+    console.error('Error loading image:', error);
   }
-  catch (error) {
+}
 
-  }
-}
-function changeValue() {
-  emits('changeStatus', !props.isActive)
-}
-watch(() => props.isActive, (newVal) => {
-  if (newVal) {
-    isHidden.value = false
-    setTimeout(() => {
-      isSlotVisible.value = true
-    }, 700) // Duración de la transición de max-height
-  }
-  else {
-    isSlotVisible.value = false
-  }
-})
-function handleTransitionEnd(event: TransitionEvent) {
-  if (event.propertyName === 'max-height' && event.target === event.currentTarget) {
-    isSlotVisible.value = props.isActive
-    if (!props.isActive)
-      isHidden.value = true
-  }
-}
 onMounted(() => {
-  loadImage()
-})
+  loadImage();
+  if (thisComponent.value) {
+    thisComponent.value.addEventListener('toggle', () => {
+      isActive.value = thisComponent.value?.open || false;
+    });
+  }
+});
 </script>
 
 <template>
-  <li
-    :class="props.isActive ? `list-none items-center px-6 py-2 mt-4 duration-300  border-l-4` : 'duration-300  list-none items-center px-6 py-2 mt-4 border-sky-900 text-white hover:bg-sky-500 hover:bg-opacity-25 hover:text-gray-100 hover:duration-200'"
-  >
-    <div class="flex items-center " @click="changeValue">
-      <img :src="iconPath" class="w-5 h-5">
-      <a href="#" class="pl-4 text-white">{{ label }}</a>
-      <img src="../../assets/img/arrow.svg" class="h-6 w-5" :class="isActive ? 'origin-center rotate-90 transition duration-500' : 'duration-500'">
-    </div>
-    <ul
-      class="transition-all duration-700 overflow-hidden"
-      :class="[
-        props.isActive ? 'max-h-screen' : 'max-h-0',
-        isHidden ? 'hidden' : '',
-      ]"
-      style="transition-property: max-height;"
-      @transitionend="handleTransitionEnd"
-    >
-      <div :class="[isSlotVisible ? 'opacity-100' : 'opacity-0']" class="transition-opacity duration-500">
-        <slot />
-      </div>
+  <details :class="isActive ? classIsActive : classInActive" ref="thisComponent"
+    class="duration-300 list-none items-center px-6 py-2 mt-4 hover:bg-sky-500 hover:bg-opacity-25 hover:text-gray-100 hover:duration-200">
+    <summary class="flex items-center">
+      <img :src="imagenLocal" class="w-5 h-5">
+      <a href="#" class="pl-4 text-white pointer-events-none select-none">{{ label }}</a>
+      <img src="../../assets/img/arrow.svg" class="h-6 w-5 select-none"
+        :class="isActive ? 'origin-center rotate-90 transition duration-500' : 'duration-500'">
+    </summary>
+    <ul>
+      <slot />
     </ul>
-  </li>
+  </details>
 </template>
