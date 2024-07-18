@@ -37,9 +37,25 @@ let status = [{ name: 'Inactivo' }, { name: 'Activo' },]
               class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
           </div>
 
-          <div class="flex flex-col gap-1">
+          <div class="">
             <label class="text-gray-700" for="tipo_espcialidad_abo">Especialidad</label>
-            <Dropdown2 :items="status" labalItemNoselected="Especialidad" idDropDown="tipo_espcialidad_abo" />
+            <div class="flex gap-2">
+              <input id="fecnac_abo" type="text"
+                class="w-[20%] mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
+              <input id="fecnac_abo" type="text"
+                class="w-[50%] mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
+
+              <button
+                class="p-3  text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                  viewBox="0 0 20 20">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                </svg>
+                <span class="sr-only">Search</span>
+              </button>
+
+            </div>
           </div>
           <div>
             <label class="text-gray-700" for="fecnac_abo">Fecha de Nacimiento</label>
