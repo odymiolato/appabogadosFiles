@@ -3,7 +3,8 @@
 import { defineProps, defineEmits } from 'vue';
 
 const props = defineProps({
-    title: { type: String, default: '' }
+    title: { type: String, default: '' },
+    btnVisible: { type: Boolean, default: true }
 });
 
 const emit = defineEmits(['close', 'accept', 'decline']);
@@ -43,10 +44,10 @@ const emit = defineEmits(['close', 'accept', 'decline']);
                 </div>
                 <!-- Modal footer -->
                 <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b">
-                    <button @click="$emit('accept')" type="button"
+                    <button v-if="btnVisible" @click="$emit('accept')" type="button"
                         class="text-white bg-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                         Aceptar</button>
-                    <button @click="$emit('decline')" type="button"
+                    <button v-if="btnVisible" @click="$emit('decline')" type="button"
                         class="py-2.5 px-5 ms-3 text-sm font-medium focus:outline-none text-white bg-red-500 rounded-lg border border-gray-200 hover:bg-red-600 hover:text-white focus:z-10 focus:ring-4 focus:ring-gray-100 ">Cancelar</button>
                 </div>
             </div>
@@ -54,8 +55,8 @@ const emit = defineEmits(['close', 'accept', 'decline']);
     </div>
 </template>
 <style scoped>
-    .bgcolor{
-        background-color: #0000007a;
-        backdrop-filter: blur(2px);
-    }
+.bgcolor {
+    background-color: #0000007a;
+    backdrop-filter: blur(2px);
+}
 </style>

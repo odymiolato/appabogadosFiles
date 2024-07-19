@@ -14,12 +14,8 @@ const props = defineProps<Props>()
 </script>
 
 <template>
-  <div class="mt-4">
-    <h4 class="text-gray-600">
-      {{ label }}
-    </h4>
-
-    <div class="mt-6">
+  <div>
+    <div class="mt-2">
       <div class="my-6 overflow-hidden bg-white rounded-md shadow">
         <table class="w-full text-left border-collapse">
           <thead class="border-b">

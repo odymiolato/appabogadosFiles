@@ -1,7 +1,76 @@
 <script setup lang="ts">
-import Dropdown2 from '../../components/dropdown2.vue';
+import { computed, ref, resolveDirective } from 'vue';
+import Modal from '../../components/Modal.vue';
+import Inputs from '../../components/Inputs.vue';
 
-let status = [{ name: 'Inactivo' }, { name: 'Activo' },]
+const showModal = ref(false);
+
+const handleAccept = () => {
+  console.log('Accepted');
+  showModal.value = false;
+};
+
+const handleDecline = () => {
+  console.log('Declined');
+  showModal.value = false;
+};
+
+const handleClose = () => {
+  showModal.value = false;
+};
+
+let searchTerm = ref('');
+
+const especialidades = ref([
+  { code: 'codigo', name: 'Nombre' },
+  { code: '1', name: 'ody' },
+  { code: 'nombre', name: 'Nombre' },
+  { code: 'nombre', name: 'Nombre' },
+  { code: 'nombre', name: 'Nombre' },
+  { code: 'nombre', name: 'Nombre' },
+  { code: 'nombre', name: 'Nombre' },
+  { code: 'nombre', name: 'Nombre' },
+  { code: 'nombre', name: 'Nombre' },
+  { code: 'nombre', name: 'Nombre' },
+  { code: 'nombre', name: 'Nombre' },
+  { code: 'nombre', name: 'Nombre' },
+  { code: 'nombre', name: 'Nombre' },
+  { code: 'nombre', name: 'Nombre' },
+  { code: 'nombre', name: 'Nombre' },
+  { code: 'nombre', name: 'Nombre' },
+  { code: 'nombre', name: 'Nombre' },
+  { code: 'nombre', name: 'Nombre' },
+  { code: 'nombre', name: 'Nombre' },
+  { code: 'nombre', name: 'Nombre' },
+  { code: 'nombre', name: 'Nombre' },
+  { code: 'nombre', name: 'Nombre' },
+  { code: 'nombre', name: 'Nombre' },
+  { code: 'nombre', name: 'Nombre' },
+  { code: 'nombre', name: 'Nombre' },
+  { code: 'nombre', name: 'Nombre' },
+  { code: 'nombre', name: 'Nombre' },
+  { code: 'nombre', name: 'Nombre' },
+]);
+
+const filteredEspecialidades = computed(() => {
+  if (searchTerm.value === '') {
+    return especialidades.value;
+  }
+  return especialidades.value.filter(item => item.code.toLowerCase().includes(searchTerm.value.toLowerCase()) || item.name.toLowerCase().includes(searchTerm.value.toLowerCase()));
+});
+
+function searchEspecilidades(value: any) {
+  console.log("value", value);
+  searchTerm.value = value;
+}
+
+let especialidadSelected = ref({ code: '', name: '' })
+
+function setEspecialidad(obj: { code: string, name: string }) {
+  especialidadSelected.value.code = obj.code;
+  especialidadSelected.value.name = obj.name;
+  handleAccept();
+}
 
 </script>
 
@@ -39,14 +108,16 @@ let status = [{ name: 'Inactivo' }, { name: 'Activo' },]
 
           <div class="">
             <label class="text-gray-700" for="tipo_espcialidad_abo">Especialidad</label>
-            <div class="flex gap-2">
+            <div class="flex gap-2 justify-center items-center">
               <input id="fecnac_abo" type="text"
-                class="w-[20%] mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
+                class="w-[20%] mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+                v-model="especialidadSelected.code" readonly>
               <input id="fecnac_abo" type="text"
-                class="w-[50%] mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
+                class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+                v-model="especialidadSelected.name" readonly>
 
-              <button
-                class="p-3  text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+              <button @click="showModal = true" type="button"
+                class="mt-1 p-3  text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
                 <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                   viewBox="0 0 20 20">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -86,4 +157,55 @@ let status = [{ name: 'Inactivo' }, { name: 'Activo' },]
       </form>
     </div>
   </div>
+
+  <Modal class="flex justify-center items-center" v-if="showModal" title="Especialidades" @close="handleClose"
+    @accept="handleAccept" @decline="handleDecline" :btnVisible="false">
+    <template #body>
+      <Inputs typeinput="search" labeltext="Buscar" :Value="searchTerm" @update="searchEspecilidades" />
+      <div>
+        <div>
+          <div class="mt-2">
+            <div class="my-6 overflow-hidden bg-white rounded-md shadow max-h-[289px] overflow-y-auto">
+              <table class="w-full text-left border-collapse">
+                <thead class="border-b top-0 sticky z-20">
+                  <tr>
+                    <th class="px-5 py-3 text-sm font-medium text-gray-100 uppercase bg-sky-800">
+                      Codigo
+                    </th>
+                    <th class="px-5 py-3 text-sm font-medium text-gray-100 uppercase bg-sky-800">
+                      Nombre
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(value) in filteredEspecialidades" class="hover:bg-gray-200 cursor-pointer" @click="setEspecialidad(value)">
+                    <td class="px-6 py-4 text-lg text-gray-700 border-b">
+                      {{ value.code }}
+                    </td>
+                    <td class="px-6 py-4 text-lg text-gray-700 border-b">
+                      {{ value.name }}
+                    </td>
+                    <!-- <input type="radio" name="especialidad" :key="value.code"
+                      class="absolute inset-0 m-auto bg-red-700 z-10 w-full h-full rb-table"> -->
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <!-- <SimpleTable :columns="columns" :tabledata="simpleTableData" label="Simple Table" /> -->
+      </div>
+    </template>
+  </Modal>
 </template>
+<style scoped>
+/* .rb-table {
+  transform: scale(2);
+  opacity: 0;
+  cursor: pointer;
+}
+
+.row-rb:has(input:checked) {
+  background-color: #000 !important;
+} */
+</style>
