@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { computed, ref, resolveDirective } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import Modal from '../../components/Modal.vue';
 import Inputs from '../../components/Inputs.vue';
+import { especialidades } from '../../class/all.class';
 
 const showModal = ref(false);
+/* @ts-ignore */
+const URL: string = import.meta.env.VITE_PATH_API;
 
 const handleAccept = () => {
   console.log('Accepted');
@@ -21,42 +24,31 @@ const handleClose = () => {
 
 let searchTerm = ref('');
 
-const especialidades = ref([
-  { code: 'codigo', name: 'Nombre' },
-  { code: '1', name: 'ody' },
-  { code: 'nombre', name: 'Nombre' },
-  { code: 'nombre', name: 'Nombre' },
-  { code: 'nombre', name: 'Nombre' },
-  { code: 'nombre', name: 'Nombre' },
-  { code: 'nombre', name: 'Nombre' },
-  { code: 'nombre', name: 'Nombre' },
-  { code: 'nombre', name: 'Nombre' },
-  { code: 'nombre', name: 'Nombre' },
-  { code: 'nombre', name: 'Nombre' },
-  { code: 'nombre', name: 'Nombre' },
-  { code: 'nombre', name: 'Nombre' },
-  { code: 'nombre', name: 'Nombre' },
-  { code: 'nombre', name: 'Nombre' },
-  { code: 'nombre', name: 'Nombre' },
-  { code: 'nombre', name: 'Nombre' },
-  { code: 'nombre', name: 'Nombre' },
-  { code: 'nombre', name: 'Nombre' },
-  { code: 'nombre', name: 'Nombre' },
-  { code: 'nombre', name: 'Nombre' },
-  { code: 'nombre', name: 'Nombre' },
-  { code: 'nombre', name: 'Nombre' },
-  { code: 'nombre', name: 'Nombre' },
-  { code: 'nombre', name: 'Nombre' },
-  { code: 'nombre', name: 'Nombre' },
-  { code: 'nombre', name: 'Nombre' },
-  { code: 'nombre', name: 'Nombre' },
-]);
+const especialidadesList = ref<especialidades[]>([]);
+
+async function GetEspecialidades() {
+  try {
+
+  } catch (error) {
+    console.error(error);
+  }
+  const response = await fetch(URL + 'especialidades', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  });
+
+  if (response.ok) {
+    especialidadesList.value = await response.json();
+  }
+}
 
 const filteredEspecialidades = computed(() => {
   if (searchTerm.value === '') {
-    return especialidades.value;
+    return especialidadesList.value;
   }
-  return especialidades.value.filter(item => item.code.toLowerCase().includes(searchTerm.value.toLowerCase()) || item.name.toLowerCase().includes(searchTerm.value.toLowerCase()));
+  return especialidadesList.value.filter(item => String(item.tipesp_tip).toLowerCase().includes(searchTerm.value.toLowerCase()) || item.descri_tip.toLowerCase().includes(searchTerm.value.toLowerCase()));
 });
 
 function searchEspecilidades(value: any) {
@@ -64,14 +56,19 @@ function searchEspecilidades(value: any) {
   searchTerm.value = value;
 }
 
-let especialidadSelected = ref({ code: '', name: '' })
+const especialidadSelected = ref({ tipesp_tip: '', descri_tip: '' });
 
-function setEspecialidad(obj: { code: string, name: string }) {
-  especialidadSelected.value.code = obj.code;
-  especialidadSelected.value.name = obj.name;
+function setEspecialidad(obj: especialidades) {
+  if (especialidadSelected !== undefined) {
+    especialidadSelected.value.tipesp_tip = String(obj.tipesp_tip);
+    especialidadSelected.value.descri_tip = obj.descri_tip;
+  }
   handleAccept();
 }
 
+onMounted(() => {
+  GetEspecialidades();
+});
 </script>
 
 <template>
@@ -111,10 +108,11 @@ function setEspecialidad(obj: { code: string, name: string }) {
             <div class="flex gap-2 justify-center items-center">
               <input id="fecnac_abo" type="text"
                 class="w-[20%] mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-                v-model="especialidadSelected.code" readonly>
+                v-model="especialidadSelected.tipesp_tip" readonly>
+
               <input id="fecnac_abo" type="text"
                 class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-                v-model="especialidadSelected.name" readonly>
+                v-model="especialidadSelected.descri_tip" readonly>
 
               <button @click="showModal = true" type="button"
                 class="mt-1 p-3  text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
@@ -178,12 +176,13 @@ function setEspecialidad(obj: { code: string, name: string }) {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(value) in filteredEspecialidades" class="hover:bg-gray-200 cursor-pointer" @click="setEspecialidad(value)">
+                  <tr v-for="(value) in filteredEspecialidades" class="hover:bg-gray-200 cursor-pointer"
+                    @click="setEspecialidad(value)">
                     <td class="px-6 py-4 text-lg text-gray-700 border-b">
-                      {{ value.code }}
+                      {{ value.tipesp_tip }}
                     </td>
                     <td class="px-6 py-4 text-lg text-gray-700 border-b">
-                      {{ value.name }}
+                      {{ value.descri_tip }}
                     </td>
                     <!-- <input type="radio" name="especialidad" :key="value.code"
                       class="absolute inset-0 m-auto bg-red-700 z-10 w-full h-full rb-table"> -->
@@ -193,7 +192,6 @@ function setEspecialidad(obj: { code: string, name: string }) {
             </div>
           </div>
         </div>
-        <!-- <SimpleTable :columns="columns" :tabledata="simpleTableData" label="Simple Table" /> -->
       </div>
     </template>
   </Modal>

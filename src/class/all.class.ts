@@ -454,6 +454,7 @@ export class especialidades {
         this.fechmod = new Date();
     }
 }
+
 export class expedientes {
     codexp_exp: number;
     codabo_exp: number;
