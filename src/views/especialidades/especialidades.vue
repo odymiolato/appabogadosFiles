@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { especialidades } from '../../class/all.class';
+import { addAlert } from '../../stores/alerts'
 
 let especialidad = ref<especialidades>(new especialidades());
 
@@ -32,7 +33,10 @@ async function saveEspecialidad() {
     });
 
     if (response.ok) {
-      console.info(await response.json());
+      if(await response.json()){
+        addAlert(2,'La especialidad se registro correctamente.');
+        ClearPage();
+      }
     } else {
       console.error('Error en la respuesta:', response.statusText);
     }

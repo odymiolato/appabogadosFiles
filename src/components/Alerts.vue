@@ -20,7 +20,7 @@ const props = defineProps({
 
     <div class="px-4 py-2 -mx-3">
       <div class="mx-3">
-        <span class="font-semibold text-green-500">Success</span>
+        <span class="font-semibold text-green-500">Éxito</span>
         <p class="text-sm text-gray-600">
           {{ MessageAlert }}
         </p>
@@ -39,7 +39,7 @@ const props = defineProps({
 
     <div class="px-4 py-2 -mx-3">
       <div class="mx-3">
-        <span class="font-semibold text-blue-500">Info</span>
+        <span class="font-semibold text-blue-500">Información</span>
         <p class="text-sm text-gray-600">
           {{ MessageAlert }}
         </p>
@@ -58,7 +58,7 @@ const props = defineProps({
 
     <div class="px-4 py-2 -mx-3">
       <div class="mx-3">
-        <span class="font-semibold text-yellow-500">Warning</span>
+        <span class="font-semibold text-yellow-500">Advertencia</span>
         <p class="text-sm text-gray-600">
           {{ MessageAlert }}
         </p>
