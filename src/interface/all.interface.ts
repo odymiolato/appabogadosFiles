@@ -1,3 +1,4 @@
+import Alerts from "../components/Alerts.vue"
 
 export interface menu {
     modules: Array<modulo>
@@ -14,4 +15,10 @@ interface modulo {
             icon: string
         }
     ]
+}
+
+export interface Alerts {
+    index:number;
+    type: number;
+    message: string;
 }

@@ -1,125 +1,73 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import Inputs from '../../../components/Inputs.vue';
-import PaginationTable from '../../../components/tablas/PaginationTable.vue'
-import Buttons from '../../../components/Buttons.vue'
+import { especialidades } from '../../class/all.class';
 
-const events = ref([
-  { index: 1, item: 'ejemplo' },
-  { index: 2, item: 'ejemplo 2' },
-])
-const columns = ref([
-  { key: 'city', label: 'City' },
-  { key: 'totalOrders', label: 'Total orders' },
-])
+let especialidad = ref<especialidades>(new especialidades());
 
-const tableData = ref([
-  { city: 'New York', totalOrders: 150 },
-  { city: 'Los Angeles', totalOrders: 200 },
-  // Agrega más datos aquí
-])
+/* @ts-ignore */
+const URL: string = import.meta.env.VITE_PATH_API;
 
-const isModalOpen = ref(false)
-const modalTitle = ref('')
-const currentEndpoint = ref('')
+function ClearPage() {
+  especialidad.value = new especialidades();
+}
 
-const nombre = ref('')
-
-function openModal(type: any) {
-  if (type === 'users') {
-    modalTitle.value = 'Usuarios'
-    currentEndpoint.value = 'https://tu-api.com/users'
+function validate(): boolean {
+  if (especialidad.value.descri_tip === '') {
+    return false;
   }
-  else if (type === 'products') {
-    modalTitle.value = 'Productos'
-    currentEndpoint.value = 'https://tu-api.com/products'
+  return true;
+}
+
+async function saveEspecialidad() {
+  if (!validate()) {
+    return;
   }
-  isModalOpen.value = true
+  try {
+    const response = await fetch(URL + 'especialidades', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(especialidad.value),
+    });
+
+    if (response.ok) {
+      console.info(await response.json());
+    } else {
+      console.error('Error en la respuesta:', response.statusText);
+    }
+  } catch (error) {
+    console.error('Error en la solicitud:', error);
+  }
 }
 
-function closeModal() {
-  isModalOpen.value = false
-}
 
-function handleSelect(item: any) {
-  nombre.value = item.name
-  // Llenar otros campos si es necesario
-}
-
-const paginationtablecolumns = [
-  {
-    name: 'Nombre',
-    field: 'nombre',
-    hasImage: true,
-  },
-  {
-    name: 'Contacto del Cliente',
-    field: 'contacto',
-
-  },
-
-]
-
-const paginationtabledata = [
-  {
-    nombre: {
-      text: 'Maria',
-      image: '',
-    },
-    contacto: '2345789234576',
-
-  },
-]
 </script>
 
 <template>
   <h3 class="text-3xl font-medium text-gray-700">
-    Gestion de Clientes
+    Especialidades
   </h3>
 
   <div class="mt-4">
-        <div class="p-6 bg-white rounded-md shadow-md">
-            <h2 class="text-lg font-semibold text-gray-700 capitalize">Configuración de Especialidades</h2>
-
-            <form>
-                <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
-                    <div>
-                        <label class="text-gray-700" for="tipesp_tip">Tipo de Especialidad</label>
-                        <input id="tipesp_tip" type="text" class="w-full mt-2 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500">
-                    </div>
-
-                    <div>
-                        <label class="text-gray-700" for="descri_tip">Descripción</label>
-                        <input id="descri_tip" type="text" class="w-full mt-2 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500">
-                    </div>
-
-                    <div>
-                        <label class="text-gray-700" for="usercrea">Usuario Creador</label>
-                        <input id="usercrea" type="text" class="w-full mt-2 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500">
-                    </div>
-
-                    <div>
-                        <label class="text-gray-700" for="usermod">Usuario Modificador</label>
-                        <input id="usermod" type="text" class="w-full mt-2 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500">
-                    </div>
-
-                    <div>
-                        <label class="text-gray-700" for="fechcrea">Fecha de Creación</label>
-                        <input id="fechcrea" type="date" class="w-full mt-2 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500">
-                    </div>
-
-                    <div>
-                        <label class="text-gray-700" for="fechmod">Fecha de Modificación</label>
-                        <input id="fechmod" type="date" class="w-full mt-2 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500">
-                    </div>
-                </div>
-
-                <div class="flex justify-end mt-4">
-                    <button class="px-4 py-2 text-gray-200 bg-gray-800 rounded-md hover:bg-gray-700 focus:outline-none focus:bg-gray-700">
-                        Guardar
-                    </button>
-                </div>
-            </form>
+    <div class="p-6 bg-white rounded-md shadow-md">
+      <form>
+        <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
+          <div>
+            <label class="text-gray-700" for="tipesp_tip">Nombre</label>
+            <input id="tipesp_tip" type="text"
+              class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+              v-model="especialidad.descri_tip">
+          </div>
         </div>
+        <div class="flex justify-end mt-4">
+          <button type="button"
+            class="px-4 py-2 text-gray-200 bg-gray-800 rounded-md hover:bg-gray-700 focus:outline-none focus:bg-gray-700"
+            @click="saveEspecialidad()">
+            Guardar
+          </button>
+        </div>
+      </form>
     </div>
+  </div>
 </template>
