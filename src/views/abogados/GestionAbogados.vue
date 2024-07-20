@@ -2,10 +2,12 @@
 import { computed, ref, onMounted } from 'vue';
 import Modal from '../../components/Modal.vue';
 import Inputs from '../../components/Inputs.vue';
-import { abogados, especialidades } from '../../class/all.class';
+import { abogados, direcciones, especialidades } from '../../class/all.class';
+import Dropdown from '../../components/dropdown2.vue';
 
 const showModal = ref(false);
 const Abogado = ref<abogados>(new abogados());
+const Direccion = ref<direcciones>(new direcciones());
 /* @ts-ignore */
 const URL: string = import.meta.env.VITE_PATH_API;
 
@@ -67,7 +69,9 @@ function setEspecialidad(obj: especialidades) {
   handleAccept();
 }
 
-async function saveAbogado(){
+async function saveAbogado() {
+  Abogado.value.tipo_espcialidad_abo = parseInt(especialidadSelected.value.tipesp_tip);
+  Abogado.value.estado_abo = 'A';
   console.info(Abogado.value);
 }
 
@@ -82,7 +86,10 @@ onMounted(() => {
       Gestion de Abogados
     </h3>
     <div class="mt-4 p-6 bg-white rounded-md shadow-md">
-      <form>
+      <h3>
+        Informacion General
+      </h3>
+      <div>
         <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
           <div>
             <label class="text-gray-700" for="nombre_abo">Nombre</label>
@@ -91,12 +98,12 @@ onMounted(() => {
               v-model="Abogado.nombre_abo">
           </div>
 
-          <div>
+          <!-- <div>
             <label class="text-gray-700" for="direcc_abo">Dirección</label>
             <input id="direcc_abo" type="text"
               class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
               v-model="Abogado.direcc_abo">
-          </div>
+          </div> -->
 
           <div>
             <label class="text-gray-700" for="telefo_abo">Teléfono</label>
@@ -158,13 +165,53 @@ onMounted(() => {
 
         </div>
 
+        <h3 class="mt-5">
+          Informacion de ubicacion
+        </h3>
+
+        <div class="mt-2">
+          <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-1">
+            <div>
+              <label class="text-gray-700" for="email_abo">Dirección</label>
+              <input id="email_abo" type="email"
+                class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+                v-model="Direccion.direccion_dir">
+            </div>
+
+            <div class="">
+              <label class="text-gray-700" for="tipo_espcialidad_abo">Ciudad</label>
+              <div class="flex gap-2 justify-center items-center">
+                <input id="fecnac_abo" type="text" disabled
+                  class="w-[20%] mt-2 border-gray-200  rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+                  v-model="especialidadSelected.tipesp_tip" readonly>
+
+                <input id="fecnac_abo" type="text"
+                  class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+                  v-model="especialidadSelected.descri_tip" readonly>
+
+                <button @click="showModal = true" type="button"
+                  class="mt-1 p-3  text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                  <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                  </svg>
+                  <span class="sr-only">Search</span>
+                </button>
+                <Dropdown labalItemNoselected="Codigo Postal" />
+              </div>
+            </div>
+
+          </div>
+        </div>
+
         <div class="flex justify-end mt-4">
           <button type="button" @click="saveAbogado()"
             class="px-4 py-2 text-gray-200 bg-gray-800 rounded-md hover:bg-gray-700 focus:outline-none focus:bg-gray-700">
             Guardar
           </button>
         </div>
-      </form>
+      </div>
     </div>
   </div>
 

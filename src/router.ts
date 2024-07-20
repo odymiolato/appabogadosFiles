@@ -21,6 +21,8 @@ import Especialidades from './views/especialidades/especialidades.vue'
 import TipoMovimientos from './views/tipo_movimientos/TipoMovimientos.vue'
 import Tribunales from './views/tribunales/Tribunales.vue'
 import TiposGastos from './views/tipos_gastos/TiposGastos.vue'
+import Paises from './views/paises/paises.vue'
+import Provincias from './views/provincias/provincias.vue'
 
 // import InteraccionCliente from './views/clientes/InteraccionCliente.vue'
 // import GestionDocumento from './views/componentes a revisar/GestionDocumento.vue'
@@ -132,40 +134,16 @@ const routes: RouteRecordRaw[] = [
     name: 'TiposGastos',
     component: TiposGastos,
   },
-  
-  
-  
-  // {
-  //   path: '/interaccioncliente',
-  //   name: 'InteraccionCliente',
-  //   component: InteraccionCliente,
-  // },
-  // {
-  //   path: '/gestiondocumento',
-  //   name: 'Gestiondocumento',
-  //   component: GestionDocumento,
-  // },
-  // {
-  //   path: '/facturacionfinanza',
-  //   name: 'FacturacionFinanza',
-  //   component: FacturacionFinanza,
-  // },
-  // {
-  //   path: '/gestionpago',
-  //   name: 'GestionPago',
-  //   component: GestionPago,
-  // },
-  // {
-  //   path: '/usuariopermiso',
-  //   name: 'UsuarioPermiso',
-  //   component: UsuarioPermiso,
-  // },
-  // esta ruta es para probar cosas no va
-  // {
-  //   path: '/facturacion',
-  //   name: 'Facturacion',
-  //   component: Facturacion,
-  // },
+  {
+    path: '/paises',
+    name: 'Paises',
+    component: Paises,
+  },
+  {
+    path: '/provincias',
+    name: 'Provincias',
+    component: Provincias,
+  },
 ]
 
 const router = createRouter({
