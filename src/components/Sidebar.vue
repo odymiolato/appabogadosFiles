@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useSidebar } from '../composables/useSidebar'
 import MenuItem from './SideBar/MenuItem.vue'
 import MenuDesplegable from './SideBar/MenuDesplegable.vue'
 
@@ -28,8 +27,7 @@ function changeStatus(valor: boolean) {
     <!-- End Backdrop -->
 
     <div
-      :class="isOpen ? 'translate-x-0 ease-out' : '-translate-x-full ease-in'"
-      class="fixed inset-y-0 left-0 z-30 w-52 overflow-y-auto transition duration-300 transform bg-sky-900 lg:translate-x-0 lg:static lg:inset-0"
+      class="inset-y-0 left-0 z-30  transition-transform relative overflow-hidden w-max bg-sky-900 lg:translate-x-0 lg:static lg:inset-0"
     >
       <div class="flex items-center justify-center mt-8">
         <div class="flex items-center">
@@ -40,8 +38,37 @@ function changeStatus(valor: boolean) {
 
       <nav class="mt-10">
         <MenuItem to="/dashboard" name="Dashboard" label="Dashboard" imagen="dashboard" />
-        <MenuItem to="/expediente" name="Expediente" label="Expedientes" imagen="dashboard" />
 
+        <MenuDesplegable class="transition-all duration-1000" label="Expediente" imagen="dashboard">
+          <MenuDesplegable label="Mantenimientos" imagen="dashboard">
+            <MenuItem to="/gestionabogados" name="GestionAbogados" label="Abogados" imagen="dashboard" />
+            <MenuItem to="/tribunales" name="Tribunales" label="Tribunales" imagen="dashboard" />
+            <MenuItem to="/tiposgastos" name="TiposGastos" label="Tipos Gastos" imagen="dashboard" />
+            <MenuItem to="/gestioncontraparte" name="GestionContraparte" label="Contrapartes" imagen="dashboard" />
+            <MenuItem to="/especialidades" name="Especialidades" label="Especialidades" imagen="dashboard" />
+            <MenuItem to="/tipomovimientos" name="TipoMovimientos" label="Tipo Movimientos" imagen="dashboard" />
+          </MenuDesplegable>
+
+          <MenuDesplegable label="Porcesos" imagen="dashboard">
+            <MenuItem to="/expedientes" name="Expendientes" label="Expendientes" imagen="dashboard" />
+            <MenuItem to="/expediente" name="Expediente" label="Control de Expedientes" imagen="dashboard" />
+            <MenuItem to="/audiencia" name="Audiencia" label="Gestion de Audiencias" imagen="dashboard" />
+          </MenuDesplegable>
+        </MenuDesplegable>
+
+        <MenuDesplegable class="transition duration-500" label="Clientes" imagen="dashboard">
+          <MenuItem to="/clientes" name="Clientes" label="Clientes" imagen="dashboard" />
+          <MenuItem to="/interaccionescliente" name="InteraccionesCliente" label="Interaccion Clientes" imagen="dashboard" />
+          <MenuItem to="/tipointeraccion" name="TipoInteraccion" label="Tipo de Interacciones" imagen="dashboard" />
+
+          <MenuDesplegable label="Mantenimientos" imagen="dashboard">
+            hola
+          </MenuDesplegable>
+
+          <MenuDesplegable label="Gestion de Clientes" imagen="dashboard">
+            hola
+          </MenuDesplegable>
+        </MenuDesplegable>
         <MenuItem to="/ui-elements" name="UIElements" label="Elements" imagen="elements" />
 
         <MenuItem to="/eventos" name="Eventos" label="Eventos" imagen="elements" />

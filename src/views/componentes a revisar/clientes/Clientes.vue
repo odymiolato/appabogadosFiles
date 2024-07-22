@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import Modal from '../../components/Modal.vue'
-import type { interacciones } from '../../class/all.class'
+import type { clientes } from '../../class/all.class'
 import WideTable from '../../components/tablas/WideTable.vue'
 
 import apiClient from '../../axiosConfig'
-import CrearInteracciones from './CrearInteracciones.vue'
+import CrearClientes from './CrearClientes.vue'
 
 const columns = [
   { title: 'Nombre', field: 'nombre_cli' },
@@ -16,51 +16,51 @@ const columns = [
 ]
 
 const showModal = ref(false)
-const selectedinteraccion = ref<interacciones | null>(null)
-const interaccionList = ref<interacciones[]>([])
+const selectedCliente = ref<clientes | null>(null)
+const clienteList = ref<clientes[]>([])
 
 onMounted(async () => {
-  await fetchinteracciones()
+  await fetchClientes()
 })
 
-async function fetchinteracciones() {
+async function fetchClientes() {
   try {
-    const response = await apiClient.get('/interacciones')
-    interaccionList.value = response.data
+    const response = await apiClient.get('/clientes')
+    clienteList.value = response.data
   }
   catch (error) {
-    console.error('Error fetching interacciones:', error)
+    console.error('Error fetching clientes:', error)
   }
 }
 function handleClose() {
   showModal.value = false
 }
 
-async function handleSaveinteraccion(interaccion: interacciones) {
+async function handleSaveCliente(cliente: clientes) {
   try {
-    if (selectedinteraccion.value) {
-      // Editar interaccion existente
-      await apiClient.patch('/interacciones', interaccion)
+    if (selectedCliente.value) {
+      // Editar cliente existente
+      await apiClient.patch('/clientes', cliente)
     }
     else {
-      // Crear nuevo interaccion
-      await apiClient.post('/interacciones', interaccion)
+      // Crear nuevo cliente
+      await apiClient.post('/clientes', cliente)
     }
-    await fetchinteracciones()
+    await fetchClientes()
     showModal.value = false
   }
   catch (error) {
-    console.error('Error saving interaccion:', error)
+    console.error('Error saving cliente:', error)
   }
 }
 
-function handleEditinteraccion(interaccion: interacciones) {
-  selectedinteraccion.value = { ...interaccion }
+function handleEditCliente(cliente: clientes) {
+  selectedCliente.value = { ...cliente }
   showModal.value = true
 }
 
 function openCreateModal() {
-  selectedinteraccion.value = null
+  selectedCliente.value = null
   showModal.value = true
 }
 </script>
@@ -72,27 +72,27 @@ function openCreateModal() {
       class="mt-1 mb-5 p-3 text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
       @click="openCreateModal"
     >
-      Crear Nuevo interaccion
+      Crear Nuevo Cliente
     </button>
 
     <WideTable
       :columns="columns"
-      :tabledata="interaccionList"
-      label="interacciones"
+      :tabledata="clienteList"
+      label="Clientes"
       default-image="/path/to/default-image.jpg"
       :editable="true"
-      @edit="handleEditinteraccion"
+      @edit="handleEditCliente"
     />
 
     <Modal
       v-if="showModal"
       class="flex justify-center items-center"
-      title="Crear/Editar interaccion"
+      title="Crear/Editar Cliente"
       :btn-visible="false"
       @close="handleClose"
     >
       <template #body>
-        <CrearInteracciones :interaccion="selectedinteraccion" @save="handleSaveinteraccion" />
+        <CrearClientes :cliente="selectedCliente" @save="handleSaveCliente" />
       </template>
     </Modal>
   </div>
