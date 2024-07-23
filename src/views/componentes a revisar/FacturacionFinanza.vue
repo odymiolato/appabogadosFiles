@@ -27,7 +27,7 @@ const currentEndpoint = ref('')
 
 const nombre = ref('')
 
-function openModal(type) {
+function openModal(type: string) {
   if (type === 'users') {
     modalTitle.value = 'Usuarios'
     currentEndpoint.value = 'https://tu-api.com/users'
@@ -43,7 +43,7 @@ function closeModal() {
   isModalOpen.value = false
 }
 
-function handleSelect(item) {
+function handleSelect(item: any) {
   nombre.value = item.name
   // Llenar otros campos si es necesario
 }
@@ -100,13 +100,8 @@ const paginationtabledata = [
         Buscar clientes
       </button>
 
-      <ModalBuscar
-        :is-open="isModalOpen"
-        :title="modalTitle"
-        :api-endpoint="currentEndpoint"
-        @close="closeModal"
-        @select="handleSelect"
-      />
+      <ModalBuscar :is-open="isModalOpen" :title="modalTitle" :api-endpoint="currentEndpoint" @close="closeModal"
+        @select="handleSelect" />
     </div>
     <Inputs typeinput="text" labeltext="monto" />
     <DatePicker label="Fecha de Emision" />
@@ -114,6 +109,8 @@ const paginationtabledata = [
     <Buttons -buttonstext="Guardar" />
     <Buttons -buttonstext="Cancelar" />
 
-    <PaginationTable default-image="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80" :columns="paginationtablecolumns" :tabledata="paginationtabledata" />
+    <PaginationTable
+      default-image="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
+      :columns="paginationtablecolumns" :tabledata="paginationtabledata" />
   </div>
 </template>

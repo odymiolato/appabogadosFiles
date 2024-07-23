@@ -13,7 +13,7 @@ const props = defineProps({
 const NameSelectd = ref<string>('')
 
 function SelectItem(index: number) {
-  NameSelectd.value = props.items[index]?.item || ''
+  NameSelectd.value = props.items[index]?.name
   document.getElementById(props.idDropDown)?.removeAttribute('open')
   Updatevalue(index)
 }
@@ -32,7 +32,7 @@ onMounted(() => {
     <div class="dropmenu">
       <ul class="data">
         <li v-for="(item, index) in items" :key="index" @click="SelectItem(index)">
-          {{ item.item }}
+          {{ item.name }}
         </li>
       </ul>
     </div>
@@ -95,7 +95,8 @@ details {
         min-height: max-content;
         height: max-content;
         max-height: calc(clamp(16dvh, 25dvh, 32dvh) + 1rem);
-        width: 100%;
+        width: max-content;
+        min-width: 150px;
         border-radius: 10px;
         box-shadow: 0 0 4px 0 #8c8989;
 

@@ -13,22 +13,23 @@ import Calendar from './components/calendar.vue'
 import Expediente from './views/expDepToAbo.vue'
 import Expedientes from './views/expediente/Expedientes.vue'
 
-import AsignacionExpediente from './views/componentes a revisar/expediente/AsignacionExpediente.vue'
+// import AsignacionExpediente from './views/componentes a revisar/expediente/AsignacionExpediente.vue'
+import Expedientes from './views/expediente/Expedientes.vue'
+
 import Audiencia from './views/componentes a revisar/Audiencia.vue'
 import GestionCliente from './views/clientes/GestionCliente.vue'
+import GestionAbogados from './views/abogados/GestionAbogados.vue'
+import GestionContraparte from './views/contrapartes/GestionContrapartes.vue'
+import Especialidades from './views/especialidades/especialidades.vue'
 import TipoMovimientos from './views/tipo_movimientos/TipoMovimientos.vue'
 import Tribunales from './views/tribunales/Tribunales.vue'
 import TiposGastos from './views/tipos_gastos/TiposGastos.vue'
 import Paises from './views/paises/paises.vue'
 import Provincias from './views/provincias/provincias.vue'
-import Clientes from './views/clientes/Clientes.vue'
-import InteraccionCliente from './views/clientes/InteraccionCliente.vue'
-import TipoInteraccion from './views/clientes/TipoInteraccion.vue'
 
 // import InteraccionCliente from './views/clientes/InteraccionCliente.vue'
-import GestionDocumento from './views/componentes a revisar/GestionDocumento.vue'
-import FacturacionFinanza from './views/composnentes a revisar/FacturacionFinanza.vue'
-
+// import GestionDocumento from './views/componentes a revisar/GestionDocumento.vue'
+// import FacturacionFinanza from './views/componentes a revisar/FacturacionFinanza.vue'
 // import GestionPago from './views/componentes a revisar/GestionPago.vue'
 // import UsuarioPermiso from './views/componentes a revisar/UsuariosPermiso.vue'
 // import Facturacion from './components/mantenimientos/facturacion.vue'
@@ -91,11 +92,11 @@ const routes: RouteRecordRaw[] = [
     name: 'Expedientes',
     component: Expedientes,
   },
-  {
-    path: '/asignacionexpediente',
-    name: 'AsignacionExpediente',
-    component: AsignacionExpediente,
-  },
+  // {
+  //   path: '/asignacionexpediente',
+  //   name: 'AsignacionExpediente',
+  //   component: AsignacionExpediente,
+  // },
   {
     path: '/audiencia',
     name: 'Audiencia',
@@ -107,26 +108,25 @@ const routes: RouteRecordRaw[] = [
     component: GestionCliente,
   },
   {
-    path: '/interaccioncliente',
-    name: 'InteraccionCliente',
-    component: InteraccionCliente,
+    path: '/gestionabogados',
+    name: 'GestionAbogados',
+    component: GestionAbogados,
   },
   {
-    path: '/gestiondocumento',
-    name: 'Gestiondocumento',
-    component: GestionDocumento,
+    path: '/gestioncontraparte',
+    name: 'GestionContraparte',
+    component: GestionContraparte,
   },
   {
-    path: '/facturacionfinanza',
-    name: 'FacturacionFinanza',
-    component: FacturacionFinanza,
+    path: '/especialidades',
+    name: 'Especialidades',
+    component: Especialidades,
   },
   {
     path: '/tipomovimientos',
     name: 'TipoMovimientos',
     component: TipoMovimientos,
   },
-  // esta ruta es para probar cosas no va
   {
     path: '/tribunales',
     name: 'Tribunales',
@@ -146,21 +146,6 @@ const routes: RouteRecordRaw[] = [
     path: '/provincias',
     name: 'Provincias',
     component: Provincias,
-  },
-  {
-    path: '/clientes',
-    name: 'Clientes',
-    component: Clientes,
-  },
-  {
-    path: '/interaccionescliente',
-    name: 'InteraccionesCliente',
-    component: InteraccionCliente,
-  },
-  {
-    path: '/tipointeraccion',
-    name: 'TipoInteraccion',
-    component: TipoInteraccion,
   },
 ]
 

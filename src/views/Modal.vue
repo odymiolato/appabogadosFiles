@@ -1,11 +1,12 @@
+<!-- Modal.vue -->
 <script setup lang="ts">
-import { defineEmits, defineProps } from 'vue'
+import { defineProps, defineEmits } from 'vue';
 
 const props = defineProps({
-  title: { type: String, default: '' },
-})
+    title: { type: String, default: '' }
+});
 
-const emit = defineEmits(['close', 'accept', 'decline'])
+const emit = defineEmits(['close', 'accept', 'decline']);
 </script>
 
 <template>
@@ -68,9 +69,3 @@ const emit = defineEmits(['close', 'accept', 'decline'])
     </div>
   </div>
 </template>
-
-<style>
-.modal {
-  transition: opacity 0.25s ease;
-}
-</style>

@@ -29,6 +29,22 @@ export function useTableData() {
     { city: 'Manchester', totalOrders: '632,310' },
     { city: 'London', totalOrders: '451,110' },
     { city: 'Madrid', totalOrders: '132,524' },
+    { city: 'New York', totalOrders: '200,120' },
+    { city: 'Manchester', totalOrders: '632,310' },
+    { city: 'London', totalOrders: '451,110' },
+    { city: 'Madrid', totalOrders: '132,524' },
+    { city: 'New York', totalOrders: '200,120' },
+    { city: 'Manchester', totalOrders: '632,310' },
+    { city: 'London', totalOrders: '451,110' },
+    { city: 'Madrid', totalOrders: '132,524' },
+    { city: 'New York', totalOrders: '200,120' },
+    { city: 'Manchester', totalOrders: '632,310' },
+    { city: 'London', totalOrders: '451,110' },
+    { city: 'Madrid', totalOrders: '132,524' },
+    { city: 'New York', totalOrders: '200,120' },
+    { city: 'Manchester', totalOrders: '632,310' },
+    { city: 'London', totalOrders: '451,110' },
+    { city: 'Madrid', totalOrders: '132,524' },
   ])
 
   const paginatedTableData = ref<IPaginatedTableData[]>([

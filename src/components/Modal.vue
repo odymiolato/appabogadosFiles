@@ -1,75 +1,59 @@
 <!-- Modal.vue -->
 <script setup lang="ts">
-import { defineEmits, defineProps } from 'vue'
+import { defineProps, defineEmits } from 'vue';
 
 const props = defineProps({
-  title: { type: String, default: '' },
-  btnVisible: { type: Boolean, default: true },
-})
+    title: { type: String, default: '' },
+    btnVisible: { type: Boolean, default: true }
+});
 
-const emit = defineEmits(['close', 'accept', 'decline'])
+const emit = defineEmits(['close', 'accept', 'decline']);
 </script>
 
 <template>
-  <!-- Main modal -->
-  <div
-    id="default-modal" tabindex="-1" aria-hidden="true"
-    class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-full max-h-full backdrop-blur-1 bgcolor"
-  >
-    <div class="relative p-4 w-full max-w-2xl max-h-full">
-      <!-- Modal content -->
-      <div class="relative bg-white rounded-lg shadow">
-        <!-- Modal header -->
-        <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
-          <h3 class="text-xl font-semibold text-gray-900">
-            {{ title }}
-          </h3>
-          <button
-            type="button"
-            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-            @click="$emit('close')"
-          >
-            <svg
-              class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-              viewBox="0 0 14 14"
-            >
-              <path
-                stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-              />
-            </svg>
-            <span class="sr-only">Close modal</span>
-          </button>
-        </div>
-        <!-- Modal body -->
-        <div class="p-4 md:p-5 space-y-4">
-          <slot name="body">
-            <!-- Default body content -->
-            <!-- <p class="text-base leading-relaxed text-gray-500">
+    <!-- Main modal -->
+    <div id="default-modal" tabindex="-1" aria-hidden="true"
+        class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-full max-h-full backdrop-blur-1 bgcolor">
+        <div class="relative p-4 w-full max-w-2xl max-h-full">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow">
+                <!-- Modal header -->
+                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+                    <h3 class="text-xl font-semibold text-gray-900">
+                        {{ title }}
+                    </h3>
+                    <button type="button"
+                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                        @click="$emit('close')">
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <div class="p-4 md:p-5 space-y-4">
+                    <slot name="body">
+                        <!-- Default body content -->
+                        <!-- <p class="text-base leading-relaxed text-gray-500">
                             Default modal body content.
                         </p> -->
-          </slot>
+                    </slot>
+                </div>
+                <!-- Modal footer -->
+                <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b">
+                    <button v-if="btnVisible" @click="$emit('accept')" type="button"
+                        class="text-white bg-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                        Aceptar</button>
+                    <button v-if="btnVisible" @click="$emit('decline')" type="button"
+                        class="py-2.5 px-5 ms-3 text-sm font-medium focus:outline-none text-white bg-red-500 rounded-lg border border-gray-200 hover:bg-red-600 hover:text-white focus:z-10 focus:ring-4 focus:ring-gray-100 ">Cancelar</button>
+                </div>
+            </div>
         </div>
-        <!-- Modal footer -->
-        <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b">
-          <button
-            v-if="btnVisible" type="button" class="text-white bg-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-            @click="$emit('accept')"
-          >
-            Aceptar
-          </button>
-          <button
-            v-if="btnVisible" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium focus:outline-none text-white bg-red-500 rounded-lg border border-gray-200 hover:bg-red-600 hover:text-white focus:z-10 focus:ring-4 focus:ring-gray-100 "
-            @click="$emit('decline')"
-          >
-            Cancelar
-          </button>
-        </div>
-      </div>
     </div>
-  </div>
 </template>
-
 <style scoped>
 .bgcolor {
     background-color: #0000007a;
