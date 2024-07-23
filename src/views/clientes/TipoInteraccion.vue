@@ -24,42 +24,6 @@ function saveTipoInteraccion() {
           class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
         >
       </div>
-
-      <div>
-        <label class="text-gray-700" for="usercrea">Usuario Creador</label>
-        <input
-          id="usercrea" v-model="tipoInteraccion.usercrea"
-          type="number"
-          class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-        >
-      </div>
-
-      <div>
-        <label class="text-gray-700" for="usermod">Usuario Modificador</label>
-        <input
-          id="usermod" v-model="tipoInteraccion.usermod"
-          type="number"
-          class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-        >
-      </div>
-
-      <div>
-        <label class="text-gray-700" for="fechcrea">Fecha Creación</label>
-        <input
-          id="fechcrea" v-model="tipoInteraccion.fechcrea"
-          type="datetime-local"
-          class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-        >
-      </div>
-
-      <div>
-        <label class="text-gray-700" for="fechmod">Fecha Modificación</label>
-        <input
-          id="fechmod" v-model="tipoInteraccion.fechmod"
-          type="datetime-local"
-          class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-        >
-      </div>
     </div>
 
     <div class="mt-4">
