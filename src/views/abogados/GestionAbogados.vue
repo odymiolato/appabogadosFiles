@@ -50,9 +50,12 @@ async function GetEspecialidades() {
 
     if (response.ok) {
       especialidadesList.value = await response.json();
+    } else {
+      addAlert(3, 'problemas con la solicitud de las Provincias')
     }
   } catch (error) {
     console.error(error);
+    addAlert(3, 'Comunicarce con los administradores.');
   }
 
 }
@@ -68,9 +71,12 @@ async function getProvincias() {
 
     if (response.ok) {
       provinciasList.value = await response.json();
+    } else {
+      addAlert(3, 'problemas con la solicitud de las Provincias')
     }
   } catch (error) {
     console.error(error);
+    addAlert(3, 'Comunicarce con los administradores.');
   }
 }
 
@@ -87,11 +93,11 @@ async function getCiudades() {
       ciudadesList.value = await response.json();
       console.log(ciudadesList.value);
     } else {
-      addAlert(3, 'problemas con la solicitud')
+      addAlert(3, 'problemas con la solicitud de las ciudades')
     }
   } catch (error) {
     console.error(error);
-    addAlert(3, 'problemas con la solicitud');
+    addAlert(3, 'Comunicarce con los administradores.');
   }
 }
 
@@ -160,7 +166,30 @@ function setCiudad(obj: ciudades) {
 async function saveAbogado() {
   Abogado.value.tipo_espcialidad_abo = parseInt(especialidadSelected.value.tipesp_tip);
   Abogado.value.estado_abo = 'A';
-  console.info(Abogado.value);
+
+  Direccion.value.codciu_dir = parseInt(provinciaSelected.value.codpro_pro);
+  Direccion.value.codciu_dir = parseInt(ciuadadSelected.value.codciu_ciu);
+
+  console.info({ Abogado: Abogado.value, direccion: Direccion.value });
+  try {
+    const response = await fetch(URL + "abogados", {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ Abogado: Abogado.value, direccion: Direccion.value })
+    });
+
+    if (response.ok) {
+
+    } else {
+      console.error(response.statusText);
+      addAlert(3, "Problemas al registar el abogado.");
+    }
+  } catch (error) {
+    console.error(error);
+    addAlert(3, 'Comunicarce con los administradores.');
+  }
 }
 
 onMounted(() => {
