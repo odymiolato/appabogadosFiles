@@ -164,33 +164,39 @@ function setCiudad(obj: ciudades) {
 }
 
 async function saveAbogado() {
+  // Asegúrate de que los valores numéricos estén correctamente parseados
   Abogado.value.tipo_espcialidad_abo = parseInt(especialidadSelected.value.tipesp_tip);
   Abogado.value.estado_abo = 'A';
 
   Direccion.value.codciu_dir = parseInt(provinciaSelected.value.codpro_pro);
   Direccion.value.codciu_dir = parseInt(ciuadadSelected.value.codciu_ciu);
 
-  console.info({ Abogado: Abogado.value, direccion: Direccion.value });
+  const requestBody = { information: Abogado.value, direccion: Direccion.value };
+
+  console.info('Datos enviados:', requestBody);
+
   try {
     const response = await fetch(URL + "abogados", {
       method: 'POST',
       headers: {
-        "Content-Type": "application/json"
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ Abogado: Abogado.value, direccion: Direccion.value })
+      body: JSON.stringify(requestBody)
     });
 
     if (response.ok) {
-
+      console.info('Abogado registrado exitosamente');
+      addAlert(2, "Abogado registrado exitosamente.");
     } else {
-      console.error(response.statusText);
-      addAlert(3, "Problemas al registar el abogado.");
+      console.error('Error en la respuesta del servidor:', response.statusText);
+      addAlert(3, "Problemas al registrar el abogado.");
     }
   } catch (error) {
-    console.error(error);
+    console.error('Error en la solicitud:', error);
     addAlert(3, 'Comunicarce con los administradores.');
   }
 }
+
 
 onMounted(() => {
   GetEspecialidades();
