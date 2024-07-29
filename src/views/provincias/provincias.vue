@@ -134,7 +134,7 @@ onMounted(() => {
           </div>
 
           <div class="">
-            <label class="text-gray-700" for="tipo_espcialidad_abo">Especialidad</label>
+            <label class="text-gray-700" for="tipo_espcialidad_abo">Pais</label>
             <div class="flex gap-2 justify-center items-center">
               <input id="fecnac_abo" type="text" disabled
                 class="w-[20%] mt-2 border-gray-200  rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"

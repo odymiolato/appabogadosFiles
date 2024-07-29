@@ -1,51 +1,104 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
-import Modal from '../../components/Modal.vue'
-import Inputs from '../../components/Inputs.vue'
-import type { especialidades } from '../../class/all.class'
-import { abogados, direcciones } from '../../class/all.class'
-import Dropdown from '../../components/dropdown2.vue'
+import { computed, ref, onMounted } from 'vue';
+import Modal from '../../components/Modal.vue';
+import Inputs from '../../components/Inputs.vue';
+import { abogados, ciudades, direcciones, especialidades, provincias } from '../../class/all.class';
+import { addAlert } from '../../stores/alerts';
+// import Dropdown from '../../components/dropdown2.vue';
 
-const showModal = ref(false)
-const Abogado = ref<abogados>(new abogados())
-const Direccion = ref<direcciones>(new direcciones())
-// @ts-expect-error  hola
-const URL: string = import.meta.env.VITE_PATH_API
+const showModal = ref(false);
+const Abogado = ref<abogados>(new abogados());
+const Direccion = ref<direcciones>(new direcciones());
+const TypeModal = ref<number>(0);
+const ShowCities = ref<boolean>(false);
+/* @ts-ignore */
+const URL: string = import.meta.env.VITE_PATH_API;
 
-function handleAccept() {
-  console.log('Accepted')
-  showModal.value = false
+const handleAccept = () => {
+  console.log('Accepted');
+  showModal.value = false;
+};
+
+function presentModal(type: number) {
+  showModal.value = true;
+  TypeModal.value = type;
 }
 
-function handleDecline() {
-  console.log('Declined')
-  showModal.value = false
-}
+const handleDecline = () => {
+  console.log('Declined');
+  showModal.value = false;
+};
 
-function handleClose() {
-  showModal.value = false
-}
+const handleClose = () => {
+  showModal.value = false;
+};
 
-const searchTerm = ref('')
+let searchTerm = ref('');
 
-const especialidadesList = ref<especialidades[]>([])
+const especialidadesList = ref<especialidades[]>([]);
+const provinciasList = ref<provincias[]>([]);
+const ciudadesList = ref<ciudades[]>([]);
 
 async function GetEspecialidades() {
   try {
+    const response = await fetch(URL + 'especialidades', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
 
+    if (response.ok) {
+      especialidadesList.value = await response.json();
+    } else {
+      addAlert(3, 'problemas con la solicitud de las Provincias')
+    }
+  } catch (error) {
+    console.error(error);
+    addAlert(3, 'Comunicarce con los administradores.');
   }
-  catch (error) {
-    console.error(error)
-  }
-  const response = await fetch(`${URL}especialidades`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
 
-  if (response.ok)
-    especialidadesList.value = await response.json()
+}
+
+async function getProvincias() {
+  try {
+    const response = await fetch(URL + 'provincias', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+
+    if (response.ok) {
+      provinciasList.value = await response.json();
+    } else {
+      addAlert(3, 'problemas con la solicitud de las Provincias')
+    }
+  } catch (error) {
+    console.error(error);
+    addAlert(3, 'Comunicarce con los administradores.');
+  }
+}
+
+async function getCiudades() {
+  try {
+    const response = await fetch(URL + 'ciudades/provincia/' + provinciaSelected.value.codpro_pro, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+
+    if (response.ok) {
+      ciudadesList.value = await response.json();
+      console.log(ciudadesList.value);
+    } else {
+      addAlert(3, 'problemas con la solicitud de las ciudades')
+    }
+  } catch (error) {
+    console.error(error);
+    addAlert(3, 'Comunicarce con los administradores.');
+  }
 }
 
 const filteredEspecialidades = computed(() => {
@@ -56,29 +109,99 @@ const filteredEspecialidades = computed(() => {
 })
 
 function searchEspecilidades(value: any) {
-  console.log('value', value)
-  searchTerm.value = value
+  searchTerm.value = value;
 }
 
-const especialidadSelected = ref({ tipesp_tip: '', descri_tip: '' })
+const filteredProvincias = computed(() => {
+  if (searchTerm.value === '') {
+    return provinciasList.value;
+  }
+  return provinciasList.value.filter(item => String(item.codpro_pro).toLowerCase().includes(searchTerm.value.toLowerCase()) || item.nombre_pro.toLowerCase().includes(searchTerm.value.toLowerCase()));
+});
+
+function searchProvincias(value: any) {
+  searchTerm.value = value;
+}
+
+const filteredCiudades = computed(() => {
+  if (searchTerm.value === '') {
+    return ciudadesList.value;
+  }
+  return ciudadesList.value.filter(item => String(item.codciu_ciu).toLowerCase().includes(searchTerm.value.toLowerCase()) || item.nombre_ciu.toLowerCase().includes(searchTerm.value.toLowerCase()));
+});
+
+function searchCiudades(value: any) {
+  searchTerm.value = value;
+}
+
+const especialidadSelected = ref({ tipesp_tip: '', descri_tip: '' });
+const provinciaSelected = ref({ codpro_pro: '', nombre_pro: '' });
+const ciuadadSelected = ref({ codciu_ciu: '', nombre_ciu: '' });
 
 function setEspecialidad(obj: especialidades) {
-  if (especialidadSelected.value !== undefined) {
-    especialidadSelected.value.tipesp_tip = String(obj.tipesp_tip)
-    especialidadSelected.value.descri_tip = obj.descri_tip
+  if (especialidadSelected !== undefined) {
+    especialidadSelected.value.tipesp_tip = String(obj.tipesp_tip);
+    especialidadSelected.value.descri_tip = obj.descri_tip;
   }
-  handleAccept()
+  handleAccept();
+}
+
+function setProvincia(obj: provincias) {
+  if (provinciaSelected !== undefined) {
+    provinciaSelected.value.codpro_pro = String(obj.codpro_pro);
+    provinciaSelected.value.nombre_pro = obj.nombre_pro;
+    getCiudades();
+    ShowCities.value = true;
+  }
+  handleAccept();
+}
+function setCiudad(obj: ciudades) {
+  if (ciuadadSelected !== undefined) {
+    ciuadadSelected.value.codciu_ciu = String(obj.codciu_ciu);
+    ciuadadSelected.value.nombre_ciu = obj.nombre_ciu;
+  }
+  handleAccept();
 }
 
 async function saveAbogado() {
-  Abogado.value.tipo_espcialidad_abo = Number.parseInt(especialidadSelected.value.tipesp_tip)
-  Abogado.value.estado_abo = 'A'
-  console.info(Abogado.value)
+  // Asegúrate de que los valores numéricos estén correctamente parseados
+  Abogado.value.tipo_espcialidad_abo = parseInt(especialidadSelected.value.tipesp_tip);
+  Abogado.value.estado_abo = 'A';
+
+  Direccion.value.codciu_dir = parseInt(provinciaSelected.value.codpro_pro);
+  Direccion.value.codciu_dir = parseInt(ciuadadSelected.value.codciu_ciu);
+
+  const requestBody = { information: Abogado.value, direccion: Direccion.value };
+
+  console.info('Datos enviados:', requestBody);
+
+  try {
+    const response = await fetch(URL + "abogados", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody)
+    });
+
+    if (response.ok) {
+      console.info('Abogado registrado exitosamente');
+      addAlert(2, "Abogado registrado exitosamente.");
+    } else {
+      console.error('Error en la respuesta del servidor:', response.statusText);
+      addAlert(3, "Problemas al registrar el abogado.");
+    }
+  } catch (error) {
+    console.error('Error en la solicitud:', error);
+    addAlert(3, 'Comunicarce con los administradores.');
+  }
 }
 
+
 onMounted(() => {
-  GetEspecialidades()
-})
+  GetEspecialidades();
+  getProvincias();
+});
 </script>
 
 <template>
@@ -100,13 +223,6 @@ onMounted(() => {
               class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
             >
           </div>
-
-          <!-- <div>
-            <label class="text-gray-700" for="direcc_abo">Dirección</label>
-            <input id="direcc_abo" type="text"
-              class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-              v-model="Abogado.direcc_abo">
-          </div> -->
 
           <div>
             <label class="text-gray-700" for="telefo_abo">Teléfono</label>
@@ -141,18 +257,12 @@ onMounted(() => {
                 class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500" readonly
               >
 
-              <button
-                type="button" class="mt-1 p-3  text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
-                @click="showModal = true"
-              >
-                <svg
-                  class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                  />
+              <button @click="presentModal(1)" type="button"
+                class="mt-1 p-3  text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                  viewBox="0 0 20 20">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                 </svg>
                 <span class="sr-only">Search</span>
               </button>
@@ -201,39 +311,57 @@ onMounted(() => {
               >
             </div>
 
-            <div class="">
-              <label class="text-gray-700" for="tipo_espcialidad_abo">Ciudad</label>
-              <div class="flex gap-2 justify-center items-center">
-                <input
-                  id="fecnac_abo" v-model="especialidadSelected.tipesp_tip" type="text"
-                  disabled
-                  class="w-[20%] mt-2 border-gray-200  rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500" readonly
-                >
+            <div class="grid grid-cols-2 gap-6">
+              <div class="">
+                <label class="text-gray-700" for="tipo_espcialidad_abo">Provincias</label>
+                <div class="flex gap-2 justify-center items-center">
+                  <input id="fecnac_abo" type="text" disabled
+                    class="w-[20%] mt-2 border-gray-200  rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+                    v-model="provinciaSelected.codpro_pro" readonly>
 
-                <input
-                  id="fecnac_abo" v-model="especialidadSelected.descri_tip"
-                  type="text"
-                  class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500" readonly
-                >
+                  <input id="fecnac_abo" type="text"
+                    class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+                    v-model="provinciaSelected.nombre_pro" readonly disabled>
 
-                <button
-                  type="button" class="mt-1 p-3  text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
-                  @click="showModal = true"
-                >
-                  <svg
-                    class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                    />
-                  </svg>
-                  <span class="sr-only">Search</span>
-                </button>
-                <Dropdown labal-item-noselected="Codigo Postal" />
+                  <button @click="presentModal(2)" type="button"
+                    class="mt-1 p-3  text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                      viewBox="0 0 20 20">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                    </svg>
+                    <span class="sr-only">Search</span>
+                  </button>
+                  <!-- <Dropdown labalItemNoselected="Codigo Postal" /> -->
+                </div>
+              </div>
+              <div class="" v-show="ShowCities">
+                <label class="text-gray-700" for="tipo_espcialidad_abo">Ciudad</label>
+                <div class="flex gap-2 justify-center items-center">
+                  <input id="fecnac_abo" type="text" disabled
+                    class="w-[20%] mt-2 border-gray-200  rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+                    v-model="ciuadadSelected.codciu_ciu" readonly>
+
+                  <input id="fecnac_abo" type="text"
+                    class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+                    v-model="ciuadadSelected.nombre_ciu" readonly disabled>
+
+                  <button @click="presentModal(3)" type="button"
+                    class="mt-1 p-3  text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                      viewBox="0 0 20 20">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                    </svg>
+                    <span class="sr-only">Search</span>
+                  </button>
+                  <!-- <Dropdown labalItemNoselected="Codigo Postal" /> -->
+                </div>
               </div>
             </div>
+
+
+
           </div>
         </div>
 
@@ -254,42 +382,117 @@ onMounted(() => {
     @close="handleClose" @accept="handleAccept" @decline="handleDecline"
   >
     <template #body>
-      <Inputs typeinput="search" labeltext="Buscar" :Value="searchTerm" @update="searchEspecilidades" />
-      <div>
+      <div v-if="TypeModal === 1">
+        <Inputs typeinput="search" labeltext="Buscar" :Value="searchTerm" @update="searchEspecilidades" />
         <div>
-          <div class="mt-2">
-            <div class="my-6 overflow-hidden bg-white rounded-md shadow max-h-[289px] overflow-y-auto">
-              <table class="w-full text-left border-collapse">
-                <thead class="border-b top-0 sticky z-20">
-                  <tr>
-                    <th class="px-5 py-3 text-sm font-medium text-gray-100 uppercase bg-sky-800">
-                      Codigo
-                    </th>
-                    <th class="px-5 py-3 text-sm font-medium text-gray-100 uppercase bg-sky-800">
-                      Nombre
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    v-for="(value) in filteredEspecialidades" class="hover:bg-gray-200 cursor-pointer"
-                    @click="setEspecialidad(value)"
-                  >
-                    <td class="px-6 py-4 text-lg text-gray-700 border-b">
-                      {{ value.tipesp_tip }}
-                    </td>
-                    <td class="px-6 py-4 text-lg text-gray-700 border-b">
-                      {{ value.descri_tip }}
-                    </td>
-                    <!-- <input type="radio" name="especialidad" :key="value.code"
+          <div>
+            <div class="mt-2">
+              <div class="my-6 overflow-hidden bg-white rounded-md shadow max-h-[289px] overflow-y-auto">
+                <table class="w-full text-left border-collapse">
+                  <thead class="border-b top-0 sticky z-20">
+                    <tr>
+                      <th class="px-5 py-3 text-sm font-medium text-gray-100 uppercase bg-sky-800">
+                        Codigo
+                      </th>
+                      <th class="px-5 py-3 text-sm font-medium text-gray-100 uppercase bg-sky-800">
+                        Nombre
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(value) in filteredEspecialidades" class="hover:bg-gray-200 cursor-pointer"
+                      @click="setEspecialidad(value)">
+                      <td class="px-6 py-4 text-lg text-gray-700 border-b">
+                        {{ value.tipesp_tip }}
+                      </td>
+                      <td class="px-6 py-4 text-lg text-gray-700 border-b">
+                        {{ value.descri_tip }}
+                      </td>
+                      <!-- <input type="radio" name="especialidad" :key="value.code"
                       class="absolute inset-0 m-auto bg-red-700 z-10 w-full h-full rb-table"> -->
-                  </tr>
-                </tbody>
-              </table>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      <div v-if="TypeModal === 2">
+        <Inputs typeinput="search" labeltext="Buscar" :Value="searchTerm" @update="searchProvincias" />
+        <div>
+          <div>
+            <div class="mt-2">
+              <div class="my-6 overflow-hidden bg-white rounded-md shadow max-h-[289px] overflow-y-auto">
+                <table class="w-full text-left border-collapse">
+                  <thead class="border-b top-0 sticky z-20">
+                    <tr>
+                      <th class="px-5 py-3 text-sm font-medium text-gray-100 uppercase bg-sky-800">
+                        Codigo
+                      </th>
+                      <th class="px-5 py-3 text-sm font-medium text-gray-100 uppercase bg-sky-800">
+                        Nombre
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(value) in filteredProvincias" class="hover:bg-gray-200 cursor-pointer"
+                      @click="setProvincia(value)">
+                      <td class="px-6 py-4 text-lg text-gray-700 border-b">
+                        {{ value.codpro_pro }}
+                      </td>
+                      <td class="px-6 py-4 text-lg text-gray-700 border-b">
+                        {{ value.nombre_pro }}
+                      </td>
+                      <!-- <input type="radio" name="especialidad" :key="value.code"
+                      class="absolute inset-0 m-auto bg-red-700 z-10 w-full h-full rb-table"> -->
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="TypeModal === 3">
+        <Inputs typeinput="search" labeltext="Buscar" :Value="searchTerm" @update="searchCiudades" />
+        <div>
+          <div>
+            <div class="mt-2">
+              <div class="my-6 overflow-hidden bg-white rounded-md shadow max-h-[289px] overflow-y-auto">
+                <table class="w-full text-left border-collapse">
+                  <thead class="border-b top-0 sticky z-20">
+                    <tr>
+                      <th class="px-5 py-3 text-sm font-medium text-gray-100 uppercase bg-sky-800">
+                        Codigo
+                      </th>
+                      <th class="px-5 py-3 text-sm font-medium text-gray-100 uppercase bg-sky-800">
+                        Nombre
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(value) in filteredCiudades" class="hover:bg-gray-200 cursor-pointer"
+                      @click="setCiudad(value)">
+                      <td class="px-6 py-4 text-lg text-gray-700 border-b">
+                        {{ value.codciu_ciu }}
+                      </td>
+                      <td class="px-6 py-4 text-lg text-gray-700 border-b">
+                        {{ value.nombre_ciu }}
+                      </td>
+                      <!-- <input type="radio" name="especialidad" :key="value.code"
+                      class="absolute inset-0 m-auto bg-red-700 z-10 w-full h-full rb-table"> -->
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </template>
   </Modal>
 </template>

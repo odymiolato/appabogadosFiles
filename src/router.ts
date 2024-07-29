@@ -25,6 +25,8 @@ import Tribunales from './views/tribunales/Tribunales.vue'
 import TiposGastos from './views/tipos_gastos/TiposGastos.vue'
 import Paises from './views/paises/paises.vue'
 import Provincias from './views/provincias/provincias.vue'
+import Ciudades from './views/ciudades/ciudades.vue'
+import OrigenDireccion from './views/origen_direccion/OrigenDireccion.vue'
 
 import InteraccionCliente from './views/clientes/InteraccionCliente.vue'
 import Clientes from './views/clientes/Clientes.vue'
@@ -148,6 +150,16 @@ const routes: RouteRecordRaw[] = [
     path: '/provincias',
     name: 'Provincias',
     component: Provincias,
+  },
+  {
+    path: '/ciudades',
+    name: 'Ciudades',
+    component: Ciudades,
+  },
+  {
+    path: '/origendireccion',
+    name: 'Origen Direccion',
+    component: OrigenDireccion,
   },
   {
     path: '/clientes',

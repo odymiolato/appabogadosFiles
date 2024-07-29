@@ -78,6 +78,8 @@ function changeStatus(valor: boolean) {
         <MenuItem to="/blank" name="Blank" label="Blank" imagen="blank" />
         <MenuItem to="/paises" name="Paises" label="Paises" imagen="blank" />
         <MenuItem to="/provincias" name="Provincias" label="Provincias" imagen="blank" />
+        <MenuItem to="/ciudades" name="Ciudades" label="Ciudades" imagen="blank" />
+        <MenuItem to="/origendireccion" name="Origen Direccion" label="Origen Direccion" imagen="blank" />
 
         <!-- <MenuDesplegable class="transition duration-700" label="Revisar" imagen="maintenance" :is-active="IsActive"
           @change-status="changeStatus">
