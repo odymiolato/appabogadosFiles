@@ -1,75 +1,89 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import Inputs from '../../../components/Inputs.vue';
-import PaginationTable from '../../../components/tablas/PaginationTable.vue'
-import Buttons from '../../../components/Buttons.vue'
+import { computed, onMounted, ref } from 'vue'
+import { tipo_movimientos, tipos_gastos } from '../../class/all.class';
+import { addAlert } from '../../stores/alerts';
+import Modal from '../../components/Modal.vue';
+import Inputs from '../../components/Inputs.vue';
 
-const events = ref([
-  { index: 1, item: 'ejemplo' },
-  { index: 2, item: 'ejemplo 2' },
-])
-const columns = ref([
-  { key: 'city', label: 'City' },
-  { key: 'totalOrders', label: 'Total orders' },
-])
+const showModal = ref<boolean>(false);
 
-const tableData = ref([
-  { city: 'New York', totalOrders: 150 },
-  { city: 'Los Angeles', totalOrders: 200 },
-  // Agrega más datos aquí
-])
+const handleAccept = () => {
+  showModal.value = false;
+};
 
-const isModalOpen = ref(false)
-const modalTitle = ref('')
-const currentEndpoint = ref('')
+const handleDecline = () => {
+  showModal.value = false;
+};
 
-const nombre = ref('')
+const handleClose = () => {
+  showModal.value = false;
+};
 
-function openModal(type: any) {
-  if (type === 'users') {
-    modalTitle.value = 'Usuarios'
-    currentEndpoint.value = 'https://tu-api.com/users'
+const tipo = ref<tipo_movimientos>(new tipo_movimientos());
+const TiposGastosList = ref<Array<tipos_gastos>>([]);
+const TipoGatosSelected = ref<{ tipgas_tga: string, descri_tga: string }>({ tipgas_tga: '', descri_tga: '' });
+let searchTerm = ref('');
+
+/* @ts-ignore */
+const URL: string = import.meta.env.VITE_PATH_API;
+
+function ClearPage() {
+  tipo.value = new tipo_movimientos();
+  TipoGatosSelected.value = { tipgas_tga: '', descri_tga: '' };
+}
+
+function validate(): boolean {
+  if (tipo.value.descri_tmo === '') {
+    return false;
   }
-  else if (type === 'products') {
-    modalTitle.value = 'Productos'
-    currentEndpoint.value = 'https://tu-api.com/products'
+  return true;
+}
+
+async function getTipoGastos() {
+  try {
+    const response = await fetch(URL + 'tiposgastos', {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+
+    if (response.ok) {
+      TiposGastosList.value = await response.json();
+    } else {
+      addAlert(3, 'Error en la respuesta.');
+      console.error('Error en la respuesta:', response.statusText);
+    }
+
+  } catch (error) {
+    addAlert(3, 'Error en la solicitud.');
+    console.log('Error en la solicitud.');
   }
-  isModalOpen.value = true
 }
 
-function closeModal() {
-  isModalOpen.value = false
+const filteredTiposGastos = computed(() => {
+  if (searchTerm.value === '') {
+    return TiposGastosList.value;
+  }
+  return TiposGastosList.value.filter(item => item.tipgas_tga.toLowerCase().includes(searchTerm.value.toLowerCase()) || item.descri_tga.toLowerCase().includes(searchTerm.value.toLowerCase()));
+});
+
+function searchTiposGastos(value: any) {
+  searchTerm.value = value;
 }
 
-function handleSelect(item: any) {
-  nombre.value = item.name
-  // Llenar otros campos si es necesario
+function setTipoGasto(obj: tipos_gastos) {
+  if (TipoGatosSelected !== undefined) {
+    TipoGatosSelected.value.tipgas_tga = obj.tipgas_tga;
+    TipoGatosSelected.value.descri_tga = obj.descri_tga;
+  }
+  handleAccept();
 }
 
-const paginationtablecolumns = [
-  {
-    name: 'Nombre',
-    field: 'nombre',
-    hasImage: true,
-  },
-  {
-    name: 'Contacto del Cliente',
-    field: 'contacto',
+onMounted(() => {
+  getTipoGastos();
+});
 
-  },
-
-]
-
-const paginationtabledata = [
-  {
-    nombre: {
-      text: 'Maria',
-      image: '',
-    },
-    contacto: '2345789234576',
-
-  },
-]
 </script>
 
 <template>
@@ -78,63 +92,90 @@ const paginationtabledata = [
   </h3>
 
   <div class="mt-4">
-        <div class="p-6 bg-white rounded-md shadow-md">
-            <h2 class="text-lg font-semibold text-gray-700 capitalize">Configuración de Tipo de Movimientos</h2>
+    <div class="p-6 bg-white rounded-md shadow-md">
+      <div>
+        <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
+          <!-- <div>
+            <label class="text-gray-700" for="tipmov_tmo">Tipo de Movimiento</label>
+            <input id="tipmov_tmo" type="text"
+              class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
+          </div> -->
 
-            <form>
-                <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
-                    <div>
-                        <label class="text-gray-700" for="tipmov_tmo">Tipo de Movimiento</label>
-                        <input id="tipmov_tmo" type="text" class="w-full mt-2 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500">
-                    </div>
+          <div>
+            <label class="text-gray-700" for="descri_tmo">Nombre</label>
+            <input id="descri_tmo" type="text"
+              class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
+          </div>
 
-                    <div>
-                        <label class="text-gray-700" for="descri_tmo">Descripción</label>
-                        <input id="descri_tmo" type="text" class="w-full mt-2 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500">
-                    </div>
+          <div class="">
+            <label class="text-gray-700" for="tipo_espcialidad_abo">Tipo de Gasto</label>
+            <div class="flex gap-2 justify-center items-center">
+              <input id="fecnac_abo" type="text" 
+                class="w-[20%] mt-2 border-gray-200  rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+                v-model="TipoGatosSelected.tipgas_tga" readonly disabled>
 
-                    <div>
-                        <label class="text-gray-700" for="origen_tmo">Origen</label>
-                        <input id="origen_tmo" type="text" class="w-full mt-2 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500">
-                    </div>
+              <input id="fecnac_abo" type="text"
+                class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+                v-model="TipoGatosSelected.descri_tga" readonly disabled>
 
-                    <div>
-                        <label class="text-gray-700" for="estado_tmo">Estado</label>
-                        <input id="estado_tmo" type="text" class="w-full mt-2 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500">
-                    </div>
+              <button @click="showModal = true" type="button"
+                class="mt-1 p-3  text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                  viewBox="0 0 20 20">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                </svg>
+                <span class="sr-only">Search</span>
+              </button>
 
-                    <div>
-                        <label class="text-gray-700" for="tipgas_tmo">Tipo de Gasto</label>
-                        <input id="tipgas_tmo" type="text" class="w-full mt-2 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500">
-                    </div>
-
-                    <div>
-                        <label class="text-gray-700" for="usercrea">Usuario Creador</label>
-                        <input id="usercrea" type="text" class="w-full mt-2 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500">
-                    </div>
-
-                    <div>
-                        <label class="text-gray-700" for="usermod">Usuario Modificador</label>
-                        <input id="usermod" type="text" class="w-full mt-2 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500">
-                    </div>
-
-                    <div>
-                        <label class="text-gray-700" for="fechcrea">Fecha de Creación</label>
-                        <input id="fechcrea" type="date" class="w-full mt-2 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500">
-                    </div>
-
-                    <div>
-                        <label class="text-gray-700" for="fechmod">Fecha de Modificación</label>
-                        <input id="fechmod" type="date" class="w-full mt-2 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500">
-                    </div>
-                </div>
-
-                <div class="flex justify-end mt-4">
-                    <button class="px-4 py-2 text-gray-200 bg-gray-800 rounded-md hover:bg-gray-700 focus:outline-none focus:bg-gray-700">
-                        Guardar
-                    </button>
-                </div>
-            </form>
+            </div>
+          </div>
         </div>
+
+        <div class="flex justify-end mt-4">
+          <button
+            class="px-4 py-2 text-gray-200 bg-gray-800 rounded-md hover:bg-gray-700 focus:outline-none focus:bg-gray-700">
+            Guardar
+          </button>
+        </div>
+      </div>
     </div>
+  </div>
+  <Modal class="flex justify-center items-center" v-if="showModal" title="Especialidades" @close="handleClose"
+    @accept="handleAccept" @decline="handleDecline" :btnVisible="false">
+    <template #body>
+      <Inputs typeinput="search" labeltext="Buscar" :Value="searchTerm" @update="searchTiposGastos" />
+      <div>
+        <div>
+          <div class="mt-2">
+            <div class="my-6 overflow-hidden bg-white rounded-md shadow max-h-[289px] overflow-y-auto">
+              <table class="w-full text-left border-collapse">
+                <thead class="border-b top-0 sticky z-20">
+                  <tr>
+                    <th class="px-5 py-3 text-sm font-medium text-gray-100 uppercase bg-sky-800">
+                      Codigo
+                    </th>
+                    <th class="px-5 py-3 text-sm font-medium text-gray-100 uppercase bg-sky-800">
+                      Nombre
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(value) in filteredTiposGastos" class="hover:bg-gray-200 cursor-pointer"
+                    @click="setTipoGasto(value)">
+                    <td class="px-6 py-4 text-lg text-gray-700 border-b">
+                      {{ value.tipgas_tga }}
+                    </td>
+                    <td class="px-6 py-4 text-lg text-gray-700 border-b">
+                      {{ value.descri_tga }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+  </Modal>
 </template>

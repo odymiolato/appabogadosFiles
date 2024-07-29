@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import { ciudades, paises, provincias } from '../../class/all.class';
+import { ciudades, provincias } from '../../class/all.class';
 import { addAlert } from '../../stores/alerts'
 import Modal from '../../components/Modal.vue';
 import Inputs from '../../components/Inputs.vue';
