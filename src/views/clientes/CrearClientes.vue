@@ -68,6 +68,14 @@ function saveCliente() {
           class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
         >
       </div>
+      <div>
+        <label class="text-gray-700" for="numdoc">Fecha de nacimiento</label>
+        <input
+          id="fecnac_cli" v-model="cliente.fecnac_cli"
+          type="date"
+          class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+        >
+      </div>
     </div>
 
     <div class="mt-4">
