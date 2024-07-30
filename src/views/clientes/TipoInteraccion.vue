@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { tipo_interaccion } from '../../class/all.class'
-
-const emit = defineEmits(['close', 'save'])
+import apiClient from '../../axiosConfig'
 
 const tipoInteraccion = ref<tipo_interaccion>(new tipo_interaccion())
 
-function saveTipoInteraccion() {
-  console.log('Tipo de interacción a guardar:', tipoInteraccion.value)
-  emit('save', tipoInteraccion.value)
-  emit('close')
+async function saveTipoInteraccion() {
+  try {
+    await apiClient.post('/tipo-interaccion', tipoInteraccion.value)
+  }
+  catch (error) {
+    console.error('Error saving tipo_interaccion:', error)
+  }
 }
 </script>
 
