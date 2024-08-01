@@ -1,15 +1,30 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { tipo_interaccion } from '../../class/all.class'
-
-const emit = defineEmits(['close', 'save'])
+import apiClient from '../../axiosConfig'
+import { addAlert } from '../../stores/alerts';
 
 const tipoInteraccion = ref<tipo_interaccion>(new tipo_interaccion())
+/* @ts-ignore  */
+const URL:string=import.meta.env.VITE_PATH_API;  
 
-function saveTipoInteraccion() {
-  console.log('Tipo de interacción a guardar:', tipoInteraccion.value)
-  emit('save', tipoInteraccion.value)
-  emit('close')
+async function saveTipoInteraccion() {
+try {
+  const response = await fetch(URL+'tipointeraccion',{
+    method:'POST',
+    headers:{
+      "Content-Type":"application/json"
+    },
+    body:JSON.stringify(tipoInteraccion.value)
+  });
+  if(response.ok){
+    addAlert(2,"Tipo interraccion guardada");
+  }
+} catch (error) {
+  addAlert(3,JSON.stringify(error));
+  console.error(error);
+
+}
 }
 </script>
 
