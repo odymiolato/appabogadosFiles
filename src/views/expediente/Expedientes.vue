@@ -33,11 +33,6 @@ const tableData = ref([
     <div class="p-6 bg-white rounded-md shadow-md">
       <form>
         <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
-          <div>
-            <label class="text-gray-700" for="codexp_exp">Código Expediente</label>
-            <input id="codexp_exp" type="text"
-              class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
-          </div>
 
           <div>
             <label class="text-gray-700" for="codabo_exp">Código Abogado</label>
@@ -60,12 +55,6 @@ const tableData = ref([
           <div>
             <label class="text-gray-700" for="fecini_exp">Fecha de Inicio</label>
             <input id="fecini_exp" type="date"
-              class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
-          </div>
-
-          <div>
-            <label class="text-gray-700" for="estatu_exp">Estatus</label>
-            <input id="estatu_exp" type="text"
               class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
           </div>
 

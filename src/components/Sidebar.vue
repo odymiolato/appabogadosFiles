@@ -46,6 +46,7 @@ function changeStatus(valor: boolean) {
             <MenuItem to="/gestioncontraparte" name="GestionContraparte" label="Contrapartes" imagen="dashboard" />
             <MenuItem to="/especialidades" name="Especialidades" label="Especialidades" imagen="dashboard" />
             <MenuItem to="/tipomovimientos" name="TipoMovimientos" label="Tipo Movimientos" imagen="dashboard" />
+            <MenuItem to="/tipoexpediente" name="TipoExpediente" label="Tipo Expediente" imagen="dashboard" />
           </MenuDesplegable>
 
           <MenuDesplegable label="Porcesos" imagen="dashboard">

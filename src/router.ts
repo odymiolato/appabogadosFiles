@@ -31,6 +31,7 @@ import OrigenDireccion from './views/origen_direccion/OrigenDireccion.vue'
 import InteraccionCliente from './views/clientes/InteraccionCliente.vue'
 import Clientes from './views/clientes/Clientes.vue'
 import TipoInteraccion from './views/clientes/TipoInteraccion.vue'
+import TiposExpedientes from './views/tipos_expedientes/TiposExpedientes.vue'
 
 // import GestionDocumento from './views/componentes a revisar/GestionDocumento.vue'
 // import FacturacionFinanza from './views/componentes a revisar/FacturacionFinanza.vue'
@@ -176,6 +177,12 @@ const routes: RouteRecordRaw[] = [
     name: 'TipoInteraccion',
     component: TipoInteraccion,
   },
+  {
+    path: '/tipoexpediente',
+    name: 'TipoExpediente',
+    component: TiposExpedientes,
+  },
+
 ]
 
 const router = createRouter({
