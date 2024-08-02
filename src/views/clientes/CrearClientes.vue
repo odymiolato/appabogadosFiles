@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import { format, parseISO } from 'date-fns'
 import { clientes } from '../../class/all.class'
 
 const props = defineProps({
@@ -14,11 +15,19 @@ const emit = defineEmits(['save'])
 const cliente = ref<clientes>(props.cliente ? { ...props.cliente } : new clientes())
 
 watch(() => props.cliente, (newCliente) => {
-  cliente.value = newCliente ? { ...newCliente } : new clientes()
+  cliente.value = newCliente
+    ? {
+        ...newCliente,
+        fecnac_cli: newCliente.fecnac_cli ? format(parseISO(newCliente.fecnac_cli), 'yyyy-MM-dd') : '',
+      }
+    : new clientes()
 })
 
 function saveCliente() {
-  console.log('Cliente a guardar:', cliente.value)
+  // Convierte la fecha al formato esperado por el servidor
+  if (cliente.value.fecnac_cli)
+    cliente.value.fecnac_cli = format(new Date(cliente.value.fecnac_cli), 'yyyy-MM-dd')
+
   emit('save', cliente.value)
 }
 </script>
@@ -69,7 +78,7 @@ function saveCliente() {
         >
       </div>
       <div>
-        <label class="text-gray-700" for="numdoc">Fecha de nacimiento</label>
+        <label class="text-gray-700" for="fecnac_cli">Fecha de nacimiento</label>
         <input
           id="fecnac_cli" v-model="cliente.fecnac_cli"
           type="date"

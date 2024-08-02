@@ -57,16 +57,13 @@ function changeStatus(valor: boolean) {
         </MenuDesplegable>
 
         <MenuDesplegable class="transition duration-500" label="Clientes" imagen="dashboard">
-          <MenuItem to="/clientes" name="Clientes" label="Clientes" imagen="dashboard" />
-          <MenuItem to="/interaccionescliente" name="InteraccionesCliente" label="Interaccion Clientes" imagen="dashboard" />
-          <MenuItem to="/tipointeraccion" name="TipoInteraccion" label="Tipo de Interacciones" imagen="dashboard" />
-
           <MenuDesplegable label="Mantenimientos" imagen="dashboard">
-            hola
+            <MenuItem to="/clientes" name="Clientes" label="Clientes" imagen="dashboard" />
+            <MenuItem to="/tipointeraccion" name="TipoInteraccion" label="Tipo de Interacciones" imagen="dashboard" />
           </MenuDesplegable>
 
           <MenuDesplegable label="Gestion de Clientes" imagen="dashboard">
-            hola
+            <MenuItem to="/interaccionescliente" name="InteraccionesCliente" label="Interaccion Clientes" imagen="dashboard" />
           </MenuDesplegable>
         </MenuDesplegable>
         <MenuItem to="/ui-elements" name="UIElements" label="Elements" imagen="elements" />
