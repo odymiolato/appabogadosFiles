@@ -1,27 +1,273 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import Buttons from '../../../components/Buttons.vue'
-import Inputs from '../../../components/Inputs.vue'
-import Dropdown from '../../../components/dropdown.vue'
-import SimpleTable from '../../../components/tablas/SimpleTable.vue'
+import { computed, ref, onMounted } from 'vue'
+import Inputs from '../../components/Inputs.vue'
+import Modal from '../../components/Modal.vue';
+import { useTableData } from '../../composables/useTableData'
+import { addAlert } from '../../stores/alerts';
+import { abogados, clientes, contrapartes, tipos_expedientes, tribunales } from '../../class/all.class';
 
-const events = ref([
-  { index: 1, item: 'ejemplo' },
-  { index: 2, item: 'ejemplo 2' },
-])
-const columns = ref([
-  { key: 'nombre', label: 'Nombre' },
-  { key: 'tipo', label: 'Tipo' },
-  { key: 'estado', label: 'Estado' },
-  { key: 'fechainicio', label: 'Fecha de Inicio' },
-  { key: 'fechacierre', label: 'Fecha de Cierre' },
-])
+const tap = ref<number>(1)
+const showModal = ref<boolean>(false)
+const TipoExpedientes = ref<tipos_expedientes[]>([])
+const Abogados = ref<abogados[]>([])
+const Clientes = ref<clientes[]>([])
+const Contrapartes = ref<contrapartes[]>([])
+const Tribunales = ref<tribunales[]>([])
+/* @ts-ignore */
+const URL: string = import.meta.env.VITE_PATH_API
+const TipoExpedienteSelected = ref({ tipexp_tip: '', descri_tip: '' })
+const AbogadoSelected = ref({ codabo_abo: '', nombre_abo: '' })
+const ClienteSelected = ref({ codcli_cli: '', nombre_cli: '' })
+const ContraparteSelected = ref({ codcon_con: '', nombre_con: '' })
+const TribunalSelected = ref({ codtri_tri: '', descri_tri: '' })
+const TypeModal = ref<number>(0)
+let searchTermTipoExpediente = ref('')
+let searchTermAbogado = ref('')
+let searchTermCliente = ref('')
+let searchTermContraparte = ref('')
+let searchTermTribunal = ref('')
 
-const tableData = ref([
-  { city: 'New York', totalOrders: 150 },
-  { city: 'Los Angeles', totalOrders: 200 },
-  // Agrega más datos aquí
-])
+const handleAccept = () => {
+  showModal.value = false
+}
+
+const handleDecline = () => {
+  showModal.value = false
+}
+
+const handleClose = () => {
+  showModal.value = false
+}
+
+const {
+  simpleTableData,
+} = useTableData()
+
+const filteredTipoExpediente = computed(() => {
+  if (searchTermTipoExpediente.value === '') {
+    return TipoExpedientes.value
+  }
+  return TipoExpedientes.value.filter(item => String(item.tipexp_tip).toLowerCase().includes(searchTermTipoExpediente.value.toLowerCase()) || item.descri_tip.toLowerCase().includes(searchTermTipoExpediente.value.toLowerCase()))
+})
+
+const filteredAbogado = computed(() => {
+  if (searchTermAbogado.value === '') {
+    return Abogados.value
+  }
+  return Abogados.value.filter(item => String(item.codabo_abo).toLowerCase().includes(searchTermAbogado.value.toLowerCase()) || item.nombre_abo.toLowerCase().includes(searchTermAbogado.value.toLowerCase()))
+})
+
+const filteredCliente = computed(() => {
+  if (searchTermCliente.value === '') {
+    return Clientes.value
+  }
+  return Clientes.value.filter(item => String(item.codcli_cli).toLowerCase().includes(searchTermCliente.value.toLowerCase()) || `${item.nombre_cli} ${item.apellido_cli}`.toLowerCase().includes(searchTermCliente.value.toLowerCase()))
+})
+
+const filteredContraparte = computed(() => {
+  if (searchTermContraparte.value === '') {
+    return Contrapartes.value
+  }
+  return Contrapartes.value.filter(item => String(item.codcon_con).toLowerCase().includes(searchTermContraparte.value.toLowerCase()) || item.nombre_con.toLowerCase().includes(searchTermContraparte.value.toLowerCase()))
+})
+
+const filteredTribunal = computed(() => {
+  if (searchTermTribunal.value === '') {
+    return Tribunales.value
+  }
+  return Tribunales.value.filter(item => String(item.codtri_tri).toLowerCase().includes(searchTermTribunal.value.toLowerCase()) || item.descri_tri.toLowerCase().includes(searchTermTribunal.value.toLowerCase()))
+})
+
+function ChageTaps(value: number) {
+  tap.value = value
+}
+
+function ClearPage() {
+  // Provincia.value = new provincias();
+  // paisSelected.value = { codpais_pais: '', nombre_pais: '' }
+}
+
+function validate(): boolean {
+  // if (Provincia.value.nombre_pro === '') {
+  //   return false;
+  // }
+  return true
+}
+
+async function getTipoExpedientes() {
+  try {
+    const response = await fetch(URL + 'tiposexpedientes', {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+
+    if (response.ok) {
+      TipoExpedientes.value = await response.json()
+    } else {
+      addAlert(3, 'Error en la respuesta.');
+      console.error('Error en la respuesta:', response.statusText)
+    }
+
+  } catch (error) {
+    addAlert(3, JSON.stringify(error))
+    console.log('Error en la solicitud.')
+  }
+}
+async function getAbogados() {
+  try {
+    const response = await fetch(URL + 'abogados', {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+
+    if (response.ok) {
+      Abogados.value = await response.json()
+    } else {
+      addAlert(3, 'Error en la respuesta.');
+      console.error('Error en la respuesta:', response.statusText)
+    }
+
+  } catch (error) {
+    addAlert(3, JSON.stringify(error))
+    console.log('Error en la solicitud.')
+  }
+}
+async function getClientes() {
+  try {
+    const response = await fetch(URL + 'clientes', {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+
+    if (response.ok) {
+      Clientes.value = await response.json()
+    } else {
+      addAlert(3, 'Error en la respuesta.');
+      console.error('Error en la respuesta:', response.statusText)
+    }
+
+  } catch (error) {
+    addAlert(3, JSON.stringify(error))
+    console.log('Error en la solicitud.')
+  }
+}
+async function getContrapartes() {
+  try {
+    const response = await fetch(URL + 'contrapartes', {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+
+    if (response.ok) {
+      Contrapartes.value = await response.json()
+    } else {
+      addAlert(3, 'Error en la respuesta.');
+      console.error('Error en la respuesta:', response.statusText)
+    }
+
+  } catch (error) {
+    addAlert(3, JSON.stringify(error))
+    console.log('Error en la solicitud.')
+  }
+}
+async function getTribunales() {
+  try {
+    const response = await fetch(URL + 'tribunales', {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+
+    if (response.ok) {
+      Tribunales.value = await response.json()
+    } else {
+      addAlert(3, 'Error en la respuesta.');
+      console.error('Error en la respuesta:', response.statusText)
+    }
+
+  } catch (error) {
+    addAlert(3, JSON.stringify(error))
+    console.log('Error en la solicitud.')
+  }
+}
+
+function searchTipoExpediente(value: any) {
+  searchTermTipoExpediente.value = value;
+}
+function searchAbogado(value: any) {
+  searchTermAbogado.value = value;
+}
+function searchCliente(value: any) {
+  searchTermCliente.value = value;
+}
+function searchContraparte(value: any) {
+  searchTermContraparte.value = value;
+}
+function searchTribunal(value: any) {
+  searchTermTribunal.value = value;
+}
+
+function setTipoExpediente(obj: tipos_expedientes) {
+  if (TipoExpedienteSelected !== undefined) {
+    TipoExpedienteSelected.value.tipexp_tip = String(obj.tipexp_tip)
+    TipoExpedienteSelected.value.descri_tip = obj.descri_tip
+  }
+  handleAccept();
+}
+
+function setAbogado(obj: abogados) {
+  if (AbogadoSelected !== undefined) {
+    AbogadoSelected.value.codabo_abo = String(obj.codabo_abo)
+    AbogadoSelected.value.nombre_abo = obj.nombre_abo
+  }
+  handleAccept();
+}
+
+function setCliente(obj: clientes) {
+  if (ClienteSelected !== undefined) {
+    ClienteSelected.value.codcli_cli = String(obj.codcli_cli)
+    ClienteSelected.value.nombre_cli = `${obj.nombre_cli} ${obj.apellido_cli}`
+  }
+  handleAccept();
+}
+
+function setContraparte(obj: contrapartes) {
+  if (ContraparteSelected !== undefined) {
+    ContraparteSelected.value.codcon_con = String(obj.codcon_con);
+    ContraparteSelected.value.nombre_con = obj.nombre_con;
+  }
+  handleAccept();
+}
+
+function setTribunal(obj: tribunales) {
+  if (TribunalSelected !== undefined) {
+    TribunalSelected.value.codtri_tri = String(obj.codtri_tri);
+    TribunalSelected.value.descri_tri = obj.descri_tri;
+  }
+  handleAccept();
+}
+
+function presentModal(type: number) {
+  showModal.value = true
+  TypeModal.value = type
+}
+
+onMounted(() => {
+  getTipoExpedientes()
+  getAbogados()
+  getClientes()
+  getContrapartes()
+  getTribunales()
+})
 </script>
 
 <template>
@@ -31,43 +277,47 @@ const tableData = ref([
 
   <div class="mt-4">
     <div class="p-6 bg-white rounded-md shadow-md">
-      <form>
-        <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
-
+      <div>
+        <div class="flex flex-col gap-6 mt-4 sm:grid-cols-2">
           <div>
-            <label class="text-gray-700" for="codabo_exp">Código Abogado</label>
-            <input id="codabo_exp" type="text"
-              class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
+            <div class="">
+              <label class="text-gray-700" for="motivo_exp">Motivo</label>
+              <input id="motivo_exp" type="text"
+                class="w-full h-[5em] mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
+            </div>
           </div>
+          <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
+            <!-- esto son los tipos de expediente -->
+            <div class="">
+              <label class="text-gray-700" for="tipo_espcialidad_abo">Tipo de Expediente</label>
+              <div class="flex gap-2 justify-center items-center">
+                <input id="fecnac_abo" type="text" disabled
+                  class="w-[20%] mt-2 border-gray-200  rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+                  v-model="TipoExpedienteSelected.tipexp_tip" readonly>
 
-          <div>
-            <label class="text-gray-700" for="motivo_exp">Motivo</label>
-            <input id="motivo_exp" type="text"
-              class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
-          </div>
+                <input id="fecnac_abo" type="text"
+                  class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+                  v-model="TipoExpedienteSelected.descri_tip" readonly>
 
-          <div>
-            <label class="text-gray-700" for="codcli_exp">Código Cliente</label>
-            <input id="codcli_exp" type="text"
-              class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
-          </div>
+                <button @click="presentModal(1)" type="button"
+                  class="mt-1 p-3  text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                  <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                  </svg>
+                  <span class="sr-only">Search</span>
+                </button>
 
-          <div>
-            <label class="text-gray-700" for="fecini_exp">Fecha de Inicio</label>
-            <input id="fecini_exp" type="date"
-              class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
-          </div>
+              </div>
+            </div>
+            <!-- end -->
 
-          <div>
-            <label class="text-gray-700" for="tipexp_exp">Tipo de Expediente</label>
-            <input id="tipexp_exp" type="text"
-              class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
-          </div>
-
-          <div>
-            <label class="text-gray-700" for="codcon_exp">Código de Contraparte</label>
-            <input id="codcon_exp" type="text"
-              class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
+            <div>
+              <label class="text-gray-700" for="fecini_exp">Fecha de Inicio</label>
+              <input id="fecini_exp" type="date"
+                class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
+            </div>
           </div>
         </div>
 
@@ -77,31 +327,453 @@ const tableData = ref([
             Guardar
           </button>
         </div>
-      </form>
+      </div>
+    </div>
+    <div class="mt-8" />
+    <div class="flex flex-col mt-8 ">
+      <div class="md:flex">
+        <ul
+          class="flex-column space-y space-y-4 text-sm font-medium text-gray-500 dark:text-gray-400 md:me-4 mb-4 md:mb-0">
+          <li>
+            <div
+              :class="`inline-flex justify-center items-center px-4 py-3 rounded-lg active w-full select-none cursor-pointer ${(tap === 1) ? 'text-white bg-sky-700 ' : 'hover:text-gray-900 bg-white hover:bg-gray-100 w-full text-gray-700'}`"
+              @click="ChageTaps(1)">
+              Abogados
+            </div>
+          </li>
+          <li>
+            <div
+              :class="`inline-flex justify-center items-center px-4 py-3 rounded-lg active w-full select-none cursor-pointer ${(tap === 2) ? 'text-white bg-sky-700 ' : 'hover:text-gray-900 bg-white hover:bg-gray-100 w-full text-gray-700'}`"
+              @click="ChageTaps(2)">
+              Clientes
+            </div>
+          </li>
+          <li>
+            <div div
+              :class="`inline-flex justify-center items-center px-4 py-3 rounded-lg active w-full select-none cursor-pointer ${(tap === 3) ? 'text-white bg-sky-700 ' : 'hover:text-gray-900 bg-white hover:bg-gray-100 w-full text-gray-700'}`"
+              @click="ChageTaps(3)">
+              Contrapartes
+            </div>
+          </li>
+          <li>
+            <div div
+              :class="`inline-flex justify-center items-center px-4 py-3 rounded-lg active w-full select-none cursor-pointer ${(tap === 4) ? 'text-white bg-sky-700 ' : 'hover:text-gray-900 bg-white hover:bg-gray-100 w-full text-gray-700'}`"
+              @click="ChageTaps(4)">
+              Tribunales
+            </div>
+          </li>
+        </ul>
+        <div
+          :class="`p-6 bg-white text-medium text-gray-500 rounded-lg w-full h-[27em] max-h-[27em] ${+(tap === 1) ? '' : 'hidden'}`">
+          <!-- esto son los tipos de expediente -->
+          <div class="">
+            <label class="text-gray-700" for="tipo_espcialidad_abo">Abogado</label>
+            <div class="flex gap-2 justify-center items-center">
+              <input id="fecnac_abo" type="text" disabled
+                class="w-[20%] mt-2 border-gray-200  rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+                v-model="AbogadoSelected.codabo_abo" readonly>
+
+              <input id="fecnac_abo" type="text"
+                class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+                v-model="AbogadoSelected.nombre_abo" readonly>
+
+              <button @click="presentModal(2)" type="button"
+                class="mt-1 p-3  text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                  viewBox="0 0 20 20">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                </svg>
+                <span class="sr-only">Search</span>
+              </button>
+
+            </div>
+          </div>
+          <!-- end -->
+          <div class="my-6 flex w-full flex-col">
+            <div class="">
+              <div class="rounded-md shadow bg-white h-[17.9em] max-h-[17.9em] overflow-auto">
+                <table class="w-full text-left border-collapse">
+                  <thead class="sticky top-0">
+                    <tr>
+                      <th
+                        class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
+                        Codigo
+                      </th>
+                      <th
+                        class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
+                        nombre
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(i, index) in simpleTableData" :key="index" class="hover:bg-gray-200">
+                      <td class="px-6 py-4 text-lg text-gray-700 border-b">
+                        {{ i.city }}
+                      </td>
+                      <td class="px-6 py-4 text-gray-500 border-b">
+                        {{ i.totalOrders }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="tap-2"
+          :class="`p-6 bg-white text-medium text-gray-500 rounded-lg w-full h-[27em] max-h-[27em] ${+(tap === 2) ? '' : 'hidden'}`">
+          <!-- esto son los tipos de expediente -->
+          <div class="">
+            <label class="text-gray-700" for="tipo_espcialidad_abo">Cliente</label>
+            <div class="flex gap-2 justify-center items-center">
+              <input id="fecnac_abo" type="text" disabled
+                class="w-[20%] mt-2 border-gray-200  rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+                v-model="ClienteSelected.codcli_cli" readonly>
+
+              <input id="fecnac_abo" type="text"
+                class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+                v-model="ClienteSelected.nombre_cli" readonly>
+
+              <button @click="presentModal(3)" type="button"
+                class="mt-1 p-3  text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                  viewBox="0 0 20 20">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                </svg>
+                <span class="sr-only">Search</span>
+              </button>
+
+            </div>
+          </div>
+          <!-- end -->
+          <div class="my-6 flex w-full flex-col">
+            <div class="">
+              <div class="rounded-md shadow bg-white h-[17.9em] max-h-[17.9em] overflow-auto">
+                <table class="w-full text-left border-collapse">
+                  <thead class="sticky top-0">
+                    <tr>
+                      <th
+                        class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
+                        Codigo
+                      </th>
+                      <th
+                        class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
+                        Nombre
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(i, index) in simpleTableData" :key="index" class="hover:bg-gray-200">
+                      <td class="px-6 py-4 text-lg text-gray-700 border-b">
+                        {{ i.city }}
+                      </td>
+                      <td class="px-6 py-4 text-gray-500 border-b">
+                        {{ i.totalOrders }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="tap-2"
+          :class="`p-6 bg-white text-medium text-gray-500 rounded-lg w-full  ${+(tap === 3) ? '' : 'hidden'}`">
+          <!-- esto son los tipos de expediente -->
+          <div class="">
+            <label class="text-gray-700" for="tipo_espcialidad_abo">Contraparte</label>
+            <div class="flex gap-2 justify-center items-center">
+              <input id="fecnac_abo" type="text" disabled
+                class="w-[20%] mt-2 border-gray-200  rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+                v-model="ContraparteSelected.codcon_con" readonly>
+
+              <input id="fecnac_abo" type="text"
+                class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+                v-model="ContraparteSelected.nombre_con" readonly>
+
+              <button @click="presentModal(4)" type="button"
+                class="mt-1 p-3  text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                  viewBox="0 0 20 20">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                </svg>
+                <span class="sr-only">Search</span>
+              </button>
+
+            </div>
+          </div>
+          <!-- end -->
+          <div class="my-6 flex w-full flex-col">
+            <div class="">
+              <div class="rounded-md shadow bg-white h-[17.9em] max-h-[17.9em] overflow-auto">
+                <table class="w-full text-left border-collapse">
+                  <thead class="sticky top-0">
+                    <tr>
+                      <th
+                        class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
+                        Codigo
+                      </th>
+                      <th
+                        class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
+                        Nombre
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(i, index) in simpleTableData" :key="index" class="hover:bg-gray-200">
+                      <td class="px-6 py-4 text-lg text-gray-700 border-b">
+                        {{ i.city }}
+                      </td>
+                      <td class="px-6 py-4 text-gray-500 border-b">
+                        {{ i.totalOrders }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="tap-2"
+          :class="`p-6 bg-white text-medium text-gray-500 rounded-lg w-full h-[27em] max-h-[27em] ${+(tap === 4) ? '' : 'hidden'}`">
+          <!-- esto son los tipos de expediente -->
+          <div class="">
+            <label class="text-gray-700" for="tipo_espcialidad_abo">Tribunal</label>
+            <div class="flex gap-2 justify-center items-center">
+              <input id="fecnac_abo" type="text" disabled
+                class="w-[20%] mt-2 border-gray-200  rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+                v-model="TribunalSelected.codtri_tri" readonly>
+
+              <input id="fecnac_abo" type="text"
+                class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+                v-model="TribunalSelected.descri_tri" readonly>
+
+              <button @click="presentModal(5)" type="button"
+                class="mt-1 p-3  text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                  viewBox="0 0 20 20">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                </svg>
+                <span class="sr-only">Search</span>
+              </button>
+
+            </div>
+          </div>
+          <!-- end -->
+          <div class="my-6 flex w-full flex-col">
+            <div class="">
+              <div class="rounded-md shadow bg-white h-[17.9em] max-h-[17.9em] overflow-auto">
+                <table class="w-full text-left border-collapse">
+                  <thead class="sticky top-0">
+                    <tr>
+                      <th
+                        class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
+                        Codigo
+                      </th>
+                      <th
+                        class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
+                        Nombre
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(i, index) in simpleTableData" :key="index" class="hover:bg-gray-200">
+                      <td class="px-6 py-4 text-lg text-gray-700 border-b">
+                        {{ i.city }}
+                      </td>
+                      <td class="px-6 py-4 text-gray-500 border-b">
+                        {{ i.totalOrders }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- <div>
-    <h3 class="text-3xl font-medium text-gray-700">
-      Expedientes
-    </h3>
-    <Buttons -buttonstext="Crear" />
-    <Buttons -buttonstext="Actualizar" />
-    <Buttons -buttonstext="Cerrar" />
-
-    <Inputs typeinput="text" labeltext="nombre" />
-
-    <Dropdown labeltext="dropdown 1" :event="events" labal-item-noselected="Tipo" />
-    <Dropdown2 labeltext="dropdown 2" :items="events" labal-item-noselected="Estado" />
-    <div class="flex flex-col gap-4" label="estado">
-      <Inputs typeinput="Radio" labeltext="Pendiente" />
-      <Inputs typeinput="Radio" labeltext="Proceso" />
-      <Inputs typeinput="Radio" labeltext="Completado" />
-    </div>
-
-    <Buttons -buttonstext="Guardar" />
-    <Buttons -buttonstext="Cancelar" />
-
-    <SimpleTable :tabledata="tableData" :columns="columns" />
-  </div> -->
+  <Modal class="flex justify-center items-center" v-if="showModal" title="Especialidades" @close="handleClose"
+    @accept="handleAccept" @decline="handleDecline" :btnVisible="false">
+    <template #body>
+      <div v-if="TypeModal === 1">
+        <Inputs typeinput="search" labeltext="Buscar" :Value="searchTermTipoExpediente"
+          @update="searchTipoExpediente" />
+        <div>
+          <div>
+            <div class="mt-2">
+              <div class="my-6 overflow-hidden bg-white rounded-md shadow max-h-[289px] overflow-y-auto">
+                <table class="w-full text-left border-collapse">
+                  <thead class="border-b top-0 sticky z-20">
+                    <tr>
+                      <th class="px-5 py-3 text-sm font-medium text-gray-100 uppercase bg-sky-800">
+                        Codigo
+                      </th>
+                      <th class="px-5 py-3 text-sm font-medium text-gray-100 uppercase bg-sky-800">
+                        Nombre
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(value) in filteredTipoExpediente" class="hover:bg-gray-200 cursor-pointer"
+                      @click="setTipoExpediente(value)">
+                      <td class="px-6 py-4 text-lg text-gray-700 border-b">
+                        {{ value.tipexp_tip }}
+                      </td>
+                      <td class="px-6 py-4 text-lg text-gray-700 border-b">
+                        {{ value.descri_tip }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-if="TypeModal === 2">
+        <Inputs typeinput="search" labeltext="Buscar" :Value="searchTermAbogado" @update="searchAbogado" />
+        <div>
+          <div>
+            <div class="mt-2">
+              <div class="my-6 overflow-hidden bg-white rounded-md shadow max-h-[289px] overflow-y-auto">
+                <table class="w-full text-left border-collapse">
+                  <thead class="border-b top-0 sticky z-20">
+                    <tr>
+                      <th class="px-5 py-3 text-sm font-medium text-gray-100 uppercase bg-sky-800">
+                        Codigo
+                      </th>
+                      <th class="px-5 py-3 text-sm font-medium text-gray-100 uppercase bg-sky-800">
+                        Nombre
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(value) in filteredAbogado" class="hover:bg-gray-200 cursor-pointer"
+                      @click="setAbogado(value)">
+                      <td class="px-6 py-4 text-lg text-gray-700 border-b">
+                        {{ value.codabo_abo }}
+                      </td>
+                      <td class="px-6 py-4 text-lg text-gray-700 border-b">
+                        {{ value.nombre_abo }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-if="TypeModal === 3">
+        <Inputs typeinput="search" labeltext="Buscar" :Value="searchTermCliente" @update="searchCliente" />
+        <div>
+          <div>
+            <div class="mt-2">
+              <div class="my-6 overflow-hidden bg-white rounded-md shadow max-h-[289px] overflow-y-auto">
+                <table class="w-full text-left border-collapse">
+                  <thead class="border-b top-0 sticky z-20">
+                    <tr>
+                      <th class="px-5 py-3 text-sm font-medium text-gray-100 uppercase bg-sky-800">
+                        Codigo
+                      </th>
+                      <th class="px-5 py-3 text-sm font-medium text-gray-100 uppercase bg-sky-800">
+                        Nombre
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(value) in filteredCliente" class="hover:bg-gray-200 cursor-pointer"
+                      @click="setCliente(value)">
+                      <td class="px-6 py-4 text-lg text-gray-700 border-b">
+                        {{ value.codcli_cli }}
+                      </td>
+                      <td class="px-6 py-4 text-lg text-gray-700 border-b">
+                        {{ `${value.nombre_cli} ${value.apellido_cli} ` }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-if="TypeModal === 4">
+        <Inputs typeinput="search" labeltext="Buscar" :Value="searchTermContraparte" @update="searchContraparte" />
+        <div>
+          <div>
+            <div class="mt-2">
+              <div class="my-6 overflow-hidden bg-white rounded-md shadow max-h-[289px] overflow-y-auto">
+                <table class="w-full text-left border-collapse">
+                  <thead class="border-b top-0 sticky z-20">
+                    <tr>
+                      <th class="px-5 py-3 text-sm font-medium text-gray-100 uppercase bg-sky-800">
+                        Codigo
+                      </th>
+                      <th class="px-5 py-3 text-sm font-medium text-gray-100 uppercase bg-sky-800">
+                        Nombre
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(value) in filteredContraparte" class="hover:bg-gray-200 cursor-pointer"
+                      @click="setContraparte(value)">
+                      <td class="px-6 py-4 text-lg text-gray-700 border-b">
+                        {{ value.codcon_con }}
+                      </td>
+                      <td class="px-6 py-4 text-lg text-gray-700 border-b">
+                        {{ value.nombre_con }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-if="TypeModal === 5">
+        <Inputs typeinput="search" labeltext="Buscar" :Value="searchTermTribunal" @update="searchTribunal" />
+        <div>
+          <div>
+            <div class="mt-2">
+              <div class="my-6 overflow-hidden bg-white rounded-md shadow max-h-[289px] overflow-y-auto">
+                <table class="w-full text-left border-collapse">
+                  <thead class="border-b top-0 sticky z-20">
+                    <tr>
+                      <th class="px-5 py-3 text-sm font-medium text-gray-100 uppercase bg-sky-800">
+                        Codigo
+                      </th>
+                      <th class="px-5 py-3 text-sm font-medium text-gray-100 uppercase bg-sky-800">
+                        Nombre
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(value) in filteredTribunal" class="hover:bg-gray-200 cursor-pointer"
+                      @click="setTribunal(value)">
+                      <td class="px-6 py-4 text-lg text-gray-700 border-b">
+                        {{ value.codtri_tri }}
+                      </td>
+                      <td class="px-6 py-4 text-lg text-gray-700 border-b">
+                        {{ value.descri_tri }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+  </Modal>
 </template>
