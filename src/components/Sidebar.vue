@@ -27,8 +27,7 @@ function changeStatus(valor: boolean) {
 
     <!-- <div :class="isOpen ? 'translate-x-0 ease-out w-64' : '-translate-x-full ease-in w-16'" -->
     <div
-      class="inset-y-0 left-0 z-30  transition-transform relative overflow-hidden w-max bg-sky-900 lg:translate-x-0 lg:static lg:inset-0"
-    >
+      class="inset-y-0 left-0 z-30  transition-transform relative overflow-hidden w-max bg-sky-900 lg:translate-x-0 lg:static lg:inset-0">
       <div class="flex items-center justify-center mt-8">
         <div class="flex items-center">
           <img src="/public/img/cumplimiento.png" alt="" class="w-20 ml-[-1]">
@@ -58,7 +57,8 @@ function changeStatus(valor: boolean) {
 
         <MenuDesplegable class="transition duration-500" label="Clientes" imagen="dashboard">
           <MenuItem to="/clientes" name="Clientes" label="Clientes" imagen="dashboard" />
-          <MenuItem to="/interaccionescliente" name="InteraccionesCliente" label="Interaccion Clientes" imagen="dashboard" />
+          <MenuItem to="/interaccionescliente" name="InteraccionesCliente" label="Interaccion Clientes"
+            imagen="dashboard" />
           <MenuItem to="/tipointeraccion" name="TipoInteraccion" label="Tipo de Interacciones" imagen="dashboard" />
 
           <MenuDesplegable label="Mantenimientos" imagen="dashboard">
@@ -69,18 +69,23 @@ function changeStatus(valor: boolean) {
             hola
           </MenuDesplegable>
         </MenuDesplegable>
-        <MenuItem to="/ui-elements" name="UIElements" label="Elements" imagen="elements" />
+        <!-- <MenuItem to="/ui-elements" name="UIElements" label="Elements" imagen="elements" /> -->
         <MenuItem to="/eventos" name="Eventos" label="Eventos" imagen="elements" />
-        <MenuItem to="/tables" name="Tables" label="Tables" imagen="tables" />
+        <!-- <MenuItem to="/tables" name="Tables" label="Tables" imagen="tables" />
         <MenuItem to="/forms" name="Forms" label="Forms" imagen="forms" />
         <MenuItem to="/cards" name="Cards" label="Cards" imagen="cards" />
-        <MenuItem to="/modal" name="Modal" label="Modal" imagen="modal" />
-        <MenuItem to="/blank" name="Blank" label="Blank" imagen="blank" />
-        <MenuItem to="/paises" name="Paises" label="Paises" imagen="blank" />
-        <MenuItem to="/provincias" name="Provincias" label="Provincias" imagen="blank" />
-        <MenuItem to="/ciudades" name="Ciudades" label="Ciudades" imagen="blank" />
-        <MenuItem to="/origendireccion" name="Origen Direccion" label="Origen Direccion" imagen="blank" />
+        <MenuItem to="/modal" name="Modal" label="Modal" imagen="modal" /> -->
+        <!-- <MenuItem to="/blank" name="Blank" label="Blank" imagen="blank" /> -->
 
+
+        <MenuDesplegable label="Configuracion" imagen="dashboard">
+          <MenuDesplegable label="Direccion" imagen="dashboard">
+            <MenuItem to="/paises" name="Paises" label="Paises" imagen="blank" />
+            <MenuItem to="/provincias" name="Provincias" label="Provincias" imagen="blank" />
+            <MenuItem to="/ciudades" name="Ciudades" label="Ciudades" imagen="blank" />
+            <MenuItem to="/origendireccion" name="Origen Direccion" label="Origen Direccion" imagen="blank" />
+          </MenuDesplegable>
+        </MenuDesplegable>
         <!-- <MenuDesplegable class="transition duration-700" label="Revisar" imagen="maintenance" :is-active="IsActive"
           @change-status="changeStatus">
           <MenuItem to="/gestioncliente" name="GestionCliente" label="Gestion Clientes" imagen="dashboard"
