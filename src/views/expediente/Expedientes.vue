@@ -566,12 +566,12 @@ onMounted(() => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(i, index) in simpleTableData" :key="index" class="hover:bg-gray-200">
+                    <tr v-for="(value, index) in ClientesList" :key="index" class="hover:bg-gray-200">
                       <td class="px-6 py-4 text-lg text-gray-700 border-b">
-                        {{ i.city }}
+                        {{ value.id }}
                       </td>
                       <td class="px-6 py-4 text-gray-500 border-b">
-                        {{ i.totalOrders }}
+                        {{ value.name }}
                       </td>
                     </tr>
                   </tbody>
@@ -643,12 +643,12 @@ onMounted(() => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(i, index) in simpleTableData" :key="index" class="hover:bg-gray-200">
+                    <tr v-for="(value, index) in ContrapartesList" :key="index" class="hover:bg-gray-200">
                       <td class="px-6 py-4 text-lg text-gray-700 border-b">
-                        {{ i.city }}
+                        {{ value.id }}
                       </td>
                       <td class="px-6 py-4 text-gray-500 border-b">
-                        {{ i.totalOrders }}
+                        {{ value.name }}
                       </td>
                     </tr>
                   </tbody>
@@ -681,7 +681,7 @@ onMounted(() => {
                 <span class="sr-only">Search</span>
               </button>
 
-              <button
+              <button @click="addTribunal(parseInt(TribunalSelected.codtri_tri), TribunalSelected.descri_tri)"
                 class="flex mt-1 p-3  text-sm font-medium text-white bg-green-500 rounded-lg border hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor" stroke-width="2">
@@ -719,12 +719,12 @@ onMounted(() => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(i, index) in simpleTableData" :key="index" class="hover:bg-gray-200">
+                    <tr v-for="(value, index) in TribunalesList" :key="index" class="hover:bg-gray-200">
                       <td class="px-6 py-4 text-lg text-gray-700 border-b">
-                        {{ i.city }}
+                        {{ value.id }}
                       </td>
                       <td class="px-6 py-4 text-gray-500 border-b">
-                        {{ i.totalOrders }}
+                        {{ value.name }}
                       </td>
                     </tr>
                   </tbody>
