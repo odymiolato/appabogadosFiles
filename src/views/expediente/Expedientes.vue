@@ -13,6 +13,10 @@ const Abogados = ref<abogados[]>([])
 const Clientes = ref<clientes[]>([])
 const Contrapartes = ref<contrapartes[]>([])
 const Tribunales = ref<tribunales[]>([])
+const AbogadosList = ref<{ id: Number, name: String }[]>([]);
+const ClientesList = ref<{ id: Number, name: String }[]>([]);
+const ContrapartesList = ref<{ id: Number, name: String }[]>([]);
+const TribunalesList = ref<{ id: Number, name: String }[]>([]);
 /* @ts-ignore */
 const URL: string = import.meta.env.VITE_PATH_API
 const TipoExpedienteSelected = ref({ tipexp_tip: '', descri_tip: '' })
@@ -261,6 +265,67 @@ function presentModal(type: number) {
   TypeModal.value = type
 }
 
+function addAbogado(id: number, name: string) {
+  try {
+    if (AbogadosList.value.find(item => item.id === id)) {
+      addAlert(1, 'Este abogado ya esta asignado a al expediente')
+      return;
+    }
+    AbogadosList.value.push({ id: id, name: name })
+    addAlert(1, 'Abogadado agregado la lista.')
+    AbogadoSelected.value = { codabo_abo: '', nombre_abo: '' }
+  } catch (error) {
+    addAlert(3, JSON.stringify(error))
+    console.error(error)
+  }
+}
+
+function addCliente(id: number, name: string) {
+  try {
+    if (ClientesList.value.find(item => item.id === id)) {
+      addAlert(1, 'Este cliente ya esta asignado al expediente')
+      return;
+    }
+    ClientesList.value.push({ id: id, name: name })
+    addAlert(1, 'Cliente agregado a la lista.')
+    ClienteSelected.value = { codcli_cli: '', nombre_cli: '' }
+  } catch (error) {
+    addAlert(3, JSON.stringify(error))
+    console.error(error)
+  }
+}
+
+function addContraparte(id: number, name: string) {
+  try {
+    if (ContrapartesList.value.find(item => item.id === id)) {
+      addAlert(1, 'Esta contraparte ya esta asignada al expediente')
+      return;
+    }
+    ContrapartesList.value.push({ id: id, name: name })
+    addAlert(1, 'Contraparte agregada a la lista.')
+    ContraparteSelected.value = { codcon_con: '', nombre_con: '' }
+  } catch (error) {
+    addAlert(3, JSON.stringify(error))
+    console.error(error)
+  }
+}
+
+function addTribunal(id: number, name: string) {
+  try {
+    if (TribunalesList.value.find(item => item.id === id)) {
+      addAlert(1, 'Este tribunal ya esta asignado al expediente.')
+      return;
+    }
+    TribunalesList.value.push({ id: id, name: name })
+    addAlert(1, 'Tribunal agregado a la lista.')
+    TribunalSelected.value = { codtri_tri: '', descri_tri: '' }
+  } catch (error) {
+    addAlert(3, JSON.stringify(error))
+    console.error(error)
+  }
+}
+
+
 onMounted(() => {
   getTipoExpedientes()
   getAbogados()
@@ -378,13 +443,31 @@ onMounted(() => {
                 v-model="AbogadoSelected.nombre_abo" readonly>
 
               <button @click="presentModal(2)" type="button"
-                class="mt-1 p-3  text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                class="mt-1 p-3  text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-sky-300">
                 <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                   viewBox="0 0 20 20">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                 </svg>
                 <span class="sr-only">Search</span>
+              </button>
+
+              <button @click="addAbogado(parseInt(AbogadoSelected.codabo_abo), AbogadoSelected.nombre_abo)"
+                class="flex mt-1 p-3  text-sm font-medium text-white bg-green-500 rounded-lg border hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                <span class="ml-2">Agregar</span>
+              </button>
+
+              <button
+                class="flex mt-1 p-3  text-sm font-medium text-white bg-red-500 rounded-lg border hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                <span class="ml-2">Eliminar</span>
               </button>
 
             </div>
@@ -407,12 +490,12 @@ onMounted(() => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(i, index) in simpleTableData" :key="index" class="hover:bg-gray-200">
+                    <tr v-for="(value, index) in AbogadosList" :key="index" class="hover:bg-gray-200">
                       <td class="px-6 py-4 text-lg text-gray-700 border-b">
-                        {{ i.city }}
+                        {{ value.id }}
                       </td>
                       <td class="px-6 py-4 text-gray-500 border-b">
-                        {{ i.totalOrders }}
+                        {{ value.name }}
                       </td>
                     </tr>
                   </tbody>
@@ -443,6 +526,24 @@ onMounted(() => {
                     d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                 </svg>
                 <span class="sr-only">Search</span>
+              </button>
+
+              <button @click="addCliente(parseInt(ClienteSelected.codcli_cli), ClienteSelected.nombre_cli)"
+                class="flex mt-1 p-3  text-sm font-medium text-white bg-green-500 rounded-lg border hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                <span class="ml-2">Agregar</span>
+              </button>
+
+              <button
+                class="flex mt-1 p-3  text-sm font-medium text-white bg-red-500 rounded-lg border hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                <span class="ml-2">Eliminar</span>
               </button>
 
             </div>
@@ -504,6 +605,24 @@ onMounted(() => {
                 <span class="sr-only">Search</span>
               </button>
 
+              <button @click="addContraparte(parseInt(ContraparteSelected.codcon_con), ContraparteSelected.nombre_con)"
+                class="flex mt-1 p-3  text-sm font-medium text-white bg-green-500 rounded-lg border hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                <span class="ml-2">Agregar</span>
+              </button>
+
+              <button
+                class="flex mt-1 p-3  text-sm font-medium text-white bg-red-500 rounded-lg border hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                <span class="ml-2">Eliminar</span>
+              </button>
+
             </div>
           </div>
           <!-- end -->
@@ -560,6 +679,24 @@ onMounted(() => {
                     d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                 </svg>
                 <span class="sr-only">Search</span>
+              </button>
+
+              <button
+                class="flex mt-1 p-3  text-sm font-medium text-white bg-green-500 rounded-lg border hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                <span class="ml-2">Agregar</span>
+              </button>
+
+              <button
+                class="flex mt-1 p-3  text-sm font-medium text-white bg-red-500 rounded-lg border hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                <span class="ml-2">Eliminar</span>
               </button>
 
             </div>
