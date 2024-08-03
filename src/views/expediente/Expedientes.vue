@@ -5,6 +5,7 @@ import Modal from '../../components/Modal.vue';
 import { useTableData } from '../../composables/useTableData'
 import { addAlert } from '../../stores/alerts';
 import { abogados, clientes, contrapartes, tipos_expedientes, tribunales } from '../../class/all.class';
+import { weekdays } from 'moment';
 
 const tap = ref<number>(1)
 const showModal = ref<boolean>(false)
@@ -325,6 +326,42 @@ function addTribunal(id: number, name: string) {
   }
 }
 
+function selectAbogado(obj: any) {
+  try {
+    AbogadoSelected.value.codabo_abo = String(obj.id)
+    AbogadoSelected.value.nombre_abo = obj.name
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+function selectCliente(obj: any) {
+  try {
+    ClienteSelected.value.codcli_cli = String(obj.id)
+    ClienteSelected.value.nombre_cli = obj.name
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+function selectContraparte(obj: any) {
+  try {
+    ContraparteSelected.value.codcon_con = String(obj.id)
+    ContraparteSelected.value.nombre_con = obj.name
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+function selectTribunal(obj: any) {
+  try {
+    TribunalSelected.value.codtri_tri = String(obj.id)
+    TribunalSelected.value.descri_tri = obj.name
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 
 onMounted(() => {
   getTipoExpedientes()
@@ -490,7 +527,7 @@ onMounted(() => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(value, index) in AbogadosList" :key="index" class="hover:bg-gray-200">
+                    <tr v-for="(value, index) in AbogadosList" :key="index" class="hover:bg-gray-200" @dblclick="selectAbogado(value)">
                       <td class="px-6 py-4 text-lg text-gray-700 border-b">
                         {{ value.id }}
                       </td>
@@ -566,7 +603,7 @@ onMounted(() => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(value, index) in ClientesList" :key="index" class="hover:bg-gray-200">
+                    <tr v-for="(value, index) in ClientesList" :key="index" class="hover:bg-gray-200" @dblclick="selectCliente(value)">
                       <td class="px-6 py-4 text-lg text-gray-700 border-b">
                         {{ value.id }}
                       </td>
@@ -643,7 +680,7 @@ onMounted(() => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(value, index) in ContrapartesList" :key="index" class="hover:bg-gray-200">
+                    <tr v-for="(value, index) in ContrapartesList" :key="index" class="hover:bg-gray-200" @dblclick="selectContraparte(value)">
                       <td class="px-6 py-4 text-lg text-gray-700 border-b">
                         {{ value.id }}
                       </td>
@@ -719,7 +756,7 @@ onMounted(() => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(value, index) in TribunalesList" :key="index" class="hover:bg-gray-200">
+                    <tr v-for="(value, index) in TribunalesList" :key="index" class="hover:bg-gray-200" @dblclick="selectTribunal(value)">
                       <td class="px-6 py-4 text-lg text-gray-700 border-b">
                         {{ value.id }}
                       </td>
