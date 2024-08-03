@@ -18,7 +18,7 @@ const AbogadosList = ref<{ id: Number, name: String }[]>([]);
 const ClientesList = ref<{ id: Number, name: String }[]>([]);
 const ContrapartesList = ref<{ id: Number, name: String }[]>([]);
 const TribunalesList = ref<{ id: Number, name: String }[]>([]);
-const TypeModalTittle = ref<Array<string>>(['Tipo de Expediente','Abogados','Clientes','Contrapartes','Tribunales'])
+const TypeModalTittle = ref<Array<string>>(['Tipo de Expediente', 'Abogados', 'Clientes', 'Contrapartes', 'Tribunales'])
 /* @ts-ignore */
 const URL: string = import.meta.env.VITE_PATH_API
 const TipoExpedienteSelected = ref({ tipexp_tip: '', descri_tip: '' })
@@ -269,9 +269,15 @@ function presentModal(type: number) {
 
 function addAbogado(id: number, name: string) {
   try {
+    
+    if(AbogadoSelected.value.codabo_abo === ''){
+      addAlert(1,'Debes de selecionar un Abogado.')
+      return
+    }
+
     if (AbogadosList.value.find(item => item.id === id)) {
       addAlert(1, 'Este abogado ya esta asignado a al expediente')
-      return;
+      return
     }
     AbogadosList.value.push({ id: id, name: name })
     addAlert(1, 'Abogadado agregado la lista.')
@@ -284,6 +290,12 @@ function addAbogado(id: number, name: string) {
 
 function addCliente(id: number, name: string) {
   try {
+
+    if(ClienteSelected.value.codcli_cli === ''){
+      addAlert(1,'Debes de selecionar un Cliente.')
+      return
+    }
+
     if (ClientesList.value.find(item => item.id === id)) {
       addAlert(1, 'Este cliente ya esta asignado al expediente')
       return;
@@ -299,6 +311,12 @@ function addCliente(id: number, name: string) {
 
 function addContraparte(id: number, name: string) {
   try {
+
+    if(ContraparteSelected.value.codcon_con === ''){
+      addAlert(1,'Debes de selecionar una Contraparte.')
+      return
+    }
+
     if (ContrapartesList.value.find(item => item.id === id)) {
       addAlert(1, 'Esta contraparte ya esta asignada al expediente')
       return;
@@ -314,6 +332,12 @@ function addContraparte(id: number, name: string) {
 
 function addTribunal(id: number, name: string) {
   try {
+
+    if(TribunalSelected.value.codtri_tri === ''){
+      addAlert(1,'Debes de selecionar un Tribunal.')
+      return
+    }
+
     if (TribunalesList.value.find(item => item.id === id)) {
       addAlert(1, 'Este tribunal ya esta asignado al expediente.')
       return;
@@ -358,6 +382,62 @@ function selectTribunal(obj: any) {
   try {
     TribunalSelected.value.codtri_tri = String(obj.id)
     TribunalSelected.value.descri_tri = obj.name
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+function removeAbogado(id: string = '') {
+  try {
+    if (id === '') {
+      addAlert(1, 'Debe de selecionar un Abogado.')
+      return;
+    }
+    AbogadosList.value = AbogadosList.value.filter(item => item.id !== parseInt(id))
+    addAlert(1, 'Abogado eliminado de la lista.')
+    AbogadoSelected.value = { codabo_abo: '', nombre_abo: '' }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+function removeCliente(id: string = '') {
+  try {
+    if (id === '') {
+      addAlert(1, 'Debe de selecionar un Cliente.')
+      return;
+    }
+    AbogadosList.value = ClientesList.value.filter(item => item.id !== parseInt(id))
+    addAlert(1, 'Cliente eliminado de la lista.')
+    AbogadoSelected.value = { codabo_abo: '', nombre_abo: '' }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+function removeContraparte(id: string = '') {
+  try {
+    if (id === '') {
+      addAlert(1, 'Debe de selecionar una Contraparte.')
+      return;
+    }
+    ContrapartesList.value = AbogadosList.value.filter(item => item.id !== parseInt(id))
+    addAlert(1, 'Contraparte eliminada de la lista.')
+    AbogadoSelected.value = { codabo_abo: '', nombre_abo: '' }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+function removeTribunal(id: string = '') {
+  try {
+    if (id === '') {
+      addAlert(1, 'Debe de selecionar un Tribunal.')
+      return;
+    }
+    TribunalesList.value = AbogadosList.value.filter(item => item.id !== parseInt(id))
+    addAlert(1, 'Tribunal eliminado de la lista.')
+    AbogadoSelected.value = { codabo_abo: '', nombre_abo: '' }
   } catch (error) {
     console.error(error)
   }
@@ -499,7 +579,7 @@ onMounted(() => {
                 <span class="ml-2">Agregar</span>
               </button>
 
-              <button
+              <button @click="removeAbogado(AbogadoSelected.codabo_abo)"
                 class="flex mt-1 p-3  text-sm font-medium text-white bg-red-500 rounded-lg border hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor" stroke-width="2">
@@ -528,7 +608,8 @@ onMounted(() => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(value, index) in AbogadosList" :key="index" class="hover:bg-gray-200" @dblclick="selectAbogado(value)">
+                    <tr v-for="(value, index) in AbogadosList" :key="index" class="hover:bg-gray-200"
+                      @dblclick="selectAbogado(value)">
                       <td class="px-6 py-4 text-lg text-gray-700 border-b">
                         {{ value.id }}
                       </td>
@@ -575,7 +656,7 @@ onMounted(() => {
                 <span class="ml-2">Agregar</span>
               </button>
 
-              <button
+              <button @click="removeCliente(ClienteSelected.codcli_cli)"
                 class="flex mt-1 p-3  text-sm font-medium text-white bg-red-500 rounded-lg border hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor" stroke-width="2">
@@ -604,7 +685,8 @@ onMounted(() => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(value, index) in ClientesList" :key="index" class="hover:bg-gray-200" @dblclick="selectCliente(value)">
+                    <tr v-for="(value, index) in ClientesList" :key="index" class="hover:bg-gray-200"
+                      @dblclick="selectCliente(value)">
                       <td class="px-6 py-4 text-lg text-gray-700 border-b">
                         {{ value.id }}
                       </td>
@@ -652,7 +734,7 @@ onMounted(() => {
                 <span class="ml-2">Agregar</span>
               </button>
 
-              <button
+              <button @click="removeContraparte(ContraparteSelected.codcon_con)"
                 class="flex mt-1 p-3  text-sm font-medium text-white bg-red-500 rounded-lg border hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor" stroke-width="2">
@@ -681,7 +763,8 @@ onMounted(() => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(value, index) in ContrapartesList" :key="index" class="hover:bg-gray-200" @dblclick="selectContraparte(value)">
+                    <tr v-for="(value, index) in ContrapartesList" :key="index" class="hover:bg-gray-200"
+                      @dblclick="selectContraparte(value)">
                       <td class="px-6 py-4 text-lg text-gray-700 border-b">
                         {{ value.id }}
                       </td>
@@ -728,7 +811,7 @@ onMounted(() => {
                 <span class="ml-2">Agregar</span>
               </button>
 
-              <button
+              <button @click="removeTribunal(TribunalSelected.codtri_tri)"
                 class="flex mt-1 p-3  text-sm font-medium text-white bg-red-500 rounded-lg border hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor" stroke-width="2">
@@ -757,7 +840,8 @@ onMounted(() => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(value, index) in TribunalesList" :key="index" class="hover:bg-gray-200" @dblclick="selectTribunal(value)">
+                    <tr v-for="(value, index) in TribunalesList" :key="index" class="hover:bg-gray-200"
+                      @dblclick="selectTribunal(value)">
                       <td class="px-6 py-4 text-lg text-gray-700 border-b">
                         {{ value.id }}
                       </td>
@@ -775,8 +859,8 @@ onMounted(() => {
     </div>
   </div>
 
-  <Modal class="flex justify-center items-center" v-if="showModal" :title="TypeModalTittle[TypeModal - 1]" @close="handleClose"
-    @accept="handleAccept" @decline="handleDecline" :btnVisible="false">
+  <Modal class="flex justify-center items-center" v-if="showModal" :title="TypeModalTittle[TypeModal - 1]"
+    @close="handleClose" @accept="handleAccept" @decline="handleDecline" :btnVisible="false">
     <template #body>
       <div v-if="TypeModal === 1">
         <Inputs typeinput="search" labeltext="Buscar" :Value="searchTermTipoExpediente"
