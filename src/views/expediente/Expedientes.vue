@@ -4,9 +4,10 @@ import Inputs from '../../components/Inputs.vue'
 import Modal from '../../components/Modal.vue';
 import { useTableData } from '../../composables/useTableData'
 import { addAlert } from '../../stores/alerts';
-import { abogados, clientes, contrapartes, tipos_expedientes, tribunales } from '../../class/all.class';
+import { abogados, clientes, contrapartes, expedientes, tipos_expedientes, tribunales } from '../../class/all.class';
 import { weekdays } from 'moment';
 
+const ExpedienteHeader = ref<expedientes>(new expedientes())
 const tap = ref<number>(1)
 const showModal = ref<boolean>(false)
 const TipoExpedientes = ref<tipos_expedientes[]>([])
@@ -89,14 +90,27 @@ function ChageTaps(value: number) {
 }
 
 function ClearPage() {
-  // Provincia.value = new provincias();
-  // paisSelected.value = { codpais_pais: '', nombre_pais: '' }
 }
 
 function validate(): boolean {
-  // if (Provincia.value.nombre_pro === '') {
-  //   return false;
-  // }
+  if (AbogadosList.value.length <= 0) {
+    return false
+  }
+  if (ClientesList.value.length <= 0) {
+    return false
+  }
+  if (ContrapartesList.value.length <= 0) {
+    return false
+  }
+  if (TribunalesList.value.length <= 0) {
+    return false
+  }
+  if (TipoExpedienteSelected.value === undefined || TipoExpedienteSelected.value.tipexp_tip === '' || TipoExpedienteSelected.value.descri_tip === '') {
+    return false
+  }
+  if (ExpedienteHeader.value.motivo_exp === '') {
+    return false
+  }
   return true
 }
 
@@ -269,9 +283,9 @@ function presentModal(type: number) {
 
 function addAbogado(id: number, name: string) {
   try {
-    
-    if(AbogadoSelected.value.codabo_abo === ''){
-      addAlert(1,'Debes de selecionar un Abogado.')
+
+    if (AbogadoSelected.value.codabo_abo === '') {
+      addAlert(1, 'Debes de selecionar un Abogado.')
       return
     }
 
@@ -291,8 +305,8 @@ function addAbogado(id: number, name: string) {
 function addCliente(id: number, name: string) {
   try {
 
-    if(ClienteSelected.value.codcli_cli === ''){
-      addAlert(1,'Debes de selecionar un Cliente.')
+    if (ClienteSelected.value.codcli_cli === '') {
+      addAlert(1, 'Debes de selecionar un Cliente.')
       return
     }
 
@@ -312,8 +326,8 @@ function addCliente(id: number, name: string) {
 function addContraparte(id: number, name: string) {
   try {
 
-    if(ContraparteSelected.value.codcon_con === ''){
-      addAlert(1,'Debes de selecionar una Contraparte.')
+    if (ContraparteSelected.value.codcon_con === '') {
+      addAlert(1, 'Debes de selecionar una Contraparte.')
       return
     }
 
@@ -333,8 +347,8 @@ function addContraparte(id: number, name: string) {
 function addTribunal(id: number, name: string) {
   try {
 
-    if(TribunalSelected.value.codtri_tri === ''){
-      addAlert(1,'Debes de selecionar un Tribunal.')
+    if (TribunalSelected.value.codtri_tri === '') {
+      addAlert(1, 'Debes de selecionar un Tribunal.')
       return
     }
 
@@ -466,7 +480,8 @@ onMounted(() => {
             <div class="">
               <label class="text-gray-700" for="motivo_exp">Motivo</label>
               <input id="motivo_exp" type="text"
-                class="w-full h-[5em] mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
+                class="w-full h-[5em] mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+                v-model="ExpedienteHeader.motivo_exp">
             </div>
           </div>
           <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
@@ -499,7 +514,8 @@ onMounted(() => {
             <div>
               <label class="text-gray-700" for="fecini_exp">Fecha de Inicio</label>
               <input id="fecini_exp" type="date"
-                class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
+                class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+                v-model="ExpedienteHeader.fecfin_exp">
             </div>
           </div>
         </div>
