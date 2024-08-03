@@ -4,10 +4,11 @@ import Inputs from '../../components/Inputs.vue'
 import Modal from '../../components/Modal.vue';
 import { useTableData } from '../../composables/useTableData'
 import { addAlert } from '../../stores/alerts';
-import { abogados, clientes, contrapartes, expedientes, tipos_expedientes, tribunales } from '../../class/all.class';
-import { weekdays } from 'moment';
+import { abogados, clientes, contrapartes, ExpedienteDetalle, expedientes, tipos_expedientes, tribunales } from '../../class/all.class';
+
 
 const ExpedienteHeader = ref<expedientes>(new expedientes())
+const ExpedienteDetail = ref<ExpedienteDetalle>()
 const tap = ref<number>(1)
 const showModal = ref<boolean>(false)
 const TipoExpedientes = ref<tipos_expedientes[]>([])
@@ -15,10 +16,10 @@ const Abogados = ref<abogados[]>([])
 const Clientes = ref<clientes[]>([])
 const Contrapartes = ref<contrapartes[]>([])
 const Tribunales = ref<tribunales[]>([])
-const AbogadosList = ref<{ id: Number, name: String }[]>([]);
-const ClientesList = ref<{ id: Number, name: String }[]>([]);
-const ContrapartesList = ref<{ id: Number, name: String }[]>([]);
-const TribunalesList = ref<{ id: Number, name: String }[]>([]);
+const AbogadosList = ref<{ id: number, name: string }[]>([]);
+const ClientesList = ref<{ id: number, name: string }[]>([]);
+const ContrapartesList = ref<{ id: number, name: string }[]>([]);
+const TribunalesList = ref<{ id: number, name: string }[]>([]);
 const TypeModalTittle = ref<Array<string>>(['Tipo de Expediente', 'Abogados', 'Clientes', 'Contrapartes', 'Tribunales'])
 /* @ts-ignore */
 const URL: string = import.meta.env.VITE_PATH_API
@@ -423,7 +424,7 @@ function removeCliente(id: string = '') {
     }
     AbogadosList.value = ClientesList.value.filter(item => item.id !== parseInt(id))
     addAlert(1, 'Cliente eliminado de la lista.')
-    AbogadoSelected.value = { codabo_abo: '', nombre_abo: '' }
+    ClienteSelected.value = { codcli_cli: '', nombre_cli: '' }
   } catch (error) {
     console.error(error)
   }
@@ -437,7 +438,7 @@ function removeContraparte(id: string = '') {
     }
     ContrapartesList.value = AbogadosList.value.filter(item => item.id !== parseInt(id))
     addAlert(1, 'Contraparte eliminada de la lista.')
-    AbogadoSelected.value = { codabo_abo: '', nombre_abo: '' }
+    ContraparteSelected.value = { codcon_con: '', nombre_con: '' }
   } catch (error) {
     console.error(error)
   }
@@ -451,12 +452,35 @@ function removeTribunal(id: string = '') {
     }
     TribunalesList.value = AbogadosList.value.filter(item => item.id !== parseInt(id))
     addAlert(1, 'Tribunal eliminado de la lista.')
-    AbogadoSelected.value = { codabo_abo: '', nombre_abo: '' }
+    TribunalSelected.value = { codtri_tri: '', descri_tri: '' }
   } catch (error) {
     console.error(error)
   }
 }
 
+function saveExpediente() {
+  try {
+    if (!validate()) {
+      return;
+    }
+
+    const expediente = {
+      header: ExpedienteHeader.value,
+      detail: new ExpedienteDetalle(
+        AbogadosList.value,
+        ClientesList.value,
+        ContrapartesList.value,
+        TribunalesList.value
+      )
+    };
+
+    console.info(expediente);
+
+  } catch (error) {
+    addAlert(3, JSON.stringify(error));
+    console.error(error);
+  }
+}
 
 onMounted(() => {
   getTipoExpedientes()
@@ -521,7 +545,7 @@ onMounted(() => {
         </div>
 
         <div class="flex justify-end mt-4">
-          <button
+          <button type="button" @click="saveExpediente"
             class="px-4 py-2 text-gray-200 bg-gray-800 rounded-md hover:bg-gray-700 focus:outline-none focus:bg-gray-700">
             Guardar
           </button>

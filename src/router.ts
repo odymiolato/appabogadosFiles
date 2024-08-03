@@ -41,6 +41,26 @@ import TiposExpedientes from './views/tipos_expedientes/TiposExpedientes.vue'
 
 const routes: RouteRecordRaw[] = [
   {
+    path: "/errors",
+    children: [
+      {
+        // the 404 route, when none of the above matches
+        path: "/404",
+        name: "404",
+        component: () => import("./views/404/404page.vue"),
+        // meta: {
+        //   title: "Repositorio - 404",
+        //   layout: BaseLayout,
+        //   requiresAuth: false,
+        // },
+      },
+    ],
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    redirect: "/404",
+  },
+  {
     path: '/',
     name: 'Login',
     component: Login,
