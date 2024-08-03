@@ -18,6 +18,7 @@ const AbogadosList = ref<{ id: Number, name: String }[]>([]);
 const ClientesList = ref<{ id: Number, name: String }[]>([]);
 const ContrapartesList = ref<{ id: Number, name: String }[]>([]);
 const TribunalesList = ref<{ id: Number, name: String }[]>([]);
+const TypeModalTittle = ref<Array<string>>(['Tipo de Expediente','Abogados','Clientes','Contrapartes','Tribunales'])
 /* @ts-ignore */
 const URL: string = import.meta.env.VITE_PATH_API
 const TipoExpedienteSelected = ref({ tipexp_tip: '', descri_tip: '' })
@@ -774,7 +775,7 @@ onMounted(() => {
     </div>
   </div>
 
-  <Modal class="flex justify-center items-center" v-if="showModal" title="Especialidades" @close="handleClose"
+  <Modal class="flex justify-center items-center" v-if="showModal" :title="TypeModalTittle[TypeModal - 1]" @close="handleClose"
     @accept="handleAccept" @decline="handleDecline" :btnVisible="false">
     <template #body>
       <div v-if="TypeModal === 1">
