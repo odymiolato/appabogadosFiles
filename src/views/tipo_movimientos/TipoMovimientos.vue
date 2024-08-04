@@ -27,13 +27,14 @@ let searchTerm = ref('');
 /* @ts-ignore */
 const URL: string = import.meta.env.VITE_PATH_API;
 
-function ClearPage() {
+function clearPage() {
   tipo.value = new tipo_movimientos();
   TipoGatosSelected.value = { tipgas_tga: '', descri_tga: '' };
 }
 
 function validate(): boolean {
   if (tipo.value.descri_tmo === '') {
+    addAlert(1, "Debe de llenar todos los campos.");
     return false;
   }
   return true;
@@ -80,6 +81,38 @@ function setTipoGasto(obj: tipos_gastos) {
   handleAccept();
 }
 
+async function saveTipoMoviento() {
+  try {
+    if (!validate()) {
+      return;
+    }
+
+    tipo.value.tipgas_tmo = TipoGatosSelected.value.tipgas_tga;
+
+    const response = await fetch(URL + 'tipomovimientos', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(tipo.value)
+
+    });
+
+    if (response.ok) {
+      if (await response.json()) {
+        addAlert(2, "Tipo de Movimiento resgistrado satisfactoriamente.")
+        clearPage()
+      }
+    } else {
+      addAlert(3, "Problemas con la peticion.")
+    }
+
+  } catch (error) {
+    console.log(error);
+    addAlert(3, "Problemas al reaizar la peticion.");
+  }
+}
+
 onMounted(() => {
   getTipoGastos();
 });
@@ -95,22 +128,17 @@ onMounted(() => {
     <div class="p-6 bg-white rounded-md shadow-md">
       <div>
         <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
-          <!-- <div>
-            <label class="text-gray-700" for="tipmov_tmo">Tipo de Movimiento</label>
-            <input id="tipmov_tmo" type="text"
-              class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
-          </div> -->
-
           <div>
             <label class="text-gray-700" for="descri_tmo">Nombre</label>
             <input id="descri_tmo" type="text"
-              class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
+              class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+              v-model="tipo.descri_tmo">
           </div>
 
           <div class="">
             <label class="text-gray-700" for="tipo_espcialidad_abo">Tipo de Gasto</label>
             <div class="flex gap-2 justify-center items-center">
-              <input id="fecnac_abo" type="text" 
+              <input id="fecnac_abo" type="text"
                 class="w-[20%] mt-2 border-gray-200  rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
                 v-model="TipoGatosSelected.tipgas_tga" readonly disabled>
 
@@ -134,7 +162,8 @@ onMounted(() => {
 
         <div class="flex justify-end mt-4">
           <button
-            class="px-4 py-2 text-gray-200 bg-gray-800 rounded-md hover:bg-gray-700 focus:outline-none focus:bg-gray-700">
+            class="px-4 py-2 text-gray-200 bg-gray-800 rounded-md hover:bg-gray-700 focus:outline-none focus:bg-gray-700"
+            @click="saveTipoMoviento">
             Guardar
           </button>
         </div>

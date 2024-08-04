@@ -47,12 +47,14 @@ function changeStatus(valor: boolean) {
             <MenuItem to="/gestioncontraparte" name="GestionContraparte" label="Contrapartes" imagen="dashboard" />
             <MenuItem to="/especialidades" name="Especialidades" label="Especialidades" imagen="dashboard" />
             <MenuItem to="/tipomovimientos" name="TipoMovimientos" label="Tipo Movimientos" imagen="dashboard" />
+            <MenuItem to="/tipoexpediente" name="TipoExpediente" label="Tipo Expediente" imagen="dashboard" />
           </MenuDesplegable>
 
           <MenuDesplegable label="Porcesos" imagen="dashboard">
             <MenuItem to="/expedientes" name="Expendientes" label="Expendientes" imagen="dashboard" />
             <MenuItem to="/expediente" name="Expediente" label="Control de Expedientes" imagen="dashboard" />
             <MenuItem to="/audiencia" name="Audiencia" label="Gestion de Audiencias" imagen="dashboard" />
+            <MenuItem to="/movimientos" name="Movimientos" label="Movimientos" imagen="dashboard" />
           </MenuDesplegable>
         </MenuDesplegable>
 
@@ -66,18 +68,22 @@ function changeStatus(valor: boolean) {
             <MenuItem to="/interaccionescliente" name="InteraccionesCliente" label="Interaccion Clientes" imagen="dashboard" />
           </MenuDesplegable>
         </MenuDesplegable>
-        <MenuItem to="/ui-elements" name="UIElements" label="Elements" imagen="elements" />
+        <!-- <MenuItem to="/ui-elements" name="UIElements" label="Elements" imagen="elements" /> -->
         <MenuItem to="/eventos" name="Eventos" label="Eventos" imagen="elements" />
-        <MenuItem to="/tables" name="Tables" label="Tables" imagen="tables" />
+        <!-- <MenuItem to="/tables" name="Tables" label="Tables" imagen="tables" />
         <MenuItem to="/forms" name="Forms" label="Forms" imagen="forms" />
         <MenuItem to="/cards" name="Cards" label="Cards" imagen="cards" />
-        <MenuItem to="/modal" name="Modal" label="Modal" imagen="modal" />
-        <MenuItem to="/blank" name="Blank" label="Blank" imagen="blank" />
-        <MenuItem to="/paises" name="Paises" label="Paises" imagen="blank" />
-        <MenuItem to="/provincias" name="Provincias" label="Provincias" imagen="blank" />
-        <MenuItem to="/ciudades" name="Ciudades" label="Ciudades" imagen="blank" />
-        <MenuItem to="/origendireccion" name="Origen Direccion" label="Origen Direccion" imagen="blank" />
+        <MenuItem to="/modal" name="Modal" label="Modal" imagen="modal" /> -->
+        <!-- <MenuItem to="/blank" name="Blank" label="Blank" imagen="blank" /> -->
 
+        <MenuDesplegable label="Configuracion" imagen="dashboard">
+          <MenuDesplegable label="Direccion" imagen="dashboard">
+            <MenuItem to="/paises" name="Paises" label="Paises" imagen="blank" />
+            <MenuItem to="/provincias" name="Provincias" label="Provincias" imagen="blank" />
+            <MenuItem to="/ciudades" name="Ciudades" label="Ciudades" imagen="blank" />
+            <MenuItem to="/origendireccion" name="Origen Direccion" label="Origen Direccion" imagen="blank" />
+          </MenuDesplegable>
+        </MenuDesplegable>
         <!-- <MenuDesplegable class="transition duration-700" label="Revisar" imagen="maintenance" :is-active="IsActive"
           @change-status="changeStatus">
           <MenuItem to="/gestioncliente" name="GestionCliente" label="Gestion Clientes" imagen="dashboard"

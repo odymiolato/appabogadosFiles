@@ -457,9 +457,7 @@ export class especialidades {
 
 export class expedientes {
   codexp_exp: number
-  codabo_exp: number
   motivo_exp: string
-  codcli_exp: number
   fecini_exp: Date
   estatu_exp: string
   fecfin_exp: Date
@@ -473,12 +471,9 @@ export class expedientes {
   usermod: number
   fechcrea: Date
   fechmod: Date
-  codcon_exp: number
   constructor() {
     this.codexp_exp = 0
-    this.codabo_exp = 0
     this.motivo_exp = ''
-    this.codcli_exp = 0
     this.fecini_exp = new Date()
     this.estatu_exp = ''
     this.fecfin_exp = new Date()
@@ -492,7 +487,6 @@ export class expedientes {
     this.usermod = 0
     this.fechcrea = new Date()
     this.fechmod = new Date()
-    this.codcon_exp = 0
   }
 }
 export class tipos_expedientes {
@@ -693,5 +687,24 @@ export class provincias {
     this.usermod = 0
     this.fechcrea = new Date()
     this.fechmod = new Date()
+  }
+}
+
+export class ExpedienteDetalle {
+  abogados: { id: number; name: string }[];
+  clientes: { id: number; name: string }[];
+  contrapartes: { id: number; name: string }[];
+  tribunales: { id: number; name: string }[];
+
+  constructor(
+    abogados: { id: number; name: string }[],
+    clientes: { id: number; name: string }[],
+    contrapartes: { id: number; name: string }[],
+    tribunales: { id: number; name: string }[]
+  ) {
+    this.abogados = abogados;
+    this.clientes = clientes;
+    this.contrapartes = contrapartes;
+    this.tribunales = tribunales;
   }
 }
