@@ -53,6 +53,7 @@ function changeStatus(valor: boolean) {
             <MenuItem to="/expedientes" name="Expendientes" label="Expendientes" imagen="dashboard" />
             <MenuItem to="/expediente" name="Expediente" label="Control de Expedientes" imagen="dashboard" />
             <MenuItem to="/audiencia" name="Audiencia" label="Gestion de Audiencias" imagen="dashboard" />
+            <MenuItem to="/movimientos" name="Movimientos" label="Movimientos" imagen="dashboard" />
           </MenuDesplegable>
         </MenuDesplegable>
 
