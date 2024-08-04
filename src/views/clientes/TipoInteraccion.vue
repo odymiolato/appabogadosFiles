@@ -7,7 +7,7 @@ const tipoInteraccion = ref<tipo_interaccion>(new tipo_interaccion())
 
 async function saveTipoInteraccion() {
   try {
-    await apiClient.post('/tipo-interaccion', tipoInteraccion.value)
+    await apiClient.post('/tipointeraccion', tipoInteraccion.value)
   }
   catch (error) {
     console.error('Error saving tipo_interaccion:', error)

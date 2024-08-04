@@ -33,7 +33,9 @@ import Clientes from './views/clientes/Clientes.vue'
 import TipoInteraccion from './views/clientes/TipoInteraccion.vue'
 import TiposExpedientes from './views/tipos_expedientes/TiposExpedientes.vue'
 import Movimientos from './views/movimientos/Movimientos.vue'
+
 import CrearClientes from './views/clientes/CrearClientes.vue'
+import CrearInteracciones from './views/clientes/CrearInteracciones.vue'
 
 // import GestionDocumento from './views/componentes a revisar/GestionDocumento.vue'
 // import FacturacionFinanza from './views/componentes a revisar/FacturacionFinanza.vue'
@@ -213,6 +215,12 @@ const routes: RouteRecordRaw[] = [
     path: '/crearcliente/:id?',
     name: 'CrearCliente',
     component: CrearClientes,
+    props: true,
+  },
+  {
+    path: '/crear-interaccion/:id?',
+    name: 'CrearInteraccion',
+    component: CrearInteracciones,
     props: true,
   },
 ]

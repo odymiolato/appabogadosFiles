@@ -1,28 +1,58 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import type { clientes, tipo_interaccion } from '../../class/all.class'
 import { interacciones } from '../../class/all.class'
 
 import ModalReutilizable from '../../components/ModalReutilizable.vue' // Importa el componente ModalReutilizable
+import apiClient from '../../axiosConfig'
 
-const props = defineProps({
-  interaccion: {
-    type: Object as () => interacciones | null,
-    default: null,
-  },
-})
-
-const emit = defineEmits(['save'])
-
-const interaccion = ref<interacciones>(props.interaccion ? { ...props.interaccion } : new interacciones())
+const interaccion = ref<interacciones>(new interacciones())
 const showModalTipoInteraccion = ref(false)
 const showModalClientes = ref(false)
 const interaccionSelected = ref({ codigo: '', nombre: '' })
 const clienteSelected = ref({ codigo: '', nombre: '' })
 
-watch(() => props.interaccion, (newInteraccion) => {
-  interaccion.value = newInteraccion ? { ...newInteraccion } : new interacciones()
+const route = useRoute()
+const router = useRouter()
+
+onMounted(async () => {
+  if (route.params.id)
+    await fetchInteraccion(route.params.id as string)
 })
+
+async function fetchInteraccion(id: string) {
+  try {
+    const response = await apiClient.get(`/interacciones/${id}`)
+    interaccion.value = response.data
+  }
+  catch (error) {
+    console.error('Error fetching interacciones:', error)
+  }
+}
+
+async function saveInteraccion() {
+  try {
+    interaccion.value.codcli_int = Number(clienteSelected.value.codigo)
+    interaccion.value.codtin_int = Number(interaccionSelected.value.codigo)
+    if (route.params.id)
+
+      await apiClient.patch(`/interacciones/${route.params.id}`, interaccion.value)
+
+    else
+
+      await apiClient.post('/interacciones', interaccion.value)
+
+    router.push({ name: 'InteraccionesCliente' })
+  }
+  catch (error) {
+    console.error('Error saving interacciones:', error)
+  }
+}
+
+function goBack() {
+  router.push({ name: 'InteraccionesCliente' })
+}
 
 function handleInteraccionSelected(tipointeraccion: tipo_interaccion) {
   interaccionSelected.value = { codigo: String(tipointeraccion.codtin_tin), nombre: tipointeraccion.descripcion_tin }
@@ -31,16 +61,15 @@ function handleInteraccionSelected(tipointeraccion: tipo_interaccion) {
 function handleClienteSelected(cliente: clientes) {
   clienteSelected.value = { codigo: String(cliente.codcli_cli), nombre: cliente.nombre_cli }
 }
-
-function saveInteraccion() {
-  interaccion.value.codcli_int = Number(clienteSelected.value.codigo)
-  interaccion.value.codtin_int = Number(interaccionSelected.value.codigo)
-  emit('save', interaccion.value)
-}
 </script>
 
 <template>
   <div class="p-6 bg-white rounded-md shadow-md">
+    <div class="flex items-center mb-4 cursor-pointer" @click="goBack">
+      <img src="../../assets/img/returnArrow.svg" alt="Back" class="w-6 h-6 mr-2 ">
+      <span class="text-gray-700">Volver</span>
+    </div>
+
     <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
       <div>
         <label class="text-gray-700" for="nombre">Detalle Interaccion</label>
@@ -135,7 +164,7 @@ function saveInteraccion() {
       <ModalReutilizable
         v-model:showModal="showModalTipoInteraccion"
         modal-title="Tipo Interacción"
-        endpoint="/tipo-interaccion"
+        endpoint="/tipointeraccion"
         code-field="codtin_tin"
         name-field="descripcion_tin"
         @selected="handleInteraccionSelected"
@@ -143,8 +172,8 @@ function saveInteraccion() {
 
       <ModalReutilizable
         v-model:showModal="showModalClientes"
-        modal-title="Clientes"
-        endpoint="/clientes"
+        modal-title="InteraccionesCliente"
+        endpoint="/interacciones"
         code-field="codcli_cli"
         name-field="nombre_cli"
         @selected="handleClienteSelected"

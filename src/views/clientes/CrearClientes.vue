@@ -40,10 +40,18 @@ async function saveCliente() {
     console.error('Error saving cliente:', error)
   }
 }
+
+function goBack() {
+  router.push({ name: 'Clientes' })
+}
 </script>
 
 <template>
   <div class="p-6 bg-white rounded-md shadow-md">
+    <div class="flex items-center mb-4 cursor-pointer" @click="goBack">
+      <img src="../../assets/img/returnArrow.svg" alt="Back" class="w-6 h-6 mr-2 ">
+      <span class="text-gray-700">Volver</span>
+    </div>
     <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
       <div>
         <label class="text-gray-700" for="nombre">Nombre</label>

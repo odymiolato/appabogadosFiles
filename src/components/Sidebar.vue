@@ -50,7 +50,7 @@ function changeStatus(valor: boolean) {
             <MenuItem to="/tipoexpediente" name="TipoExpediente" label="Tipo Expediente" imagen="dashboard" />
           </MenuDesplegable>
 
-          <MenuDesplegable label="Porcesos" imagen="dashboard">
+          <MenuDesplegable label="Procesos" imagen="dashboard">
             <MenuItem to="/expedientes" name="Expendientes" label="Expendientes" imagen="dashboard" />
             <MenuItem to="/expediente" name="Expediente" label="Control de Expedientes" imagen="dashboard" />
             <MenuItem to="/audiencia" name="Audiencia" label="Gestion de Audiencias" imagen="dashboard" />
@@ -64,7 +64,7 @@ function changeStatus(valor: boolean) {
             <MenuItem to="/tipointeraccion" name="TipoInteraccion" label="Tipo de Interacciones" imagen="dashboard" />
           </MenuDesplegable>
 
-          <MenuDesplegable label="Gestion de Clientes" imagen="dashboard">
+          <MenuDesplegable label="Procesos" imagen="dashboard">
             <MenuItem to="/interaccionescliente" name="InteraccionesCliente" label="Interaccion Clientes" imagen="dashboard" />
           </MenuDesplegable>
         </MenuDesplegable>

@@ -39,7 +39,7 @@ function handleEditCliente(cliente: clientes) {
   router.push({ name: 'CrearCliente', params: { id: cliente.codcli_cli } })
 }
 
-function openCreateModal() {
+function openCreateCliente() {
   router.push({ name: 'CrearCliente' })
 }
 </script>
@@ -48,7 +48,7 @@ function openCreateModal() {
   <button
     type="button"
     class="mt-1 mb-5 p-3 text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
-    @click="openCreateModal"
+    @click="openCreateCliente"
   >
     Crear Nuevo Cliente
   </button>
