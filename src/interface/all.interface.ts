@@ -22,3 +22,8 @@ export interface Alerts {
     type: number;
     message: string;
 }
+
+export interface ContextMenuInstance {
+    showMenu: (event: MouseEvent) => void;
+    hideMenu: () => void;
+  }
