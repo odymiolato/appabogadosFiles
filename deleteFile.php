@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
         if (!file_exists($target_file)) {
             echo json_encode([
                 'status' => 0,
-                'message' => 'The file does not exist.'
+                'message' => 'El archivo no existe.'
             ]);
             return;
         }
@@ -23,24 +23,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
         if (unlink($target_file)) {
             echo json_encode([
                 'status' => 1,
-                'message' => 'File deleted successfully.'
+                'message' => 'Archivo eliminado.'
             ]);
         } else {
             echo json_encode([
-                'status' => 0,
-                'message' => 'Failed to delete the file.'
+                'status' => 2,
+                'message' => 'Error al eliminar el archivo.'
             ]);
         }
     } else {
         echo json_encode([
             'status' => 'error',
-            'message' => 'No file specified'
+            'message' => 'No se ha especificado ningún archivo.'
         ]);
     }
 } else {
     echo json_encode([
         'status' => 'error',
-        'message' => 'Invalid request method'
+        'message' => 'Método de solicitud no válido.'
     ]);
 }
 ?>
