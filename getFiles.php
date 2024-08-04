@@ -32,7 +32,7 @@ if (!isset($data) && empty($data)) {
 
 $directory = $data->URL;
 
-$baseUrl = 'http://localhost:8081' . $directory . '/';
+$baseUrl = 'http://localhost' . $directory . '/';
 $files = array_diff(scandir(".." . $directory), array('..', '.'));
 $test = [];
 foreach ($files as &$value) {
