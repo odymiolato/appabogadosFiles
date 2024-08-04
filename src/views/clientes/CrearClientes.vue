@@ -1,39 +1,49 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { format, parseISO } from 'date-fns'
+import { onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { clientes } from '../../class/all.class'
+import apiClient from '../../axiosConfig'
 
-const props = defineProps({
-  cliente: {
-    type: Object as () => clientes | null,
-    default: null,
-  },
+const route = useRoute()
+const router = useRouter()
+
+const cliente = ref<clientes>(new clientes())
+
+onMounted(async () => {
+  if (route.params.id)
+    await fetchCliente(route.params.id as string)
 })
 
-const emit = defineEmits(['save'])
+async function fetchCliente(id: string) {
+  try {
+    const response = await apiClient.get(`/clientes/${id}`)
+    cliente.value = response.data
+  }
+  catch (error) {
+    console.error('Error fetching cliente:', error)
+  }
+}
 
-const cliente = ref<clientes>(props.cliente ? { ...props.cliente } : new clientes())
-
-watch(() => props.cliente, (newCliente) => {
-  cliente.value = newCliente
-    ? {
-        ...newCliente,
-        fecnac_cli: newCliente.fecnac_cli ? format(parseISO(newCliente.fecnac_cli), 'yyyy-MM-dd') : '',
-      }
-    : new clientes()
-})
-
-function saveCliente() {
-  // Convierte la fecha al formato esperado por el servidor
-  if (cliente.value.fecnac_cli)
-    cliente.value.fecnac_cli = format(new Date(cliente.value.fecnac_cli), 'yyyy-MM-dd')
-
-  emit('save', cliente.value)
+async function saveCliente() {
+  try {
+    if (route.params.id) {
+      // Editar cliente existente
+      await apiClient.patch(`/clientes/${route.params.id}`, cliente.value)
+    }
+    else {
+      // Crear nuevo cliente
+      await apiClient.post('/clientes', cliente.value)
+    }
+    router.push({ name: 'Clientes' })
+  }
+  catch (error) {
+    console.error('Error saving cliente:', error)
+  }
 }
 </script>
 
 <template>
-  <div>
+  <div class="p-6 bg-white rounded-md shadow-md">
     <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
       <div>
         <label class="text-gray-700" for="nombre">Nombre</label>

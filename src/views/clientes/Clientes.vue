@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { format } from 'date-fns'
-import Modal from '../../components/Modal.vue'
-import type { clientes } from '../../class/all.class'
+import { useRouter } from 'vue-router'
 import WideTable from '../../components/tablas/WideTable.vue'
 import apiClient from '../../axiosConfig'
-import CrearClientes from './CrearClientes.vue'
+import type { clientes } from '../../class/all.class'
 
 const columns = [
   { title: 'Nombre', field: 'nombre_cli' },
@@ -16,9 +15,8 @@ const columns = [
   { title: 'Fecha Nacimiento', field: 'fecnac_cli' },
 ]
 
-const showModal = ref(false)
-const selectedCliente = ref<clientes | null>(null)
 const clienteList = ref<clientes[]>([])
+const router = useRouter()
 
 onMounted(async () => {
   await fetchClientes()
@@ -37,50 +35,27 @@ async function fetchClientes() {
   }
 }
 
-function handleClose() {
-  showModal.value = false
-}
-
-async function handleSaveCliente(cliente: clientes) {
-  try {
-    if (selectedCliente.value) {
-      // Editar cliente existente
-      console.log('editando cliente:', cliente)
-      await apiClient.patch(`/clientes/${selectedCliente.value.codcli_cli}`, cliente)
-    }
-    else {
-      // Crear nuevo cliente
-      console.log(cliente)
-      await apiClient.post('/clientes', cliente)
-    }
-    await fetchClientes()
-    showModal.value = false
-  }
-  catch (error) {
-    console.error('Error saving cliente:', error)
-  }
-}
-
 function handleEditCliente(cliente: clientes) {
-  selectedCliente.value = { ...cliente }
-  showModal.value = true
+  router.push({ name: 'CrearCliente', params: { id: cliente.codcli_cli } })
 }
 
 function openCreateModal() {
-  selectedCliente.value = null
-  showModal.value = true
+  router.push({ name: 'CrearCliente' })
 }
 </script>
 
 <template>
+  <button
+    type="button"
+    class="mt-1 mb-5 p-3 text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
+    @click="openCreateModal"
+  >
+    Crear Nuevo Cliente
+  </button>
   <div class="p-6 bg-white rounded-md shadow-md">
-    <button
-      type="button"
-      class="mt-1 mb-5 p-3 text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
-      @click="openCreateModal"
-    >
-      Crear Nuevo Cliente
-    </button>
+    <div class="mb-4">
+      <label class="text-gray-700 " for="descripcion">Clientes</label>
+    </div>
 
     <WideTable
       :columns="columns"
@@ -90,17 +65,5 @@ function openCreateModal() {
       :editable="true"
       @edit="handleEditCliente"
     />
-
-    <Modal
-      v-if="showModal"
-      class="flex justify-center items-center"
-      title="Crear/Editar Cliente"
-      :btn-visible="false"
-      @close="handleClose"
-    >
-      <template #body>
-        <CrearClientes :cliente="selectedCliente" @save="handleSaveCliente" />
-      </template>
-    </Modal>
   </div>
 </template>

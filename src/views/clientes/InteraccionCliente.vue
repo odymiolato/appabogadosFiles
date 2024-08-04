@@ -78,15 +78,17 @@ function openCreateModal() {
 </script>
 
 <template>
-  <div>
-    <button
-      type="button"
-      class="mt-1 mb-5 p-3 text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
-      @click="openCreateModal"
-    >
-      Crear Nueva Interacción
-    </button>
-
+  <button
+    type="button"
+    class="mt-1 mb-5 p-3 text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
+    @click="openCreateModal"
+  >
+    Crear Nueva Interacción
+  </button>
+  <div class="p-6 bg-white rounded-md shadow-md">
+    <div class="mb-4">
+      <label class="text-gray-700" for="descripcion">Interacciones</label>
+    </div>
     <WideTable
       :columns="columns"
       :tabledata="interaccionList"
