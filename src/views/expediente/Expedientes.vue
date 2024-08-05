@@ -483,7 +483,7 @@ async function saveExpediente() {
       body: JSON.stringify(expediente)
 
     })
-    
+
     if (response.ok) {
       if (await response.json()) {
         addAlert(2, 'Expediente registrado')
@@ -520,7 +520,7 @@ onMounted(() => {
         <div class="flex flex-col gap-6 mt-4 sm:grid-cols-2">
           <div>
             <div class="">
-              <label class="text-gray-700" for="motivo_exp">Motivo</label>
+              <label class="text-gray-700" for="motivo_exp">Descripción</label>
               <input id="motivo_exp" type="text"
                 class="w-full h-[5em] mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
                 v-model="ExpedienteHeader.descri_exp">
