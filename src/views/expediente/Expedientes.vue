@@ -8,7 +8,6 @@ import { abogados, clientes, contrapartes, ExpedienteDetalle, expedientes, tipos
 
 
 const ExpedienteHeader = ref<expedientes>(new expedientes())
-const ExpedienteDetail = ref<ExpedienteDetalle>()
 const tap = ref<number>(1)
 const showModal = ref<boolean>(false)
 const TipoExpedientes = ref<tipos_expedientes[]>([])
@@ -109,7 +108,7 @@ function validate(): boolean {
   if (TipoExpedienteSelected.value === undefined || TipoExpedienteSelected.value.tipexp_tip === '' || TipoExpedienteSelected.value.descri_tip === '') {
     return false
   }
-  if (ExpedienteHeader.value.motivo_exp === '') {
+  if (ExpedienteHeader.value.descri_exp === '') {
     return false
   }
   return true
@@ -458,11 +457,13 @@ function removeTribunal(id: string = '') {
   }
 }
 
-function saveExpediente() {
+async function saveExpediente() {
   try {
     if (!validate()) {
       return;
     }
+
+    ExpedienteHeader.value.tipexp_exp = parseInt(TipoExpedienteSelected.value.tipexp_tip)
 
     const expediente = {
       header: ExpedienteHeader.value,
@@ -474,8 +475,25 @@ function saveExpediente() {
       )
     };
 
-    console.info(expediente);
+    const response = await fetch(`${URL}expedientes`, {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(expediente)
 
+    })
+    
+    if (response.ok) {
+      if (await response.json()) {
+        addAlert(2, 'Expediente registrado')
+      } else {
+        addAlert(3, '')
+      }
+    } else {
+      addAlert(3, response.statusText)
+      console.error(response.statusText)
+    }
   } catch (error) {
     addAlert(3, JSON.stringify(error));
     console.error(error);
@@ -505,7 +523,7 @@ onMounted(() => {
               <label class="text-gray-700" for="motivo_exp">Motivo</label>
               <input id="motivo_exp" type="text"
                 class="w-full h-[5em] mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-                v-model="ExpedienteHeader.motivo_exp">
+                v-model="ExpedienteHeader.descri_exp">
             </div>
           </div>
           <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
