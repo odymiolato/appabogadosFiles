@@ -16,7 +16,7 @@ import Expedientes from './views/expediente/Expedientes.vue'
 // import AsignacionExpediente from './views/componentes a revisar/expediente/AsignacionExpediente.vue'
 
 import Audiencia from './views/componentes a revisar/Audiencia.vue'
-import GestionCliente from './views/clientes/GestionCliente.vue'
+
 import GestionAbogados from './views/abogados/GestionAbogados.vue'
 import GestionContraparte from './views/contrapartes/GestionContrapartes.vue'
 import Especialidades from './views/especialidades/especialidades.vue'
@@ -131,11 +131,7 @@ const routes: RouteRecordRaw[] = [
     name: 'Audiencia',
     component: Audiencia,
   },
-  {
-    path: '/gestioncliente',
-    name: 'GestionCliente',
-    component: GestionCliente,
-  },
+
   {
     path: '/gestionabogados',
     name: 'GestionAbogados',

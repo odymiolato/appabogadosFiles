@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { format } from 'date-fns'
 import { useRouter } from 'vue-router'
 import WideTable from '../../components/tablas/WideTable.vue'
 import apiClient from '../../axiosConfig'
@@ -28,13 +27,21 @@ async function fetchClientes() {
     const response = await apiClient.get('/clientes')
     clienteList.value = response.data.map((cliente: clientes) => ({
       ...cliente,
-      fecnac_cli: format(new Date(cliente.fecnac_cli), 'dd/MM/yyyy'), // Formatea la fecha
+      fecnac_cli: formatDate(cliente.fecnac_cli), // Formatea la fecha
     }))
   }
   catch (error) {
     console.error('Error fetching clientes:', error)
     addAlert(3, 'Error cargando clientes')
   }
+}
+
+function formatDate(dateString: string): string {
+  const date = new Date(dateString)
+  const year = date.getUTCFullYear()
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0')
+  const day = String(date.getUTCDate()).padStart(2, '0')
+  return `${day}/${month}/${year}`
 }
 
 function handleEditCliente(cliente: clientes) {

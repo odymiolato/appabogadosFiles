@@ -18,13 +18,24 @@ onMounted(async () => {
 async function fetchCliente(id: string) {
   try {
     const response = await apiClient.get(`/clientes/${id}`)
-    cliente.value = response.data
+    cliente.value = {
+      ...response.data,
+      fecnac_cli: formatDate(response.data.fecnac_cli) // Formatea la fecha
+    }
     addAlert(1, 'Cliente cargado correctamente.')
   }
   catch (error) {
     console.error('Error fetching cliente:', error)
     addAlert(3, 'Error al obtener el cliente.')
   }
+}
+
+function formatDate(dateString: string): string {
+  const date = new Date(dateString)
+  const year = date.getUTCFullYear()
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0')
+  const day = String(date.getUTCDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
 }
 
 async function saveCliente() {

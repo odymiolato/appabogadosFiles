@@ -13,7 +13,6 @@ const showModalTipoInteraccion = ref(false)
 const showModalClientes = ref(false)
 const interaccionSelected = ref<{ codigo: string, nombre: string }>({ codigo: '', nombre: '' })
 const clienteSelected = ref<{ codigo: string, nombre: string }>({ codigo: '', nombre: '' })
-const fechaSelected = ref('')
 
 const route = useRoute()
 const router = useRouter()
@@ -28,7 +27,7 @@ async function fetchInteraccion(id: string) {
   try {
     const response = await apiClient.get(`/interacciones/${id}`)
     interaccion.value = response.data
-    fechaSelected.value = interaccion.value.fecha_int:format(new Date(interaccion.fecha_int), 'dd/MM/yyyy').tostring()
+    interaccion.value.fecha_int = formatDate(interaccion.value.fecha_int)
     const cliente = await apiClient.get(`/clientes/${interaccion.value.codcli_int}`)
     clienteSelected.value = { codigo: String(cliente.data.codcli_cli), nombre: cliente.data.nombre_cli }
     const tipointeraccion = await apiClient.get(`/tipointeraccion/${interaccion.value.codtin_int}`)
@@ -44,7 +43,6 @@ async function saveInteraccion() {
   try {
     interaccion.value.codcli_int = Number(clienteSelected.value.codigo)
     interaccion.value.codtin_int = Number(interaccionSelected.value.codigo)
-    interaccion.value.fecha_int = new Date(fechaSelected.value)
     if (route.params.id) {
       await apiClient.patch(`/interacciones/${route.params.id}`, interaccion.value)
       addAlert(2, 'La interacción se actualizó correctamente.')
@@ -57,6 +55,13 @@ async function saveInteraccion() {
     console.error('Error saving interacciones:', error)
     addAlert(3, 'Error al registrar la interacción.')
   }
+}
+function formatDate(dateString: string): string {
+  const date = new Date(dateString)
+  const year = date.getUTCFullYear()
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0')
+  const day = String(date.getUTCDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
 }
 
 function goBack() {
@@ -161,7 +166,7 @@ function handleClienteSelected(cliente: clientes) {
       <div>
         <label class="text-gray-700" for="fecini_abo">Fecha de Inicio</label>
         <input
-          id="fecini_abo" v-model="fechaSelected"
+          id="fecini_abo" v-model="interaccion.fecha_int"
           type="date"
           class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
         >

@@ -1,12 +1,10 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { format } from 'date-fns'
-import type { interacciones } from '../../class/all.class'
-import WideTable from '../../components/tablas/WideTable.vue'
-
 import apiClient from '../../axiosConfig'
+import type { interacciones } from '../../class/all.class'
 import { addAlert } from '../../stores/alerts'
+import WideTable from '../../components/tablas/WideTable.vue'
 
 const columns = [
   { title: 'Fecha', field: 'fecha_int' },
@@ -19,30 +17,36 @@ const interaccionList = ref<interacciones[]>([])
 const router = useRouter()
 
 onMounted(async () => {
-  await fetchinteracciones()
+  await fetchInteracciones()
 })
 
-async function fetchinteracciones() {
+async function fetchInteracciones() {
   try {
     const response = await apiClient.get('/interacciones')
     const clientesResponse = await apiClient.get('/clientes')
     const tiposInteraccionResponse = await apiClient.get('/tipointeraccion')
-
+    
     const clientes = clientesResponse.data
     const tiposInteraccion = tiposInteraccionResponse.data
-
-    // Mapea las interacciones con los nombres de clientes y tipos de interacción
+    
     interaccionList.value = response.data.map((interaccion: interacciones) => ({
       ...interaccion,
       nombre_cliente: clientes.find(cliente => cliente.codcli_cli === interaccion.codcli_int)?.nombre_cli || 'Desconocido',
       tipo_interaccion: tiposInteraccion.find(tipo => tipo.codtin_tin === interaccion.codtin_int)?.descripcion_tin || 'Desconocido',
-      fecha_int: format(new Date(interaccion.fecha_int), 'dd/MM/yyyy'),
+      fecha_int: formatDate(interaccion.fecha_int), // Formatea la fecha
     }))
-  }
-  catch (error) {
+  } catch (error) {
     console.error('Error fetching interacciones:', error)
     addAlert(3, 'Error cargando interacciones')
   }
+}
+
+function formatDate(dateString: string): string {
+  const date = new Date(dateString)
+  const day = String(date.getUTCDate()).padStart(2, '0')
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0')
+  const year = date.getUTCFullYear()
+  return `${day}/${month}/${year}`
 }
 
 function handleEditInteraccion(interaccion: interacciones) {
@@ -64,12 +68,13 @@ function openCreateInteraccion() {
   </button>
   <div class="p-6 bg-white rounded-md shadow-md">
     <div class="mb-4">
-      <label class="text-gray-700" for="descripcion">Interacciones</label>
+      <label class="text-gray-700 " for="descripcion">Interacciones</label>
     </div>
+
     <WideTable
       :columns="columns"
       :tabledata="interaccionList"
-      label="interacciones"
+      label="Interacciones"
       default-image="/path/to/default-image.jpg"
       :editable="true"
       @edit="handleEditInteraccion"
