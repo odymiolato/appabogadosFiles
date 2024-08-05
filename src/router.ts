@@ -28,14 +28,14 @@ import Provincias from './views/provincias/provincias.vue'
 import Ciudades from './views/ciudades/ciudades.vue'
 import OrigenDireccion from './views/origen_direccion/OrigenDireccion.vue'
 
-import InteraccionCliente from './views/clientes/InteraccionCliente.vue'
+import InteraccionCliente from './views/interacciones/InteraccionCliente.vue'
 import Clientes from './views/clientes/Clientes.vue'
-import TipoInteraccion from './views/clientes/TipoInteraccion.vue'
+import TipoInteraccion from './views/tipo_interaccion/TipoInteraccion.vue'
 import TiposExpedientes from './views/tipos_expedientes/TiposExpedientes.vue'
 import Movimientos from './views/movimientos/Movimientos.vue'
 
 import CrearClientes from './views/clientes/CrearClientes.vue'
-import CrearInteracciones from './views/clientes/CrearInteracciones.vue'
+import CrearInteracciones from './views/interacciones/CrearInteracciones.vue'
 
 // import GestionDocumento from './views/componentes a revisar/GestionDocumento.vue'
 // import FacturacionFinanza from './views/componentes a revisar/FacturacionFinanza.vue'

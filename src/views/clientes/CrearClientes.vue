@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { clientes } from '../../class/all.class'
 import apiClient from '../../axiosConfig'
+import { addAlert } from '../../stores/alerts'
 
 const route = useRoute()
 const router = useRouter()
@@ -18,9 +19,11 @@ async function fetchCliente(id: string) {
   try {
     const response = await apiClient.get(`/clientes/${id}`)
     cliente.value = response.data
+    addAlert(1, 'Cliente cargado correctamente.')
   }
   catch (error) {
     console.error('Error fetching cliente:', error)
+    addAlert(3, 'Error al obtener el cliente.')
   }
 }
 
@@ -29,15 +32,18 @@ async function saveCliente() {
     if (route.params.id) {
       // Editar cliente existente
       await apiClient.patch(`/clientes/${route.params.id}`, cliente.value)
+      addAlert(2, 'El cliente se actualizó correctamente.')
     }
     else {
       // Crear nuevo cliente
       await apiClient.post('/clientes', cliente.value)
+      addAlert(2, 'El cliente se registró correctamente.')
     }
     router.push({ name: 'Clientes' })
   }
   catch (error) {
     console.error('Error saving cliente:', error)
+    addAlert(3, 'Error al registrar el cliente.')
   }
 }
 

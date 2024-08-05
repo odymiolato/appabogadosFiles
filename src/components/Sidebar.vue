@@ -68,6 +68,11 @@ function changeStatus(valor: boolean) {
             <MenuItem to="/interaccionescliente" name="InteraccionesCliente" label="Interaccion Clientes" imagen="dashboard" />
           </MenuDesplegable>
         </MenuDesplegable>
+
+        <MenuDesplegable label="Vehiculos" imagen="dashboard">
+          hola
+        </MenuDesplegable>
+
         <!-- <MenuItem to="/ui-elements" name="UIElements" label="Elements" imagen="elements" /> -->
         <MenuItem to="/eventos" name="Eventos" label="Eventos" imagen="elements" />
         <!-- <MenuItem to="/tables" name="Tables" label="Tables" imagen="tables" />

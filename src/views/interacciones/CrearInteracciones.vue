@@ -4,30 +4,39 @@ import { useRoute, useRouter } from 'vue-router'
 import type { clientes, tipo_interaccion } from '../../class/all.class'
 import { interacciones } from '../../class/all.class'
 
-import ModalReutilizable from '../../components/ModalReutilizable.vue' // Importa el componente ModalReutilizable
+import ModalReutilizable from '../../components/ModalReutilizable.vue'
 import apiClient from '../../axiosConfig'
+import { addAlert } from '../../stores/alerts'
 
 const interaccion = ref<interacciones>(new interacciones())
 const showModalTipoInteraccion = ref(false)
 const showModalClientes = ref(false)
-const interaccionSelected = ref({ codigo: '', nombre: '' })
-const clienteSelected = ref({ codigo: '', nombre: '' })
+const interaccionSelected = ref<{ codigo: string, nombre: string }>({ codigo: '', nombre: '' })
+const clienteSelected = ref<{ codigo: string, nombre: string }>({ codigo: '', nombre: '' })
+const fechaSelected = ref('')
 
 const route = useRoute()
 const router = useRouter()
 
 onMounted(async () => {
-  if (route.params.id)
+  if (route.params.id) {
     await fetchInteraccion(route.params.id as string)
+  }
 })
 
 async function fetchInteraccion(id: string) {
   try {
     const response = await apiClient.get(`/interacciones/${id}`)
     interaccion.value = response.data
-  }
-  catch (error) {
+    fechaSelected.value = interaccion.value.fecha_int:format(new Date(interaccion.fecha_int), 'dd/MM/yyyy').tostring()
+    const cliente = await apiClient.get(`/clientes/${interaccion.value.codcli_int}`)
+    clienteSelected.value = { codigo: String(cliente.data.codcli_cli), nombre: cliente.data.nombre_cli }
+    const tipointeraccion = await apiClient.get(`/tipointeraccion/${interaccion.value.codtin_int}`)
+    interaccionSelected.value = { codigo: String(tipointeraccion.data.codtin_tin), nombre: tipointeraccion.data.descripcion_tin }
+    addAlert(1, 'Interacción cargada correctamente.')
+  } catch (error) {
     console.error('Error fetching interacciones:', error)
+    addAlert(3, 'Error al obtener la interacción.')
   }
 }
 
@@ -35,18 +44,18 @@ async function saveInteraccion() {
   try {
     interaccion.value.codcli_int = Number(clienteSelected.value.codigo)
     interaccion.value.codtin_int = Number(interaccionSelected.value.codigo)
-    if (route.params.id)
-
+    interaccion.value.fecha_int = new Date(fechaSelected.value)
+    if (route.params.id) {
       await apiClient.patch(`/interacciones/${route.params.id}`, interaccion.value)
-
-    else
-
+      addAlert(2, 'La interacción se actualizó correctamente.')
+    } else {
       await apiClient.post('/interacciones', interaccion.value)
-
+      addAlert(2, 'La interacción se registró correctamente.')
+    }
     router.push({ name: 'InteraccionesCliente' })
-  }
-  catch (error) {
+  } catch (error) {
     console.error('Error saving interacciones:', error)
+    addAlert(3, 'Error al registrar la interacción.')
   }
 }
 
@@ -66,7 +75,7 @@ function handleClienteSelected(cliente: clientes) {
 <template>
   <div class="p-6 bg-white rounded-md shadow-md">
     <div class="flex items-center mb-4 cursor-pointer" @click="goBack">
-      <img src="../../assets/img/returnArrow.svg" alt="Back" class="w-6 h-6 mr-2 ">
+      <img src="../../assets/img/returnArrow.svg" alt="Back" class="w-6 h-6 mr-2">
       <span class="text-gray-700">Volver</span>
     </div>
 
@@ -86,16 +95,18 @@ function handleClienteSelected(cliente: clientes) {
             id="cliente-codigo" v-model="clienteSelected.codigo"
             type="text"
             disabled
-            class="w-[20%] mt-2 border-gray-200  rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500" readonly
+            class="w-[20%] mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+            readonly
           >
           <input
             id="cliente-nombre" v-model="clienteSelected.nombre"
             type="text"
             disabled
-            class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500" readonly
+            class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+            readonly
           >
           <button
-            class="mt-1 p-3  text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
+            class="mt-1 p-3 text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
             @click="showModalClientes = true"
           >
             <svg
@@ -118,17 +129,20 @@ function handleClienteSelected(cliente: clientes) {
             id="tipo-interaccion-codigo" v-model="interaccionSelected.codigo"
             type="text"
             disabled
-            class="w-[20%] mt-2 border-gray-200  rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500" readonly
+            class="w-[20%] mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+            readonly
           >
           <input
             id="tipo-interaccion-nombre" v-model="interaccionSelected.nombre"
             type="text"
             disabled
-            class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500" readonly
+            class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+            readonly
           >
           <button
             type="button"
-            class="mt-1 p-3  text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300" @click="showModalTipoInteraccion = true"
+            class="mt-1 p-3 text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
+            @click="showModalTipoInteraccion = true"
           >
             <svg
               class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -147,14 +161,14 @@ function handleClienteSelected(cliente: clientes) {
       <div>
         <label class="text-gray-700" for="fecini_abo">Fecha de Inicio</label>
         <input
-          id="fecini_abo" v-model="interaccion.fecha_int"
+          id="fecini_abo" v-model="fechaSelected"
           type="date"
           class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
         >
       </div>
       <div class="mt-4">
         <button
-          type="button" class="px-4 py-2  text-gray-200 bg-gray-800 rounded-md hover:bg-gray-700 focus:outline-none focus:bg-gray-700"
+          type="button" class="px-4 py-2 text-gray-200 bg-gray-800 rounded-md hover:bg-gray-700 focus:outline-none focus:bg-gray-700"
           @click="saveInteraccion"
         >
           Guardar
@@ -172,8 +186,8 @@ function handleClienteSelected(cliente: clientes) {
 
       <ModalReutilizable
         v-model:showModal="showModalClientes"
-        modal-title="InteraccionesCliente"
-        endpoint="/interacciones"
+        modal-title="Cliente"
+        endpoint="/clientes"
         code-field="codcli_cli"
         name-field="nombre_cli"
         @selected="handleClienteSelected"

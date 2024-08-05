@@ -2,15 +2,19 @@
 import { ref } from 'vue'
 import { tipo_interaccion } from '../../class/all.class'
 import apiClient from '../../axiosConfig'
+import { addAlert } from '../../stores/alerts'
 
 const tipoInteraccion = ref<tipo_interaccion>(new tipo_interaccion())
 
 async function saveTipoInteraccion() {
   try {
     await apiClient.post('/tipointeraccion', tipoInteraccion.value)
+    tipoInteraccion.value.descripcion_tin = ''
+    addAlert(2, 'El tipo de interacción se registró correctamente.')
   }
   catch (error) {
     console.error('Error saving tipo_interaccion:', error)
+    addAlert(3, 'Error al registrar el tipo de interacción.')
   }
 }
 </script>

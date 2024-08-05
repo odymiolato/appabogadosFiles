@@ -6,6 +6,7 @@ import type { interacciones } from '../../class/all.class'
 import WideTable from '../../components/tablas/WideTable.vue'
 
 import apiClient from '../../axiosConfig'
+import { addAlert } from '../../stores/alerts'
 
 const columns = [
   { title: 'Fecha', field: 'fecha_int' },
@@ -40,6 +41,7 @@ async function fetchinteracciones() {
   }
   catch (error) {
     console.error('Error fetching interacciones:', error)
+    addAlert(3, 'Error cargando interacciones')
   }
 }
 

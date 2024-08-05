@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router'
 import WideTable from '../../components/tablas/WideTable.vue'
 import apiClient from '../../axiosConfig'
 import type { clientes } from '../../class/all.class'
+import { addAlert } from '../../stores/alerts'
 
 const columns = [
   { title: 'Nombre', field: 'nombre_cli' },
@@ -32,6 +33,7 @@ async function fetchClientes() {
   }
   catch (error) {
     console.error('Error fetching clientes:', error)
+    addAlert(3, 'Error cargando clientes')
   }
 }
 
