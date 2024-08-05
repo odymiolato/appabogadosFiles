@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from 'vue'
 import Modal from '../../components/Modal.vue'
 import Inputs from '../../components/Inputs.vue'
-import { contrapartes, ciudades, provincias } from '../../class/all.class'
+import { contrapartes, ciudades, provincias, expedientes, tipo_movimientos } from '../../class/all.class'
 import { addAlert } from '../../stores/alerts'
 
 const ClientesList = ref<{ id: number, name: string }[]>([]);
@@ -17,6 +17,13 @@ const ciudadesList = ref<ciudades[]>([])
 const provinciaSelected = ref({ codpro_pro: '', nombre_pro: '' })
 const ciuadadSelected = ref({ codciu_ciu: '', nombre_ciu: '' })
 
+const ExpedientesList = ref<expedientes[]>([])
+const TipoMovimientosList = ref<tipo_movimientos[]>([])
+const searchTermExpedientes = ref('')
+const searchTermTipoMovimientos = ref('')
+const ExpedienteSelected = ref({ codexp_exp: '', descri_exp: '' })
+const TipoMovimientoSelected = ref({ tipmov_tmo: '', descri_tmo: '' })
+
 
 const filteredProvincias = computed(() => {
   if (searchTerm.value === '')
@@ -24,7 +31,6 @@ const filteredProvincias = computed(() => {
 
   return provinciasList.value.filter(item => String(item.codpro_pro).toLowerCase().includes(searchTerm.value.toLowerCase()) || item.nombre_pro.toLowerCase().includes(searchTerm.value.toLowerCase()))
 })
-
 
 function handleAccept() {
   showModal.value = false
@@ -43,8 +49,6 @@ function handleDecline() {
 function handleClose() {
   showModal.value = false
 }
-
-
 
 async function getProvincias() {
   try {
@@ -65,7 +69,44 @@ async function getProvincias() {
     addAlert(3, 'Comunicarce con los administradores.')
   }
 }
+async function getExpedientes() {
+  try {
+    const response = await fetch(`${URL}expedientes`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
 
+    if (response.ok)
+      provinciasList.value = await response.json()
+    else
+      addAlert(3, 'problemas con la solicitud de los Expedientes')
+  }
+  catch (error) {
+    console.error(error)
+    addAlert(3, 'Comunicarce con los administradores.')
+  }
+}
+async function getTiposMovimientos() {
+  try {
+    const response = await fetch(`${URL}tipomovimientos`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+
+    if (response.ok)
+      provinciasList.value = await response.json()
+    else
+      addAlert(3, 'problemas con la solicitud de los Tipos de movimientos')
+  }
+  catch (error) {
+    console.error(error)
+    addAlert(3, 'Comunicarce con los administradores.')
+  }
+}
 
 function searchProvincias(value: any) {
   searchTerm.value = value
@@ -100,6 +141,8 @@ function setCiudad(obj: ciudades) {
 
 onMounted(() => {
   getProvincias()
+  getExpedientes()
+  getTiposMovimientos()
 })
 </script>
 
@@ -178,7 +221,7 @@ onMounted(() => {
 
             <!-- block two -->
             <div class="flex-[50%]">
-              <label class="text-gray-700" for="tipo_espcialidad_abo">Tipo de Expediente</label>
+              <label class="text-gray-700" for="tipo_espcialidad_abo">Tipo de Movimiento</label>
               <div class="flex gap-2 justify-center items-center">
                 <input id="fecnac_abo" type="text" disabled
                   class="w-[20%] mt-2 border-gray-200  rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
@@ -203,7 +246,7 @@ onMounted(() => {
 
             <!-- block tree -->
             <div class="flex flex-col">
-              <label class="text-gray-700" for="tipo_espcialidad_abo">Tipo de Expediente</label>
+              <label class="text-gray-700" for="tipo_espcialidad_abo">Monto</label>
               <div>
                 <input id="fecnac_abo" type="number"
                   class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
@@ -234,7 +277,6 @@ onMounted(() => {
         </div>
         <!-- end -->
 
-
         <div class="my-6 flex w-full flex-col">
           <div class="">
             <div class="rounded-md shadow bg-white h-[17.9em] max-h-[17.9em] overflow-auto">
@@ -243,11 +285,19 @@ onMounted(() => {
                   <tr>
                     <th
                       class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
-                      Codigo
+                      Codigo Expediente
                     </th>
                     <th
                       class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
-                      Nombre
+                      Tipo Movimiento
+                    </th>
+                    <th
+                      class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
+                      Nombre Movimiento
+                    </th>
+                    <th
+                      class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
+                      Monto
                     </th>
                   </tr>
                 </thead>
