@@ -70,7 +70,8 @@ function changeStatus(valor: boolean) {
         </MenuDesplegable>
 
         <MenuDesplegable label="Vehiculos" imagen="dashboard">
-          hola
+          <MenuItem to="/vehiculosestado" name="VehiculosEstado" label="Estado de vehiculos" imagen="dashboard" />
+          <MenuItem to="/vehiculosmodelos" name="VehiculosModelos" label="Modelos de Vehiculos" imagen="dashboard" />
         </MenuDesplegable>
 
         <!-- <MenuItem to="/ui-elements" name="UIElements" label="Elements" imagen="elements" /> -->
