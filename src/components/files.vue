@@ -185,7 +185,6 @@ onMounted(() => {
         <h3>No hay archivos.</h3>
       </div>
     </div>
-    <!-- Añadir el componente ContextMenu -->
     <ContextMenu ref="contextMenuRef" @action="handleAction" />
   </div>
 </template>
