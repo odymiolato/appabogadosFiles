@@ -2,7 +2,7 @@
 import { callWithErrorHandling, computed, onMounted, ref } from 'vue'
 import Modal from '../../components/Modal.vue'
 import Inputs from '../../components/Inputs.vue'
-import { contrapartes, expedientes, tipo_movimientos } from '../../class/all.class'
+import { contrapartes, expedientes, movimientos_h, tipo_movimientos } from '../../class/all.class'
 import { addAlert } from '../../stores/alerts'
 
 class TableMovimientos {
@@ -19,9 +19,9 @@ class TableMovimientos {
   }
 }
 
-const ClientesList = ref<{ id: number, name: string }[]>([]);
 const showModal = ref(false)
 const Contraparte = ref<contrapartes>(new contrapartes())
+const MovimientoHeader = ref<movimientos_h>(new movimientos_h)
 const TypeModal = ref<number>(0)
 /* @ts-expect-error */
 const URL: string = import.meta.env.VITE_PATH_API
@@ -129,8 +129,17 @@ function setTipoMovimiento(obj: tipo_movimientos) {
   }
   handleAccept()
 }
+function calculateAmont() {
+  try {
+    TableMovList.value.forEach((item) => {
+      MovimientoHeader.value.total_movh += item.monto
+    })
 
-
+  } catch (error) {
+    console.error(error)
+    addAlert(3, JSON.stringify(error))
+  }
+}
 
 function addMovimiento(codexp: string = '', tipmov: string = '', nombreMov: string = '', monto: number = 0) {
   try {
@@ -154,7 +163,8 @@ function addMovimiento(codexp: string = '', tipmov: string = '', nombreMov: stri
     ExpedienteSelected.value = { codexp_exp: '', descri_exp: '' }
     TipoMovimientoSelected.value = { tipmov_tmo: '', descri_tmo: '' }
     Amont.value = 0;
-    addAlert(1, 'Se ha agregado un elemento a la lista.')
+    calculateAmont()
+    addAlert(2, 'Se ha agregado un elemento a la lista.')
   } catch (error) {
     console.error(error)
     addAlert(3, JSON.stringify(error))
@@ -184,7 +194,16 @@ function removeMovimiento(codexp: number) {
     ExpedienteSelected.value = { codexp_exp: '', descri_exp: '' }
     TipoMovimientoSelected.value = { tipmov_tmo: '', descri_tmo: '' }
     Amont.value = 0;
-    addAlert(1,'Elemento Eliminado de la lista.')
+    addAlert(2, 'Elemento Eliminado de la lista.')
+  } catch (error) {
+    console.error(error)
+    addAlert(3, JSON.stringify(error))
+  }
+}
+
+async function saveMovimiento() {
+  try {
+
   } catch (error) {
     console.error(error)
     addAlert(3, JSON.stringify(error))
@@ -208,7 +227,7 @@ onMounted(() => {
           <div class="flex w-full">
             <div class="w-full">
               <label class="text-gray-700" for="telefo_abo">Comentario</label>
-              <input id="telefo_abo" v-model="Contraparte.telefo_con" type="text"
+              <input id="telefo_abo" v-model="MovimientoHeader.comentario_movh" type="text"
                 class="w-full h-[6em] mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
             </div>
           </div>
@@ -216,26 +235,26 @@ onMounted(() => {
           <div class="grid grid-cols-1 gap-6 mt-2 sm:grid-cols-2">
             <div>
               <label class="text-gray-700" for="celula_abo">Fecha</label>
-              <input id="celula_abo" v-model="Contraparte.doc_con" type="date"
+              <input id="celula_abo" v-model="MovimientoHeader.fecha_movh" type="date"
                 class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
             </div>
 
             <div>
               <label class="text-gray-700" for="email_abo">Total</label>
-              <input id="email_abo" v-model="Contraparte.email_con" type="number" disabled
+              <input id="email_abo" v-model="MovimientoHeader.total_movh" type="number" disabled
                 class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
             </div>
           </div>
 
         </div>
 
-        <div class="flex justify-end mt-4">
+        <!-- <div class="flex justify-end mt-4">
           <button type="button"
             class="px-4 py-2 text-gray-200 bg-gray-800 rounded-md hover:bg-gray-700 focus:outline-none focus:bg-gray-700"
             @click="true">
             Guardar
           </button>
-        </div>
+        </div> -->
       </div>
     </div>
 
@@ -377,6 +396,13 @@ onMounted(() => {
       </div>
     </div>
     <!-- end detalle -->
+    <div class="flex justify-end mt-4">
+      <button type="button"
+        class="px-4 py-2 text-gray-200 bg-gray-800 rounded-md hover:bg-gray-700 focus:outline-none focus:bg-gray-700"
+        @click="true">
+        Guardar
+      </button>
+    </div>
   </div>
 
   <Modal v-if="showModal" class="flex justify-center items-center" :title="TittleModal[TypeModal - 1]"
