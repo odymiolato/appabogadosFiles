@@ -1,76 +1,87 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import type { vehiculos_estados, vehiculos_modelos } from '../../class/all.class'
-import { vehiculos } from '../../class/all.class'
+import { abogados, asignaciones_vehiculos, vehiculos } from '../../class/all.class';
+import { audiencias } from '../../class/all.class';
 
 import ModalReutilizable from '../../components/ModalReutilizable.vue'
 import apiClient from '../../axiosConfig'
 import { addAlert } from '../../stores/alerts'
 
-const vehiculo = ref<vehiculos>(new vehiculos())
-const showModalModelos = ref(false)
-const showModalEstados = ref(false)
-const modeloSelected = ref<{ codigo: string; nombre: string }>({ codigo: '', nombre: '' })
-const estadoSelected = ref<{ codigo: string; nombre: string }>({ codigo: '', nombre: '' })
+const asignacion = ref<asignaciones_vehiculos>(new asignaciones_vehiculos())
+const showModalVehiculos = ref(false)
+const showModalAbogados = ref(false)
+const showModalAudiencia = ref(false)
+
+const vehiculoSelected = ref<{ codigo: string; nombre: string }>({ codigo: '', nombre: '' })
+const abogadoSelected = ref<{ codigo: string; nombre: string }>({ codigo: '', nombre: '' })
+const audienciaSelected = ref<{ codigo: string; nombre: string }>({ codigo: '', nombre: '' })
 
 const route = useRoute()
 const router = useRouter()
 
 onMounted(async () => {
   if (route.params.id)
-    await fetchVehiculo(route.params.id as string)
+    await fetchAsignacion(route.params.id as string)
 })
 
-async function fetchVehiculo(id: string) {
+async function fetchAsignacion(id: string) {
   try {
-    const response = await apiClient.get(`/vehiculos/${id}`)
-    vehiculo.value = response.data
+    const response = await apiClient.get(`/asignaciones/${id}`)
+    asignacion.value = response.data
 
-    const estado = await apiClient.get(`/vehiculos-estados/${vehiculo.value.codestado_veh}`)
-    estadoSelected.value = { codigo: String(estado.data.codestado_est), nombre: estado.data.descripcion_est }
+    const abogado = await apiClient.get(`/abogados/${asignacion.value.codabo_asv}`)
+    abogadoSelected.value = { codigo: String(abogado.data.codabogado_est), nombre: abogado.data.descripcion_est }
 
-    const modelo = await apiClient.get(`/vehiculos-modelos/${vehiculo.value.codmodelo_veh}`)
-    modeloSelected.value = { codigo: String(modelo.data.codmodelo_mod), nombre: modelo.data.nombre_mod }
+    const vehiculo = await apiClient.get(`/vehiculos/${asignacion.value.codveh_asv}`)
+    vehiculoSelected.value = { codigo: String(vehiculo.data.codvehiculo_mod), nombre: vehiculo.data.nombre_mod }
 
-    addAlert(1, 'Interacción cargada correctamente.')
+    const audiencia = await apiClient.get(`/audiencias/${asignacion.value.codaud_asv}`)
+    audienciaSelected.value = { codigo: String(audiencia.data.codvehiculo_mod), nombre: audiencia.data.fecha_aud }
+
+    addAlert(1, 'Asignacion cargada correctamente.')
   }
   catch (error) {
-    console.error('Error fetching vehiculos:', error)
-    addAlert(3, 'Error al obtener la interacción.')
+    console.error('Error fetching asignacion:', error)
+    addAlert(3, 'Error al obtener la asignacion.')
   }
 }
 
 async function saveVehiculo() {
   try {
-    vehiculo.value.codestado_veh = estadoSelected.value.codigo
-    vehiculo.value.codmodelo_veh = Number(modeloSelected.value.codigo)
+    asignacion.value.codabo_asv = Number(abogadoSelected.value.codigo)
+    asignacion.value.codveh_asv = Number(vehiculoSelected.value.codigo)
+    asignacion.value.codaud_asv = Number(audienciaSelected.value.codigo)
     if (route.params.id) {
-      await apiClient.patch(`/vehiculos/${route.params.id}`, vehiculo.value)
+      await apiClient.patch(`/asignarvehiculos/${route.params.id}`, asignacion.value)
       addAlert(2, 'El vehiculo se actualizó correctamente.')
     }
     else {
-      await apiClient.post('/vehiculos', vehiculo.value)
-      addAlert(2, 'El Vehiculo se registró correctamente.')
+      await apiClient.post('/asignarvehiculos', asignacion.value)
+      addAlert(2, 'El Vehiculo se asigno correctamente.')
     }
-    router.push({ name: 'Vehiculos' })
+    router.push({ name: 'AsignacionVehiculo' })
   }
   catch (error) {
-    console.error('Error saving vehiculos:', error)
-    addAlert(3, 'Error al registrar el vehiculo.')
+    console.error('Error saving asignacion:', error)
+    addAlert(3, 'Error al asignar el vehiculo.')
   }
 }
 
 function goBack() {
-  router.push({ name: 'Vehiculos' })
+  router.push({ name: 'AsignacionVehiculo' })
 }
 
-function handlemodeloSelected(modelo: vehiculos_modelos) {
-  modeloSelected.value = { codigo: String(modelo.codmodelo_mod), nombre: modelo.nombre_mod }
+function handlevehiculoSelected(vehiculo: vehiculos) {
+  vehiculoSelected.value = { codigo: String(vehiculo.codveh_veh), nombre: vehiculo.placa_veh }
 }
 
-function handleestadoSelected(estado: vehiculos_estados) {
-  estadoSelected.value = { codigo: String(estado.codestado_est), nombre: estado.descripcion_est }
+function handleabogadoSelected(abogado: abogados) {
+  abogadoSelected.value = { codigo: String(abogado.codabo_abo), nombre: abogado.nombre_abo}
+}
+
+function handleaudienciaSelected(audiencia: audiencias) {
+  audienciaSelected.value = { codigo: String(audiencia.codaud_aud), nombre: audiencia.fecha_aud }
 }
 </script>
 
@@ -82,35 +93,29 @@ function handleestadoSelected(estado: vehiculos_estados) {
     </div>
 
     <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
-      <div>
-        <label class="text-gray-700" for="nombre">Placa del Vehiculo</label>
-        <input
-          id="placa" v-model="vehiculo.placa_veh"
-          type="text"
-          class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-        >
-      </div>
+
       <div>
         <label class="text-gray-700" for="nombre">Año del Vehiculo</label>
         <input
-          id="anio" v-model="vehiculo.anio_veh"
-          type="text"
+          id="anio" v-model="asignacion.fecha_asv"
+          type="date"
           maxlength="4"
           class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
         >
       </div>
+
       <div>
-        <label class="text-gray-700" for="estado">Estado</label>
+        <label class="text-gray-700" for="abogado">abogado</label>
         <div class="flex gap-2 justify-center items-center">
           <input
-            id="estado-codigo" v-model="estadoSelected.codigo"
+            id="abogado-codigo" v-model="abogadoSelected.codigo"
             type="text"
             disabled
             class="w-[20%] mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
             readonly
           >
           <input
-            id="estado-nombre" v-model="estadoSelected.nombre"
+            id="abogado-nombre" v-model="abogadoSelected.nombre"
             type="text"
             disabled
             class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
@@ -118,7 +123,7 @@ function handleestadoSelected(estado: vehiculos_estados) {
           >
           <button
             class="mt-1 p-3 text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
-            @click="showModalEstados = true"
+            @click="showModalAbogados = true"
           >
             <svg
               class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -133,18 +138,54 @@ function handleestadoSelected(estado: vehiculos_estados) {
           </button>
         </div>
       </div>
+      
       <div>
-        <label class="text-gray-700" for="modelos">Modelos</label>
+        <label class="text-gray-700" for="abogado">audiencias</label>
         <div class="flex gap-2 justify-center items-center">
           <input
-            id="modelo-codigo" v-model="modeloSelected.codigo"
+            id="abogado-codigo" v-model="audienciaSelected.codigo"
             type="text"
             disabled
             class="w-[20%] mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
             readonly
           >
           <input
-            id="modelo-nombre" v-model="modeloSelected.nombre"
+            id="abogado-nombre" v-model="audienciaSelected.fecha_aud"
+            type="text"
+            disabled
+            class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+            readonly
+          >
+          <button
+            class="mt-1 p-3 text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
+            @click="showModalAudiencia = true"
+          >
+            <svg
+              class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+              viewBox="0 0 20 20"
+            >
+              <path
+                stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+              />
+            </svg>
+            <span class="sr-only">Search</span>
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <label class="text-gray-700" for="vehiculos">vehiculos</label>
+        <div class="flex gap-2 justify-center items-center">
+          <input
+            id="vehiculo-codigo" v-model="vehiculoSelected.codigo"
+            type="text"
+            disabled
+            class="w-[20%] mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+            readonly
+          >
+          <input
+            id="vehiculo-nombre" v-model="vehiculoSelected.nombre"
             type="text"
             disabled
             class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
@@ -153,7 +194,7 @@ function handleestadoSelected(estado: vehiculos_estados) {
           <button
             type="button"
             class="mt-1 p-3 text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
-            @click="showModalModelos = true"
+            @click="showModalVehiculos = true"
           >
             <svg
               class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -179,21 +220,29 @@ function handleestadoSelected(estado: vehiculos_estados) {
       </div>
 
       <ModalReutilizable
-        v-model:showModal="showModalModelos"
-        modal-title="Modelos de Vehiculos"
-        endpoint="/vehiculos-modelos"
-        code-field="codmodelo_mod"
-        name-field="nombre_mod"
-        @selected="handlemodeloSelected"
+        v-model:showModal="showModalVehiculos"
+        modal-title="Vehiculos"
+        endpoint="/vehiculos"
+        code-field="codveh_veh"
+        name-field="placa_veh"
+        @selected="handlevehiculoSelected"
       />
 
       <ModalReutilizable
-        v-model:showModal="showModalEstados"
-        modal-title="Estados del Vehiculo"
-        endpoint="/vehiculos-estados"
-        code-field="codestado_est"
-        name-field="descripcion_est"
-        @selected="handleestadoSelected"
+        v-model:showModal="showModalAbogados"
+        modal-title="Abogados"
+        endpoint="/abogados"
+        code-field="codabo_abo"
+        name-field="nombre_abo"
+        @selected="handleabogadoSelected"
+      />
+      <ModalReutilizable
+        v-model:showModal="showModalAudiencia"
+        modal-title="Audiencias"
+        endpoint="/audiencias"
+        code-field="codaud_aud"
+        name-field="fecha_aud"
+        @selected="handleaudienciaSelected"
       />
     </div>
   </div>
