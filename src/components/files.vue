@@ -11,7 +11,7 @@ const props = defineProps({
   path: { type: String, default: '' },
 });
 
-const URL: string = 'http://localhost/appabogadosFiles/'
+const URL: string = 'http://localhost:8081/appabogadosFiles/'
 const files = ref<Array<any>>([])
 const filesCopy = ref<Array<any>>([])
 const searchTerm = ref('')
@@ -185,7 +185,6 @@ onMounted(() => {
         <h3>No hay archivos.</h3>
       </div>
     </div>
-    <!-- Añadir el componente ContextMenu -->
     <ContextMenu ref="contextMenuRef" @action="handleAction" />
   </div>
 </template>

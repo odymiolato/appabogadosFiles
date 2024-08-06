@@ -25,6 +25,8 @@ async function saveTipoGasto(): Promise<void> {
       return;
     }
 
+    tipo.value.tipgas_tga = tipo.value.tipgas_tga.toUpperCase()
+
     const response = await fetch(URL + 'tiposgastos', {
       method: 'POST',
       headers: {
@@ -36,7 +38,7 @@ async function saveTipoGasto(): Promise<void> {
 
     if (response.ok) {
       if (await response.json()) {
-        addAlert(2, "Tipo de Gasta resgistrado satisfactoriamente.")
+        addAlert(2, "Tipo de Gasto resgistrado satisfactoriamente.")
         clearPage()
       }
     } else {

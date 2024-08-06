@@ -457,10 +457,10 @@ export class especialidades {
 
 export class expedientes {
   codexp_exp: number
-  motivo_exp: string
+  descri_exp: string
   fecini_exp: Date
   estatu_exp: string
-  fecfin_exp: Date
+  fecfin_exp: Date | null
   tipexp_exp: number
   balhon_exp: number
   balgasop_exp: number
@@ -473,10 +473,10 @@ export class expedientes {
   fechmod: Date
   constructor() {
     this.codexp_exp = 0
-    this.motivo_exp = ''
+    this.descri_exp = ''
     this.fecini_exp = new Date()
     this.estatu_exp = ''
-    this.fecfin_exp = new Date()
+    this.fecfin_exp = null
     this.tipexp_exp = 0
     this.balhon_exp = 0
     this.balgasop_exp = 0
