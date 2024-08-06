@@ -26,7 +26,7 @@ function editCliente(cliente) {
             {{ col.title }}
           </th>
           <th v-if="editable" class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
-            Acciones
+            
           </th>
         </tr>
       </thead>
@@ -59,9 +59,9 @@ function editCliente(cliente) {
               </div>
             </div>
           </td>
-          <td v-if="editable" class="px-5 py-5 text-sm bg-white border-b border-gray-200">
+          <td v-if="editable" class="px-6 py-4 text-sm font-medium leading-5 text-right border-b border-gray-200 whitespace-nowrap">
             <button
-              class="text-blue-600 hover:underline "
+              class="text-indigo-600 hover:text-indigo-900 "
               @click="editCliente(row)"
             >
               Editar
