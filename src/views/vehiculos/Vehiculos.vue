@@ -10,8 +10,8 @@ const columns = [
   { title: 'Placa', field: 'placa_veh' },
   { title: 'Año', field: 'anio_veh' },
   { title: 'Modelo', field: 'nombre_mod' },
-  { title: 'Estado del Vehiculo', field: 'descripcion_est' },
-
+  { title: 'Marca', field: 'nombre_mar' },
+  { title: 'Estado', field: 'descripcion_est' },
 ]
 
 const vehiculosList = ref<vehiculos[]>([])
@@ -26,31 +26,32 @@ async function fetchVehiculos() {
     const response = await apiClient.get('/vehiculos')
     const modelosResponse = await apiClient.get('/vehiculos-modelos')
     const estadosResponse = await apiClient.get('/vehiculos-estados')
+    const marcasResponse = await apiClient.get('/vehiculos-marcas')
     
     const modelos = modelosResponse.data
     const estados = estadosResponse.data
-    
-    vehiculosList.value = response.data.map((vehiculo: vehiculos) => ({
-      ...vehiculo,
-      nombre_mod: modelos.find(modelo => modelo.codmodelo_mod === vehiculo.codmodelo_veh)?.nombre_mod || 'Desconocido',
-      descripcion_est: estados.find(estado => estado.codestado_est === vehiculo.codestado_veh)?.descripcion_est || 'Desconocido',
-    }))
+    const marcas = marcasResponse.data
+
+    vehiculosList.value = response.data.map((vehiculo: vehiculos) => {
+      const modelo = modelos.find(modelo => modelo.codmodelo_mod === vehiculo.codmodelo_veh)
+      const marca = modelo ? marcas.find(marca => marca.codmarca_mar === modelo.codmarca_mod) : null
+      return {
+        ...vehiculo,
+        nombre_mod: modelo?.nombre_mod || 'Desconocido',
+        nombre_mar: marca?.nombre_mar || 'Desconocido',
+        descripcion_est: estados.find(estado => estado.codestado_est === vehiculo.codestado_veh)?.descripcion_est || 'Desconocido',
+      }
+    })
   } catch (error) {
     console.error('Error fetching vehiculos:', error)
     addAlert(3, 'Error cargando vehiculos')
   }
 }
 
-function formatDate(dateString: string): string {
-  const date = new Date(dateString)
-  const day = String(date.getUTCDate()).padStart(2, '0')
-  const month = String(date.getUTCMonth() + 1).padStart(2, '0')
-  const year = date.getUTCFullYear()
-  return `${day}/${month}/${year}`
-}
+
 
 function handleEditVehiculo(vehiculo: vehiculos) {
-  router.push({ name: 'CrearVehiculo', params: { id: vehiculo.codint_int } })
+  router.push({ name: 'CrearVehiculo', params: { id: vehiculo.codveh_veh } })
 }
 
 function openCreateVehiculo() {

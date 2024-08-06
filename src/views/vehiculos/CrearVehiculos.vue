@@ -29,7 +29,7 @@ async function fetchVehiculo(id: string) {
     vehiculo.value = response.data
 
     const estado = await apiClient.get(`/vehiculos-estados/${vehiculo.value.codestado_veh}`)
-    estadoSelected.value = { codigo: String(estado.data.codestado_est), nombre: estado.data.descricion_est }
+    estadoSelected.value = { codigo: String(estado.data.codestado_est), nombre: estado.data.descripcion_est }
 
     const modelo = await apiClient.get(`/vehiculos-modelos/${vehiculo.value.codmodelo_veh}`)
     modeloSelected.value = { codigo: String(modelo.data.codmodelo_mod), nombre: modelo.data.nombre_mod }
@@ -47,23 +47,16 @@ async function saveVehiculo() {
     vehiculo.value.codmodelo_veh = Number(modeloSelected.value.codigo)
     if (route.params.id) {
       await apiClient.patch(`/vehiculos/${route.params.id}`, vehiculo.value)
-      addAlert(2, 'La interacción se actualizó correctamente.')
+      addAlert(2, 'El vehiculo se actualizó correctamente.')
     } else {
       await apiClient.post('/vehiculos', vehiculo.value)
-      addAlert(2, 'La interacción se registró correctamente.')
+      addAlert(2, 'El Vehiculo se registró correctamente.')
     }
     router.push({ name: 'Vehiculos' })
   } catch (error) {
     console.error('Error saving vehiculos:', error)
-    addAlert(3, 'Error al registrar la interacción.')
+    addAlert(3, 'Error al registrar el vehiculo.')
   }
-}
-function formatDate(dateString: string): string {
-  const date = new Date(dateString)
-  const year = date.getUTCFullYear()
-  const month = String(date.getUTCMonth() + 1).padStart(2, '0')
-  const day = String(date.getUTCDate()).padStart(2, '0')
-  return `${year}-${month}-${day}`
 }
 
 function goBack() {
@@ -71,7 +64,7 @@ function goBack() {
 }
 
 function handlemodeloSelected(modelo: vehiculos_modelos) {
-  modeloSelected.value = { codigo: String(modelo.codmodelo_mod), nombre: modelo.nombre_mod}
+  modeloSelected.value = { codigo: String(modelo.codmodelo_mod), nombre: modelo.nombre_mod }
 }
 
 function handleestadoSelected(estado: vehiculos_estados) {
@@ -173,7 +166,6 @@ function handleestadoSelected(estado: vehiculos_estados) {
           </button>
         </div>
       </div>
-
 
       <div class="mt-4">
         <button
