@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import apiClient from '../../axiosConfig'
-import type { vehiculos, vehiculos_modelos } from '../../class/all.class'
+import type { vehiculos } from '../../class/all.class'
 import { addAlert } from '../../stores/alerts'
 import WideTable from '../../components/tablas/WideTable.vue'
 
@@ -27,7 +27,7 @@ async function fetchVehiculos() {
     const modelosResponse = await apiClient.get('/vehiculos-modelos')
     const estadosResponse = await apiClient.get('/vehiculos-estados')
     const marcasResponse = await apiClient.get('/vehiculos-marcas')
-    
+
     const modelos = modelosResponse.data
     const estados = estadosResponse.data
     const marcas = marcasResponse.data
@@ -42,13 +42,12 @@ async function fetchVehiculos() {
         descripcion_est: estados.find(estado => estado.codestado_est === vehiculo.codestado_veh)?.descripcion_est || 'Desconocido',
       }
     })
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error fetching vehiculos:', error)
     addAlert(3, 'Error cargando vehiculos')
   }
 }
-
-
 
 function handleEditVehiculo(vehiculo: vehiculos) {
   router.push({ name: 'CrearVehiculo', params: { id: vehiculo.codveh_veh } })
