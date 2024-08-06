@@ -23,7 +23,7 @@ const tipo = ref<tipo_movimientos>(new tipo_movimientos());
 const TiposGastosList = ref<Array<tipos_gastos>>([]);
 const TipoGatosSelected = ref<{ tipgas_tga: string, descri_tga: string }>({ tipgas_tga: '', descri_tga: '' });
 let searchTerm = ref('');
-
+const origen = ref<string>('');
 /* @ts-ignore */
 const URL: string = import.meta.env.VITE_PATH_API;
 
@@ -158,6 +158,23 @@ onMounted(() => {
 
             </div>
           </div>
+
+          <!-- <div>
+            <label class="text-gray-700" for="tipo_especialidad_abo">Origen</label>
+            <div class="mt-3 flex flex-row gap-3 items-end">
+              <label class="flex flex-row items-center">
+                <input type="radio" class="w-5 h-5 text-sky-600 focus:ring-sky-500" name="radio" value="D"
+                  v-model="origen" checked>
+                <span class="ml-2 text-gray-700">Débito</span>
+              </label>
+              <label class="flex flex-row items-center">
+                <input type="radio" class="w-5 h-5 text-sky-600 focus:ring-sky-500" name="radio" value="C"
+                  v-model="origen">
+                <span class="ml-2 text-gray-700">Crédito</span>
+              </label>
+            </div>
+          </div> -->
+
         </div>
 
         <div class="flex justify-end mt-4">
