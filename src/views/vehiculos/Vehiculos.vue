@@ -1,136 +1,83 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import Inputs from '../../../components/Inputs.vue';
-import PaginationTable from '../../../components/tablas/PaginationTable.vue'
-import Buttons from '../../../components/Buttons.vue'
+import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import apiClient from '../../axiosConfig'
+import type { vehiculos, vehiculos_modelos } from '../../class/all.class'
+import { addAlert } from '../../stores/alerts'
+import WideTable from '../../components/tablas/WideTable.vue'
 
-const events = ref([
-  { index: 1, item: 'ejemplo' },
-  { index: 2, item: 'ejemplo 2' },
-])
-const columns = ref([
-  { key: 'city', label: 'City' },
-  { key: 'totalOrders', label: 'Total orders' },
-])
-
-const tableData = ref([
-  { city: 'New York', totalOrders: 150 },
-  { city: 'Los Angeles', totalOrders: 200 },
-  // Agrega más datos aquí
-])
-
-const isModalOpen = ref(false)
-const modalTitle = ref('')
-const currentEndpoint = ref('')
-
-const nombre = ref('')
-
-function openModal(type: any) {
-  if (type === 'users') {
-    modalTitle.value = 'Usuarios'
-    currentEndpoint.value = 'https://tu-api.com/users'
-  }
-  else if (type === 'products') {
-    modalTitle.value = 'Productos'
-    currentEndpoint.value = 'https://tu-api.com/products'
-  }
-  isModalOpen.value = true
-}
-
-function closeModal() {
-  isModalOpen.value = false
-}
-
-function handleSelect(item: any) {
-  nombre.value = item.name
-  // Llenar otros campos si es necesario
-}
-
-const paginationtablecolumns = [
-  {
-    name: 'Nombre',
-    field: 'nombre',
-    hasImage: true,
-  },
-  {
-    name: 'Contacto del Cliente',
-    field: 'contacto',
-
-  },
+const columns = [
+  { title: 'Placa', field: 'placa_veh' },
+  { title: 'Año', field: 'anio_veh' },
+  { title: 'Modelo', field: 'nombre_mod' },
+  { title: 'Estado del Vehiculo', field: 'descripcion_est' },
 
 ]
 
-const paginationtabledata = [
-  {
-    nombre: {
-      text: 'Maria',
-      image: '',
-    },
-    contacto: '2345789234576',
+const vehiculosList = ref<vehiculos[]>([])
+const router = useRouter()
 
-  },
-]
+onMounted(async () => {
+  await fetchVehiculos()
+})
+
+async function fetchVehiculos() {
+  try {
+    const response = await apiClient.get('/vehiculos')
+    const modelosResponse = await apiClient.get('/vehiculos-modelos')
+    const estadosResponse = await apiClient.get('/vehiculos-estados')
+    
+    const modelos = modelosResponse.data
+    const estados = estadosResponse.data
+    
+    vehiculosList.value = response.data.map((vehiculo: vehiculos) => ({
+      ...vehiculo,
+      nombre_mod: modelos.find(modelo => modelo.codmodelo_mod === vehiculo.codmodelo_veh)?.nombre_mod || 'Desconocido',
+      descripcion_est: estados.find(estado => estado.codestado_est === vehiculo.codestado_veh)?.descripcion_est || 'Desconocido',
+    }))
+  } catch (error) {
+    console.error('Error fetching vehiculos:', error)
+    addAlert(3, 'Error cargando vehiculos')
+  }
+}
+
+function formatDate(dateString: string): string {
+  const date = new Date(dateString)
+  const day = String(date.getUTCDate()).padStart(2, '0')
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0')
+  const year = date.getUTCFullYear()
+  return `${day}/${month}/${year}`
+}
+
+function handleEditVehiculo(vehiculo: vehiculos) {
+  router.push({ name: 'CrearVehiculo', params: { id: vehiculo.codint_int } })
+}
+
+function openCreateVehiculo() {
+  router.push({ name: 'CrearVehiculo' })
+}
 </script>
 
 <template>
-  <h3 class="text-3xl font-medium text-gray-700">
-    Gestion de Clientes
-  </h3>
-
-  <div class="mt-4">
-    <div class="p-6 bg-white rounded-md shadow-md">
-      <form>
-        <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
-          <div>
-            <label class="text-gray-700" for="nombre_cli">Nombre</label>
-            <input id="nombre_cli" type="text"
-              class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
-          </div>
-
-          <div>
-            <label class="text-gray-700" for="apellido_cli">Apellido</label>
-            <input id="apellido_cli" type="text"
-              class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
-          </div>
-
-          <div>
-            <label class="text-gray-700" for="fecnac_cli">Fecha de Nacimiento</label>
-            <input id="fecnac_cli" type="date"
-              class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
-          </div>
-
-          <div>
-            <label class="text-gray-700" for="numdoc_cli">Número de Documento</label>
-            <input id="numdoc_cli" type="text"
-              class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
-          </div>
-
-          <div>
-            <label class="text-gray-700" for="email_cli">Email</label>
-            <input id="email_cli" type="email"
-              class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
-          </div>
-
-          <div>
-            <label class="text-gray-700" for="telefono_cli">Teléfono</label>
-            <input id="telefono_cli" type="text"
-              class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
-          </div>
-
-          <div>
-            <label class="text-gray-700" for="fecini_cli">Fecha de Inicio</label>
-            <input id="fecini_cli" type="date"
-              class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
-          </div>
-        </div>
-
-        <div class="flex justify-end mt-4">
-          <button
-            class="px-4 py-2 text-gray-200 bg-gray-800 rounded-md hover:bg-gray-700 focus:outline-none focus:bg-gray-700">
-            Guardar
-          </button>
-        </div>
-      </form>
+  <button
+    type="button"
+    class="mt-1 mb-5 p-3 text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
+    @click="openCreateVehiculo"
+  >
+    Crear Nuevo Vehiculo
+  </button>
+  <div class="p-6 bg-white rounded-md shadow-md">
+    <div class="mb-4">
+      <label class="text-gray-700 " for="descripcion">vehiculos</label>
     </div>
+
+    <WideTable
+      :columns="columns"
+      :tabledata="vehiculosList"
+      label="vehiculos"
+      default-image="/path/to/default-image.jpg"
+      :editable="true"
+      @edit="handleEditVehiculo"
+    />
   </div>
 </template>
