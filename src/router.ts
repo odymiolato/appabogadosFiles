@@ -16,7 +16,7 @@ import Expedientes from './views/expediente/Expedientes.vue'
 // import AsignacionExpediente from './views/componentes a revisar/expediente/AsignacionExpediente.vue'
 
 import Audiencia from './views/componentes a revisar/Audiencia.vue'
-import GestionCliente from './views/clientes/GestionCliente.vue'
+
 import GestionAbogados from './views/abogados/GestionAbogados.vue'
 import GestionContraparte from './views/contrapartes/GestionContrapartes.vue'
 import Especialidades from './views/especialidades/especialidades.vue'
@@ -28,11 +28,16 @@ import Provincias from './views/provincias/provincias.vue'
 import Ciudades from './views/ciudades/ciudades.vue'
 import OrigenDireccion from './views/origen_direccion/OrigenDireccion.vue'
 
-import InteraccionCliente from './views/clientes/InteraccionCliente.vue'
+import InteraccionCliente from './views/interacciones/InteraccionCliente.vue'
 import Clientes from './views/clientes/Clientes.vue'
-import TipoInteraccion from './views/clientes/TipoInteraccion.vue'
+import TipoInteraccion from './views/tipo_interaccion/TipoInteraccion.vue'
 import TiposExpedientes from './views/tipos_expedientes/TiposExpedientes.vue'
 import Movimientos from './views/movimientos/Movimientos.vue'
+
+import CrearClientes from './views/clientes/CrearClientes.vue'
+import CrearInteracciones from './views/interacciones/CrearInteracciones.vue'
+import VehiculosModelos from './views/vehiculos_modelos/VehiculosModelos.vue'
+import VehiculosEstado from './views/vehiculos_estado/VehiculosEstado.vue'
 
 // import GestionDocumento from './views/componentes a revisar/GestionDocumento.vue'
 // import FacturacionFinanza from './views/componentes a revisar/FacturacionFinanza.vue'
@@ -42,13 +47,13 @@ import Movimientos from './views/movimientos/Movimientos.vue'
 
 const routes: RouteRecordRaw[] = [
   {
-    path: "/errors",
+    path: '/errors',
     children: [
       {
         // the 404 route, when none of the above matches
-        path: "/404",
-        name: "404",
-        component: () => import("./views/404/404page.vue"),
+        path: '/404',
+        name: '404',
+        component: () => import('./views/404/404page.vue'),
         // meta: {
         //   title: "Repositorio - 404",
         //   layout: BaseLayout,
@@ -58,8 +63,8 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
-    path: "/:pathMatch(.*)*",
-    redirect: "/404",
+    path: '/:pathMatch(.*)*',
+    redirect: '/404',
   },
   {
     path: '/',
@@ -128,11 +133,7 @@ const routes: RouteRecordRaw[] = [
     name: 'Audiencia',
     component: Audiencia,
   },
-  {
-    path: '/gestioncliente',
-    name: 'GestionCliente',
-    component: GestionCliente,
-  },
+
   {
     path: '/gestionabogados',
     name: 'GestionAbogados',
@@ -207,6 +208,28 @@ const routes: RouteRecordRaw[] = [
     path: '/movimientos',
     name: 'Movimientos',
     component: Movimientos,
+  },
+  {
+    path: '/vehiculosmodelos',
+    name: 'VehiculosModelos',
+    component: VehiculosModelos,
+  },
+  {
+    path: '/vehiculosestado',
+    name: 'VehiculosEstado',
+    component: VehiculosEstado,
+  },
+  {
+    path: '/crearcliente/:id?',
+    name: 'CrearCliente',
+    component: CrearClientes,
+    props: true,
+  },
+  {
+    path: '/crear-interaccion/:id?',
+    name: 'CrearInteraccion',
+    component: CrearInteracciones,
+    props: true,
   },
 ]
 

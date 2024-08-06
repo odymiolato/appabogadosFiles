@@ -27,7 +27,8 @@ function changeStatus(valor: boolean) {
 
     <!-- <div :class="isOpen ? 'translate-x-0 ease-out w-64' : '-translate-x-full ease-in w-16'" -->
     <div
-      class="inset-y-0 left-0 z-30  transition-transform relative overflow-hidden w-max bg-sky-900 lg:translate-x-0 lg:static lg:inset-0">
+      class="inset-y-0 left-0 z-30  transition-transform relative overflow-hidden w-max bg-sky-900 lg:translate-x-0 lg:static lg:inset-0"
+    >
       <div class="flex items-center justify-center mt-8">
         <div class="flex items-center">
           <img src="/public/img/cumplimiento.png" alt="" class="w-20 ml-[-1]">
@@ -49,7 +50,7 @@ function changeStatus(valor: boolean) {
             <MenuItem to="/tipoexpediente" name="TipoExpediente" label="Tipo Expediente" imagen="dashboard" />
           </MenuDesplegable>
 
-          <MenuDesplegable label="Porcesos" imagen="dashboard">
+          <MenuDesplegable label="Procesos" imagen="dashboard">
             <MenuItem to="/expedientes" name="Expendientes" label="Expendientes" imagen="dashboard" />
             <MenuItem to="/expediente" name="Expediente" label="Control de Expedientes" imagen="dashboard" />
             <MenuItem to="/audiencia" name="Audiencia" label="Gestion de Audiencias" imagen="dashboard" />
@@ -58,19 +59,21 @@ function changeStatus(valor: boolean) {
         </MenuDesplegable>
 
         <MenuDesplegable class="transition duration-500" label="Clientes" imagen="dashboard">
-          <MenuItem to="/clientes" name="Clientes" label="Clientes" imagen="dashboard" />
-          <MenuItem to="/interaccionescliente" name="InteraccionesCliente" label="Interaccion Clientes"
-            imagen="dashboard" />
-          <MenuItem to="/tipointeraccion" name="TipoInteraccion" label="Tipo de Interacciones" imagen="dashboard" />
-
           <MenuDesplegable label="Mantenimientos" imagen="dashboard">
-            hola
+            <MenuItem to="/clientes" name="Clientes" label="Clientes" imagen="dashboard" />
+            <MenuItem to="/tipointeraccion" name="TipoInteraccion" label="Tipo de Interacciones" imagen="dashboard" />
           </MenuDesplegable>
 
-          <MenuDesplegable label="Gestion de Clientes" imagen="dashboard">
-            hola
+          <MenuDesplegable label="Procesos" imagen="dashboard">
+            <MenuItem to="/interaccionescliente" name="InteraccionesCliente" label="Interaccion Clientes" imagen="dashboard" />
           </MenuDesplegable>
         </MenuDesplegable>
+
+        <MenuDesplegable label="Vehiculos" imagen="dashboard">
+          <MenuItem to="/vehiculosestado" name="VehiculosEstado" label="Estado de vehiculos" imagen="dashboard" />
+          <MenuItem to="/vehiculosmodelos" name="VehiculosModelos" label="Modelos de Vehiculos" imagen="dashboard" />
+        </MenuDesplegable>
+
         <!-- <MenuItem to="/ui-elements" name="UIElements" label="Elements" imagen="elements" /> -->
         <MenuItem to="/eventos" name="Eventos" label="Eventos" imagen="elements" />
         <!-- <MenuItem to="/tables" name="Tables" label="Tables" imagen="tables" />
@@ -78,7 +81,6 @@ function changeStatus(valor: boolean) {
         <MenuItem to="/cards" name="Cards" label="Cards" imagen="cards" />
         <MenuItem to="/modal" name="Modal" label="Modal" imagen="modal" /> -->
         <!-- <MenuItem to="/blank" name="Blank" label="Blank" imagen="blank" /> -->
-
 
         <MenuDesplegable label="Configuracion" imagen="dashboard">
           <MenuDesplegable label="Direccion" imagen="dashboard">

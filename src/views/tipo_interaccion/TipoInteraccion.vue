@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { vehiculos_modelos } from '../../class/all.class'
+import { tipo_interaccion } from '../../class/all.class'
 import apiClient from '../../axiosConfig'
 import { addAlert } from '../../stores/alerts'
 
-const VehiculoModelo = ref<vehiculos_modelos>(new vehiculos_modelos())
+const tipoInteraccion = ref<tipo_interaccion>(new tipo_interaccion())
 
-async function saveVehiculoModelo() {
+async function saveTipoInteraccion() {
   try {
-    await apiClient.post('/vehiculos-modelos', VehiculoModelo.value)
-    VehiculoModelo.value.descripcion_est = ''
+    await apiClient.post('/tipointeraccion', tipoInteraccion.value)
+    tipoInteraccion.value.descripcion_tin = ''
     addAlert(2, 'El tipo de interacción se registró correctamente.')
   }
   catch (error) {
-    console.error('Error saving vehiculos_modelos:', error)
+    console.error('Error saving tipo_interaccion:', error)
     addAlert(3, 'Error al registrar el tipo de interacción.')
   }
 }
@@ -21,7 +21,7 @@ async function saveVehiculoModelo() {
 
 <template>
   <h3 class="text-3xl font-medium text-gray-700" for="descripcion">
-    Modelos de los Vehículos
+    Tipo de Interacción
   </h3>
   <div class="mt-4">
     <div class="p-6 bg-white rounded-md shadow-md">
@@ -29,7 +29,7 @@ async function saveVehiculoModelo() {
         <div>
           <label class="text-gray-700" for="descripcion">Descripción</label>
           <input
-            id="descripcion" v-model="VehiculoModelo.descripcion_est"
+            id="descripcion" v-model="tipoInteraccion.descripcion_tin"
             type="text"
             class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
           >
@@ -40,7 +40,7 @@ async function saveVehiculoModelo() {
         <button
           type="button"
           class="text-white bg-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-          @click="saveVehiculoModelo"
+          @click="saveTipoInteraccion"
         >
           Guardar
         </button>

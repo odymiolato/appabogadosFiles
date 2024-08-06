@@ -1,30 +1,74 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { clientes } from '../../class/all.class'
+import apiClient from '../../axiosConfig'
+import { addAlert } from '../../stores/alerts'
 
-const props = defineProps({
-  cliente: {
-    type: Object as () => clientes | null,
-    default: null,
-  },
+const route = useRoute()
+const router = useRouter()
+
+const cliente = ref<clientes>(new clientes())
+
+onMounted(async () => {
+  if (route.params.id)
+    await fetchCliente(route.params.id as string)
 })
 
-const emit = defineEmits(['save'])
+async function fetchCliente(id: string) {
+  try {
+    const response = await apiClient.get(`/clientes/${id}`)
+    cliente.value = {
+      ...response.data,
+      fecnac_cli: formatDate(response.data.fecnac_cli) // Formatea la fecha
+    }
+    addAlert(1, 'Cliente cargado correctamente.')
+  }
+  catch (error) {
+    console.error('Error fetching cliente:', error)
+    addAlert(3, 'Error al obtener el cliente.')
+  }
+}
 
-const cliente = ref<clientes>(props.cliente ? { ...props.cliente } : new clientes())
+function formatDate(dateString: string): string {
+  const date = new Date(dateString)
+  const year = date.getUTCFullYear()
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0')
+  const day = String(date.getUTCDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
 
-watch(() => props.cliente, (newCliente) => {
-  cliente.value = newCliente ? { ...newCliente } : new clientes()
-})
+async function saveCliente() {
+  try {
+    if (route.params.id) {
+      // Editar cliente existente
+      await apiClient.patch(`/clientes/${route.params.id}`, cliente.value)
+      addAlert(2, 'El cliente se actualizó correctamente.')
+    }
+    else {
+      // Crear nuevo cliente
+      await apiClient.post('/clientes', cliente.value)
+      addAlert(2, 'El cliente se registró correctamente.')
+    }
+    router.push({ name: 'Clientes' })
+  }
+  catch (error) {
+    console.error('Error saving cliente:', error)
+    addAlert(3, 'Error al registrar el cliente.')
+  }
+}
 
-function saveCliente() {
-  console.log('Cliente a guardar:', cliente.value)
-  emit('save', cliente.value)
+function goBack() {
+  router.push({ name: 'Clientes' })
 }
 </script>
 
 <template>
-  <div>
+  <div class="p-6 bg-white rounded-md shadow-md">
+    <div class="flex items-center mb-4 cursor-pointer" @click="goBack">
+      <img src="../../assets/img/returnArrow.svg" alt="Back" class="w-6 h-6 mr-2 ">
+      <span class="text-gray-700">Volver</span>
+    </div>
     <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
       <div>
         <label class="text-gray-700" for="nombre">Nombre</label>
@@ -69,7 +113,7 @@ function saveCliente() {
         >
       </div>
       <div>
-        <label class="text-gray-700" for="numdoc">Fecha de nacimiento</label>
+        <label class="text-gray-700" for="fecnac_cli">Fecha de nacimiento</label>
         <input
           id="fecnac_cli" v-model="cliente.fecnac_cli"
           type="date"
