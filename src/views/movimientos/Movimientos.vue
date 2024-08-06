@@ -220,6 +220,19 @@ function validate(): boolean {
   return true;
 }
 
+function clearPage() {
+  try {
+    MovimientoHeader.value = new movimientos_h()
+    ExpedienteSelected.value = { codexp_exp: '', descri_exp: '' }
+    TipoMovimientoSelected.value = { tipmov_tmo: '', descri_tmo: '' }
+    Amont.value = 0
+    TableMovList.value = []
+  } catch (error) {
+    console.error(error)
+    addAlert(3, JSON.stringify(error))
+  }
+}
+
 async function saveMovimiento() {
   try {
 
@@ -240,6 +253,7 @@ async function saveMovimiento() {
     if (response.ok) {
       if (await response.json()) {
         addAlert(2, 'Movimientos registrado exitosamente.')
+        clearPage()
       } else {
         addAlert(3, 'Contacte el administrador.')
       }
