@@ -200,9 +200,33 @@ function removeMovimiento(codexp: number) {
   }
 }
 
+function validate(): boolean {
+  if (MovimientoHeader.value.comentario_movh === '') {
+    addAlert(4, "Debe de ingresar un comentario.")
+    return false
+  }
+
+  console.log(MovimientoHeader.value.fecha_movh);
+  if (MovimientoHeader.value.fecha_movh === null || MovimientoHeader.value.fecha_movh === undefined) {
+    addAlert(4, "Debe de ingresar la fecha.");
+    return false;
+  }
+
+  if (TableMovList.value.length <= 0) {
+    addAlert(4, "Debe ingresar al menos un elemento en la lista.")
+    return false;
+  }
+
+  return true;
+}
 
 async function saveMovimiento() {
   try {
+
+    if (!validate()) {
+      return false
+    }
+
     let Movimiento: { header: movimientos_h, details: TableMovimientos[] } = { header: MovimientoHeader.value, details: TableMovList.value }
 
     const response = await fetch(`${URL}movimientos`, {
@@ -212,6 +236,17 @@ async function saveMovimiento() {
       },
       body: JSON.stringify(Movimiento)
     })
+
+    if (response.ok) {
+      if (await response.json()) {
+        addAlert(2, 'Movimientos registrado exitosamente.')
+      } else {
+        addAlert(3, 'Contacte el administrador.')
+      }
+    } else {
+      addAlert(3, 'Contacte el administrador.')
+      console.error(response.statusText)
+    }
   } catch (error) {
     console.error(error)
     addAlert(3, JSON.stringify(error))
