@@ -1,9 +1,23 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { callWithErrorHandling, computed, onMounted, ref } from 'vue'
 import Modal from '../../components/Modal.vue'
 import Inputs from '../../components/Inputs.vue'
-import { contrapartes, ciudades, provincias, expedientes, tipo_movimientos } from '../../class/all.class'
+import { contrapartes, expedientes, tipo_movimientos } from '../../class/all.class'
 import { addAlert } from '../../stores/alerts'
+
+class TableMovimientos {
+  codexp: number;
+  tipmov: string;
+  nombreMov: string;
+  monto: number
+
+  constructor(codexp: number, tipmov: string, nombreMov: string, monto: number) {
+    this.codexp = codexp;
+    this.tipmov = tipmov;
+    this.nombreMov = nombreMov;
+    this.monto = monto
+  }
+}
 
 const ClientesList = ref<{ id: number, name: string }[]>([]);
 const showModal = ref(false)
@@ -11,25 +25,28 @@ const Contraparte = ref<contrapartes>(new contrapartes())
 const TypeModal = ref<number>(0)
 /* @ts-expect-error */
 const URL: string = import.meta.env.VITE_PATH_API
-const searchTerm = ref('')
-const provinciasList = ref<provincias[]>([])
-const ciudadesList = ref<ciudades[]>([])
-const provinciaSelected = ref({ codpro_pro: '', nombre_pro: '' })
-const ciuadadSelected = ref({ codciu_ciu: '', nombre_ciu: '' })
-
+const TittleModal: Array<string> = ['Expedientes', 'Tipos de Movimientos'];
 const ExpedientesList = ref<expedientes[]>([])
 const TipoMovimientosList = ref<tipo_movimientos[]>([])
 const searchTermExpedientes = ref('')
 const searchTermTipoMovimientos = ref('')
 const ExpedienteSelected = ref({ codexp_exp: '', descri_exp: '' })
 const TipoMovimientoSelected = ref({ tipmov_tmo: '', descri_tmo: '' })
+const Amont = ref<number>(0)
+const TableMovList = ref<TableMovimientos[]>([])
 
+const filteredExpedientes = computed(() => {
+  if (searchTermExpedientes.value === '')
+    return ExpedientesList.value
 
-const filteredProvincias = computed(() => {
-  if (searchTerm.value === '')
-    return provinciasList.value
+  return ExpedientesList.value.filter(item => String(item.codexp_exp).toLowerCase().includes(searchTermExpedientes.value.toLowerCase()) || item.descri_exp.toLowerCase().includes(searchTermExpedientes.value.toLowerCase()))
+})
 
-  return provinciasList.value.filter(item => String(item.codpro_pro).toLowerCase().includes(searchTerm.value.toLowerCase()) || item.nombre_pro.toLowerCase().includes(searchTerm.value.toLowerCase()))
+const filteredTipoMivimientos = computed(() => {
+  if (searchTermTipoMovimientos.value === '')
+    return TipoMovimientosList.value
+
+  return TipoMovimientosList.value.filter(item => String(item.tipmov_tmo).toLowerCase().includes(searchTermTipoMovimientos.value.toLowerCase()) || item.descri_tmo.toLowerCase().includes(searchTermTipoMovimientos.value.toLowerCase()))
 })
 
 function handleAccept() {
@@ -50,25 +67,6 @@ function handleClose() {
   showModal.value = false
 }
 
-async function getProvincias() {
-  try {
-    const response = await fetch(`${URL}provincias`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-
-    if (response.ok)
-      provinciasList.value = await response.json()
-    else
-      addAlert(3, 'problemas con la solicitud de las Provincias')
-  }
-  catch (error) {
-    console.error(error)
-    addAlert(3, 'Comunicarce con los administradores.')
-  }
-}
 async function getExpedientes() {
   try {
     const response = await fetch(`${URL}expedientes`, {
@@ -79,7 +77,7 @@ async function getExpedientes() {
     })
 
     if (response.ok)
-      provinciasList.value = await response.json()
+      ExpedientesList.value = await response.json()
     else
       addAlert(3, 'problemas con la solicitud de los Expedientes')
   }
@@ -98,7 +96,7 @@ async function getTiposMovimientos() {
     })
 
     if (response.ok)
-      provinciasList.value = await response.json()
+      TipoMovimientosList.value = await response.json()
     else
       addAlert(3, 'problemas con la solicitud de los Tipos de movimientos')
   }
@@ -108,39 +106,92 @@ async function getTiposMovimientos() {
   }
 }
 
-function searchProvincias(value: any) {
-  searchTerm.value = value
+function searchExpedientes(value: any) {
+  searchTermExpedientes.value = value
 }
 
-const filteredCiudades = computed(() => {
-  if (searchTerm.value === '')
-    return ciudadesList.value
-
-  return ciudadesList.value.filter(item => String(item.codciu_ciu).toLowerCase().includes(searchTerm.value.toLowerCase()) || item.nombre_ciu.toLowerCase().includes(searchTerm.value.toLowerCase()))
-})
-
-function searchCiudades(value: any) {
-  searchTerm.value = value
+function searchTipoMovimientos(value: any) {
+  searchTermTipoMovimientos.value = value
 }
 
-function setProvincia(obj: provincias) {
-  if (provinciaSelected.value !== undefined) {
-    provinciaSelected.value.codpro_pro = String(obj.codpro_pro)
-    provinciaSelected.value.nombre_pro = obj.nombre_pro
+function setExpediente(obj: expedientes) {
+  if (ExpedienteSelected.value !== undefined) {
+    ExpedienteSelected.value.codexp_exp = String(obj.codexp_exp)
+    ExpedienteSelected.value.descri_exp = obj.descri_exp
   }
   handleAccept()
 }
 
-function setCiudad(obj: ciudades) {
-  if (ciuadadSelected.value !== undefined) {
-    ciuadadSelected.value.codciu_ciu = String(obj.codciu_ciu)
-    ciuadadSelected.value.nombre_ciu = obj.nombre_ciu
+function setTipoMovimiento(obj: tipo_movimientos) {
+  if (TipoMovimientoSelected.value !== undefined) {
+    TipoMovimientoSelected.value.tipmov_tmo = String(obj.tipmov_tmo)
+    TipoMovimientoSelected.value.descri_tmo = obj.descri_tmo
   }
   handleAccept()
+}
+
+
+
+function addMovimiento(codexp: string = '', tipmov: string = '', nombreMov: string = '', monto: number = 0) {
+  try {
+    if (codexp === '') {
+      addAlert(1, 'Debe de seleccionar un Expediente.')
+      return
+    }
+
+    if (tipmov === '') {
+      addAlert(1, 'Debe de selecionar un tipo de movimiento.')
+      return
+    }
+
+    if (monto <= 0) {
+      addAlert(1, 'Debe de ingresar un monto mayor de 0.')
+      return
+    }
+
+    const temp = new TableMovimientos(parseInt(codexp), tipmov, nombreMov, monto)
+    TableMovList.value.push(temp)
+    ExpedienteSelected.value = { codexp_exp: '', descri_exp: '' }
+    TipoMovimientoSelected.value = { tipmov_tmo: '', descri_tmo: '' }
+    Amont.value = 0;
+    addAlert(1, 'Se ha agregado un elemento a la lista.')
+  } catch (error) {
+    console.error(error)
+    addAlert(3, JSON.stringify(error))
+  }
+}
+
+function selectMovimiento(obj: TableMovimientos) {
+  try {
+    ExpedienteSelected.value.codexp_exp = String(obj.codexp)
+    TipoMovimientoSelected.value.tipmov_tmo = obj.tipmov
+    TipoMovimientoSelected.value.descri_tmo = obj.nombreMov
+    Amont.value = obj.monto
+    addAlert(1, 'Se ha seleccionado un elemento de la lista.')
+  } catch (error) {
+    console.error(error)
+    addAlert(3, JSON.stringify(error))
+  }
+}
+
+function removeMovimiento(codexp: number) {
+  try {
+    if (ExpedienteSelected.value.codexp_exp === '') {
+      addAlert(1, 'Debe de seleccionar un expediente.')
+      return
+    }
+    TableMovList.value = TableMovList.value.filter(item => item.codexp !== codexp)
+    ExpedienteSelected.value = { codexp_exp: '', descri_exp: '' }
+    TipoMovimientoSelected.value = { tipmov_tmo: '', descri_tmo: '' }
+    Amont.value = 0;
+    addAlert(1,'Elemento Eliminado de la lista.')
+  } catch (error) {
+    console.error(error)
+    addAlert(3, JSON.stringify(error))
+  }
 }
 
 onMounted(() => {
-  getProvincias()
   getExpedientes()
   getTiposMovimientos()
 })
@@ -200,13 +251,13 @@ onMounted(() => {
               <div class="flex gap-2 justify-center items-center">
                 <input id="fecnac_abo" type="text" disabled
                   class="w-[20%] mt-2 border-gray-200  rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-                  readonly>
+                  readonly v-model="ExpedienteSelected.codexp_exp">
 
                 <input id="fecnac_abo" type="text"
                   class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-                  readonly disabled>
+                  readonly disabled v-model="ExpedienteSelected.descri_exp">
 
-                <button @click="presentModal(3)" type="button"
+                <button @click="presentModal(1)" type="button"
                   class="mt-1 p-3  text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
                   <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                     viewBox="0 0 20 20">
@@ -225,13 +276,13 @@ onMounted(() => {
               <div class="flex gap-2 justify-center items-center">
                 <input id="fecnac_abo" type="text" disabled
                   class="w-[20%] mt-2 border-gray-200  rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-                  readonly>
+                  readonly v-model="TipoMovimientoSelected.tipmov_tmo">
 
                 <input id="fecnac_abo" type="text"
                   class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-                  readonly disabled>
+                  readonly disabled v-model="TipoMovimientoSelected.descri_tmo">
 
-                <button @click="presentModal(3)" type="button"
+                <button @click="presentModal(2)" type="button"
                   class="mt-1 p-3  text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
                   <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                     viewBox="0 0 20 20">
@@ -248,15 +299,16 @@ onMounted(() => {
             <div class="flex flex-col">
               <label class="text-gray-700" for="tipo_espcialidad_abo">Monto</label>
               <div>
-                <input id="fecnac_abo" type="number"
-                  class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
+                <input id="fecnac_abo" type="number" v-model="Amont"
+                  class="w-full mt-2 border-gray-200 text-right rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
               </div>
             </div>
             <!-- block tree -->
 
           </div>
           <div class="flex flex-row gap-1 flex-[10%] items-end">
-            <button @click="true"
+            <button
+              @click="addMovimiento(ExpedienteSelected.codexp_exp, TipoMovimientoSelected.tipmov_tmo, TipoMovimientoSelected.descri_tmo, Amont)"
               class="flex mt-1 p-3  text-sm font-medium text-white bg-green-500 rounded-lg border hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor" stroke-width="2">
@@ -265,7 +317,7 @@ onMounted(() => {
               <span class="ml-2">Agregar</span>
             </button>
 
-            <button @click="true"
+            <button @click="removeMovimiento(parseInt(ExpedienteSelected.codexp_exp))"
               class="flex mt-1 p-3  text-sm font-medium text-white bg-red-500 rounded-lg border hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor" stroke-width="2">
@@ -302,12 +354,19 @@ onMounted(() => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(value, index) in ClientesList" :key="index" class="hover:bg-gray-200" @dblclick="true">
+                  <tr v-for="(value, index) in TableMovList" :key="index" class="hover:bg-gray-200"
+                    @dblclick="selectMovimiento(value)">
                     <td class="px-6 py-4 text-lg text-gray-700 border-b">
-                      {{ value.id }}
+                      {{ value.codexp }}
                     </td>
                     <td class="px-6 py-4 text-gray-500 border-b">
-                      {{ value.name }}
+                      {{ value.tipmov }}
+                    </td>
+                    <td class="px-6 py-4 text-gray-500 border-b">
+                      {{ value.nombreMov }}
+                    </td>
+                    <td class="px-6 py-4 text-gray-500 border-b">
+                      {{ value.monto }}
                     </td>
                   </tr>
                 </tbody>
@@ -320,11 +379,11 @@ onMounted(() => {
     <!-- end detalle -->
   </div>
 
-  <Modal v-if="showModal" class="flex justify-center items-center" title="Especialidades" :btn-visible="false"
-    @close="handleClose" @accept="handleAccept" @decline="handleDecline">
+  <Modal v-if="showModal" class="flex justify-center items-center" :title="TittleModal[TypeModal - 1]"
+    :btn-visible="false" @close="handleClose" @accept="handleAccept" @decline="handleDecline">
     <template #body>
       <div v-if="TypeModal === 1">
-        <Inputs typeinput="search" labeltext="Buscar" :Value="searchTerm" @update="searchProvincias" />
+        <Inputs typeinput="search" labeltext="Buscar" :Value="searchTermExpedientes" @update="searchExpedientes" />
         <div>
           <div>
             <div class="mt-2">
@@ -341,13 +400,13 @@ onMounted(() => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(value) in filteredProvincias" class="hover:bg-gray-200 cursor-pointer"
-                      @click="setProvincia(value)">
+                    <tr v-for="(value) in filteredExpedientes" class="hover:bg-gray-200 cursor-pointer"
+                      @click="setExpediente(value)">
                       <td class="px-6 py-4 text-lg text-gray-700 border-b">
-                        {{ value.codpro_pro }}
+                        {{ value.codexp_exp }}
                       </td>
                       <td class="px-6 py-4 text-lg text-gray-700 border-b">
-                        {{ value.nombre_pro }}
+                        {{ value.descri_exp }}
                       </td>
                     </tr>
                   </tbody>
@@ -359,7 +418,8 @@ onMounted(() => {
       </div>
 
       <div v-if="TypeModal === 2">
-        <Inputs typeinput="search" labeltext="Buscar" :Value="searchTerm" @update="searchCiudades" />
+        <Inputs typeinput="search" labeltext="Buscar" :Value="searchTermTipoMovimientos"
+          @update="searchTipoMovimientos" />
         <div>
           <div>
             <div class="mt-2">
@@ -376,13 +436,13 @@ onMounted(() => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(value) in filteredCiudades" class="hover:bg-gray-200 cursor-pointer"
-                      @click="setCiudad(value)">
+                    <tr v-for="(value) in filteredTipoMivimientos" class="hover:bg-gray-200 cursor-pointer"
+                      @click="setTipoMovimiento(value)">
                       <td class="px-6 py-4 text-lg text-gray-700 border-b">
-                        {{ value.codciu_ciu }}
+                        {{ value.tipmov_tmo }}
                       </td>
                       <td class="px-6 py-4 text-lg text-gray-700 border-b">
-                        {{ value.nombre_ciu }}
+                        {{ value.descri_tmo }}
                       </td>
                     </tr>
                   </tbody>
@@ -392,6 +452,7 @@ onMounted(() => {
           </div>
         </div>
       </div>
+
     </template>
   </Modal>
 </template>
