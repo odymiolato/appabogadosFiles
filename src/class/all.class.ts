@@ -368,7 +368,6 @@ export class contrapartes {
 }
 export class movimientos_h {
   codmov_movh: number
-  referencia_movh: string
   comentario_movh: string
   fecha_movh: Date
   total_movh: number
@@ -379,7 +378,6 @@ export class movimientos_h {
   fechmod: Date
   constructor() {
     this.codmov_movh = 0
-    this.referencia_movh = ''
     this.comentario_movh = ''
     this.fecha_movh = new Date()
     this.total_movh = 0

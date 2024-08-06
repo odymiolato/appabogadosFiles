@@ -2,16 +2,16 @@
 import { callWithErrorHandling, computed, onMounted, ref } from 'vue'
 import Modal from '../../components/Modal.vue'
 import Inputs from '../../components/Inputs.vue'
-import { contrapartes, expedientes, movimientos_h, tipo_movimientos } from '../../class/all.class'
+import { expedientes, movimientos_h, tipo_movimientos } from '../../class/all.class'
 import { addAlert } from '../../stores/alerts'
 
 class TableMovimientos {
   codexp: number;
-  tipmov: string;
+  tipmov: number;
   nombreMov: string;
   monto: number
 
-  constructor(codexp: number, tipmov: string, nombreMov: string, monto: number) {
+  constructor(codexp: number, tipmov: number, nombreMov: string, monto: number) {
     this.codexp = codexp;
     this.tipmov = tipmov;
     this.nombreMov = nombreMov;
@@ -20,10 +20,9 @@ class TableMovimientos {
 }
 
 const showModal = ref(false)
-const Contraparte = ref<contrapartes>(new contrapartes())
 const MovimientoHeader = ref<movimientos_h>(new movimientos_h)
 const TypeModal = ref<number>(0)
-/* @ts-expect-error */
+/* @ts-ignore */
 const URL: string = import.meta.env.VITE_PATH_API
 const TittleModal: Array<string> = ['Expedientes', 'Tipos de Movimientos'];
 const ExpedientesList = ref<expedientes[]>([])
@@ -158,7 +157,7 @@ function addMovimiento(codexp: string = '', tipmov: string = '', nombreMov: stri
       return
     }
 
-    const temp = new TableMovimientos(parseInt(codexp), tipmov, nombreMov, monto)
+    const temp = new TableMovimientos(parseInt(codexp), parseInt(tipmov), nombreMov, monto)
     TableMovList.value.push(temp)
     ExpedienteSelected.value = { codexp_exp: '', descri_exp: '' }
     TipoMovimientoSelected.value = { tipmov_tmo: '', descri_tmo: '' }
@@ -174,7 +173,7 @@ function addMovimiento(codexp: string = '', tipmov: string = '', nombreMov: stri
 function selectMovimiento(obj: TableMovimientos) {
   try {
     ExpedienteSelected.value.codexp_exp = String(obj.codexp)
-    TipoMovimientoSelected.value.tipmov_tmo = obj.tipmov
+    TipoMovimientoSelected.value.tipmov_tmo = String(obj.tipmov)
     TipoMovimientoSelected.value.descri_tmo = obj.nombreMov
     Amont.value = obj.monto
     addAlert(1, 'Se ha seleccionado un elemento de la lista.')
@@ -201,9 +200,18 @@ function removeMovimiento(codexp: number) {
   }
 }
 
+
 async function saveMovimiento() {
   try {
+    let Movimiento: { header: movimientos_h, details: TableMovimientos[] } = { header: MovimientoHeader.value, details: TableMovList.value }
 
+    const response = await fetch(`${URL}movimientos`, {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(Movimiento)
+    })
   } catch (error) {
     console.error(error)
     addAlert(3, JSON.stringify(error))
@@ -399,7 +407,7 @@ onMounted(() => {
     <div class="flex justify-end mt-4">
       <button type="button"
         class="px-4 py-2 text-gray-200 bg-gray-800 rounded-md hover:bg-gray-700 focus:outline-none focus:bg-gray-700"
-        @click="true">
+        @click="saveMovimiento()">
         Guardar
       </button>
     </div>
