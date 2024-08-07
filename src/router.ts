@@ -36,6 +36,13 @@ import Movimientos from './views/movimientos/Movimientos.vue'
 
 import CrearClientes from './views/clientes/CrearClientes.vue'
 import CrearInteracciones from './views/interacciones/CrearInteracciones.vue'
+import VehiculosModelos from './views/vehiculos_modelos/VehiculosModelos.vue'
+import VehiculosEstado from './views/vehiculos_estado/VehiculosEstado.vue'
+import VehiculosMarcas from './views/vehiculos_marcas/VehiculosMarcas.vue'
+import Vehiculos from './views/vehiculos/Vehiculos.vue'
+import CrearVehiculos from './views/vehiculos/CrearVehiculos.vue'
+import Asignacion from './views/asignacion_vehiculos/Asignacion.vue'
+import CrearAsignacion from './views/asignacion_vehiculos/CrearAsignacion.vue'
 
 // import GestionDocumento from './views/componentes a revisar/GestionDocumento.vue'
 // import FacturacionFinanza from './views/componentes a revisar/FacturacionFinanza.vue'
@@ -208,6 +215,31 @@ const routes: RouteRecordRaw[] = [
     component: Movimientos,
   },
   {
+    path: '/vehiculos',
+    name: 'Vehiculos',
+    component: Vehiculos,
+  },
+  {
+    path: '/asignacionvehiculo',
+    name: 'AsignacionVehiculo',
+    component: Asignacion,
+  },
+  {
+    path: '/vehiculosmodelos',
+    name: 'VehiculosModelos',
+    component: VehiculosModelos,
+  },
+  {
+    path: '/vehiculosestado',
+    name: 'VehiculosEstado',
+    component: VehiculosEstado,
+  },
+  {
+    path: '/vehiculosmarca',
+    name: 'VehiculosMarca',
+    component: VehiculosMarcas,
+  },
+  {
     path: '/crearcliente/:id?',
     name: 'CrearCliente',
     component: CrearClientes,
@@ -217,6 +249,18 @@ const routes: RouteRecordRaw[] = [
     path: '/crear-interaccion/:id?',
     name: 'CrearInteraccion',
     component: CrearInteracciones,
+    props: true,
+  },
+  {
+    path: '/crear-vehiculo/:id?',
+    name: 'CrearVehiculo',
+    component: CrearVehiculos,
+    props: true,
+  },
+  {
+    path: '/crear-asignacion/:id?',
+    name: 'CrearAsignacion',
+    component: CrearAsignacion,
     props: true,
   },
 ]

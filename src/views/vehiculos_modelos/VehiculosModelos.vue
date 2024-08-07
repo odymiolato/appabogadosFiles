@@ -1,136 +1,103 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import Inputs from '../../../components/Inputs.vue';
-import PaginationTable from '../../../components/tablas/PaginationTable.vue'
-import Buttons from '../../../components/Buttons.vue'
+import { vehiculos_marcas, vehiculos_modelos } from '../../class/all.class'
+import apiClient from '../../axiosConfig'
+import { addAlert } from '../../stores/alerts'
+import ModalReutilizable from '../../components/ModalReutilizable.vue'
 
-const events = ref([
-  { index: 1, item: 'ejemplo' },
-  { index: 2, item: 'ejemplo 2' },
-])
-const columns = ref([
-  { key: 'city', label: 'City' },
-  { key: 'totalOrders', label: 'Total orders' },
-])
+const VehiculoModelo = ref<vehiculos_modelos>(new vehiculos_modelos())
+const marcaSelected = ref<{ codigo: string, nombre: string }>({ codigo: '', nombre: '' })
+const showModalVehiculoMarca = ref(false)
 
-const tableData = ref([
-  { city: 'New York', totalOrders: 150 },
-  { city: 'Los Angeles', totalOrders: 200 },
-  // Agrega más datos aquí
-])
-
-const isModalOpen = ref(false)
-const modalTitle = ref('')
-const currentEndpoint = ref('')
-
-const nombre = ref('')
-
-function openModal(type: any) {
-  if (type === 'users') {
-    modalTitle.value = 'Usuarios'
-    currentEndpoint.value = 'https://tu-api.com/users'
+async function saveVehiculoModelo() {
+  try {
+    VehiculoModelo.value.codmarca_mod=Number( marcaSelected.value.codigo)
+    await apiClient.post('/vehiculos-modelos', VehiculoModelo.value)
+    VehiculoModelo.value.nombre_mod = ''
+    addAlert(2, 'El modelo se registró correctamente.')
   }
-  else if (type === 'products') {
-    modalTitle.value = 'Productos'
-    currentEndpoint.value = 'https://tu-api.com/products'
+  catch (error) {
+    console.error('Error saving vehiculos_modelos:', error)
+    addAlert(3, 'Error al registrar el modelo.')
   }
-  isModalOpen.value = true
 }
 
-function closeModal() {
-  isModalOpen.value = false
+function handleMarcaSelected(vehiculosmarca: vehiculos_marcas) {
+  marcaSelected.value = { codigo: String(vehiculosmarca.codmarca_mar), nombre: vehiculosmarca.nombre_mar }
 }
 
-function handleSelect(item: any) {
-  nombre.value = item.name
-  // Llenar otros campos si es necesario
-}
-
-const paginationtablecolumns = [
-  {
-    name: 'Nombre',
-    field: 'nombre',
-    hasImage: true,
-  },
-  {
-    name: 'Contacto del Cliente',
-    field: 'contacto',
-
-  },
-
-]
-
-const paginationtabledata = [
-  {
-    nombre: {
-      text: 'Maria',
-      image: '',
-    },
-    contacto: '2345789234576',
-
-  },
-]
 </script>
 
 <template>
-  <h3 class="text-3xl font-medium text-gray-700">
-    Gestion de Clientes
+  <h3 class="text-3xl font-medium text-gray-700" for="descripcion">
+    Modelos de los Vehículos
   </h3>
-
   <div class="mt-4">
     <div class="p-6 bg-white rounded-md shadow-md">
-      <form>
-        <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
-          <div>
-            <label class="text-gray-700" for="nombre_cli">Nombre</label>
-            <input id="nombre_cli" type="text"
-              class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
-          </div>
-
-          <div>
-            <label class="text-gray-700" for="apellido_cli">Apellido</label>
-            <input id="apellido_cli" type="text"
-              class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
-          </div>
-
-          <div>
-            <label class="text-gray-700" for="fecnac_cli">Fecha de Nacimiento</label>
-            <input id="fecnac_cli" type="date"
-              class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
-          </div>
-
-          <div>
-            <label class="text-gray-700" for="numdoc_cli">Número de Documento</label>
-            <input id="numdoc_cli" type="text"
-              class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
-          </div>
-
-          <div>
-            <label class="text-gray-700" for="email_cli">Email</label>
-            <input id="email_cli" type="email"
-              class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
-          </div>
-
-          <div>
-            <label class="text-gray-700" for="telefono_cli">Teléfono</label>
-            <input id="telefono_cli" type="text"
-              class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
-          </div>
-
-          <div>
-            <label class="text-gray-700" for="fecini_cli">Fecha de Inicio</label>
-            <input id="fecini_cli" type="date"
-              class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
-          </div>
+      <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
+        <div>
+          <label class="text-gray-700" for="descripcion">Descripción</label>
+          <input
+            id="descripcion" v-model="VehiculoModelo.nombre_mod"
+            type="text"
+            class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+          >
         </div>
-
-        <div class="flex justify-end mt-4">
+        <div>
+        <label class="text-gray-700" for="vehiculos-marcas">Marca del Modelo</label>
+        <div class="flex gap-2 justify-center items-center">
+          <input
+            id="vehiculos-marcas-codigo" v-model="marcaSelected.codigo"
+            type="text"
+            disabled
+            class="w-[20%] mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+            readonly
+          >
+          <input
+            id="vehiculos-marcas-nombre" v-model="marcaSelected.nombre"
+            type="text"
+            disabled
+            class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+            readonly
+          >
           <button
-            class="px-4 py-2 text-gray-200 bg-gray-800 rounded-md hover:bg-gray-700 focus:outline-none focus:bg-gray-700">
-            Guardar
+            type="button"
+            class="mt-1 p-3 text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
+            @click="showModalVehiculoMarca = true"
+          >
+            <svg
+              class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+              viewBox="0 0 20 20"
+            >
+              <path
+                stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+              />
+            </svg>
+            <span class="sr-only">Search</span>
           </button>
         </div>
-      </form>
+      </div>
+      </div>
+
+      <div class="mt-4">
+        <button
+          type="button"
+          class="text-white bg-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+          @click="saveVehiculoModelo"
+        >
+          Guardar
+        </button>
+      </div>
+      
+      <ModalReutilizable
+        v-model:showModal="showModalVehiculoMarca"
+        modal-title="Marcas de los Vehiculos"
+        endpoint="/vehiculos-marcas"
+        code-field="codmarca_mar"
+        name-field="nombre_mar"
+        @selected="handleMarcaSelected"
+      />
     </div>
   </div>
 </template>
