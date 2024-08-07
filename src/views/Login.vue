@@ -46,17 +46,10 @@ function login() {
               <span class="mx-2 text-sm text-gray-600">Recuerdame</span>
             </label>
           </div>
-
-          <!-- <div>
-            <a
-              class="block text-sm text-indigo-700 fontme hover:underline"
-              href="#"
-            >Forgot your password?</a>
-          </div> -->
         </div>
 
         <div class="mt-6">
-          <Buttons type="submit" class="w-full" text="Inicia Session"/>
+          <Buttons type="submit" class="w-full" Buttonstext="Inicia Session"/>
           <!-- <button
             type="submit"
             class="w-full px-4 py-2 text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500"
