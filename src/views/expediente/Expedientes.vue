@@ -485,11 +485,17 @@ async function saveExpediente() {
     })
 
     if (response.ok) {
-      if (await response.json()) {
+      const responsePHP = await fetch('http://localhost:8081/appabogadosFiles/createFolder.php', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ USERID: await response.json() })
+      })
+      if (responsePHP.ok) {
         addAlert(2, 'Expediente registrado')
-      } else {
-        addAlert(3, '')
       }
+
     } else {
       addAlert(3, response.statusText)
       console.error(response.statusText)
