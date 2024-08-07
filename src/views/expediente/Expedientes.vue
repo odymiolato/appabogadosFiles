@@ -294,7 +294,7 @@ function addAbogado(id: number, name: string) {
       return
     }
     AbogadosList.value.push({ id: id, name: name })
-    addAlert(1, 'Abogadado agregado la lista.')
+    addAlert(2, 'Abogadado agregado la lista.')
     AbogadoSelected.value = { codabo_abo: '', nombre_abo: '' }
   } catch (error) {
     addAlert(3, JSON.stringify(error))
@@ -315,7 +315,7 @@ function addCliente(id: number, name: string) {
       return;
     }
     ClientesList.value.push({ id: id, name: name })
-    addAlert(1, 'Cliente agregado a la lista.')
+    addAlert(2, 'Cliente agregado a la lista.')
     ClienteSelected.value = { codcli_cli: '', nombre_cli: '' }
   } catch (error) {
     addAlert(3, JSON.stringify(error))
@@ -336,7 +336,7 @@ function addContraparte(id: number, name: string) {
       return;
     }
     ContrapartesList.value.push({ id: id, name: name })
-    addAlert(1, 'Contraparte agregada a la lista.')
+    addAlert(2, 'Contraparte agregada a la lista.')
     ContraparteSelected.value = { codcon_con: '', nombre_con: '' }
   } catch (error) {
     addAlert(3, JSON.stringify(error))
@@ -357,7 +357,7 @@ function addTribunal(id: number, name: string) {
       return;
     }
     TribunalesList.value.push({ id: id, name: name })
-    addAlert(1, 'Tribunal agregado a la lista.')
+    addAlert(2, 'Tribunal agregado a la lista.')
     TribunalSelected.value = { codtri_tri: '', descri_tri: '' }
   } catch (error) {
     addAlert(3, JSON.stringify(error))
@@ -408,7 +408,7 @@ function removeAbogado(id: string = '') {
       return;
     }
     AbogadosList.value = AbogadosList.value.filter(item => item.id !== parseInt(id))
-    addAlert(1, 'Abogado eliminado de la lista.')
+    addAlert(2, 'Abogado eliminado de la lista.')
     AbogadoSelected.value = { codabo_abo: '', nombre_abo: '' }
   } catch (error) {
     console.error(error)
@@ -422,7 +422,7 @@ function removeCliente(id: string = '') {
       return;
     }
     AbogadosList.value = ClientesList.value.filter(item => item.id !== parseInt(id))
-    addAlert(1, 'Cliente eliminado de la lista.')
+    addAlert(2, 'Cliente eliminado de la lista.')
     ClienteSelected.value = { codcli_cli: '', nombre_cli: '' }
   } catch (error) {
     console.error(error)
@@ -436,7 +436,7 @@ function removeContraparte(id: string = '') {
       return;
     }
     ContrapartesList.value = AbogadosList.value.filter(item => item.id !== parseInt(id))
-    addAlert(1, 'Contraparte eliminada de la lista.')
+    addAlert(2, 'Contraparte eliminada de la lista.')
     ContraparteSelected.value = { codcon_con: '', nombre_con: '' }
   } catch (error) {
     console.error(error)
@@ -450,7 +450,7 @@ function removeTribunal(id: string = '') {
       return;
     }
     TribunalesList.value = AbogadosList.value.filter(item => item.id !== parseInt(id))
-    addAlert(1, 'Tribunal eliminado de la lista.')
+    addAlert(2, 'Tribunal eliminado de la lista.')
     TribunalSelected.value = { codtri_tri: '', descri_tri: '' }
   } catch (error) {
     console.error(error)
@@ -485,11 +485,17 @@ async function saveExpediente() {
     })
 
     if (response.ok) {
-      if (await response.json()) {
+      const responsePHP = await fetch('http://localhost:8081/appabogadosFiles/createFolder.php', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ USERID: await response.json() })
+      })
+      if (responsePHP.ok) {
         addAlert(2, 'Expediente registrado')
-      } else {
-        addAlert(3, '')
       }
+
     } else {
       addAlert(3, response.statusText)
       console.error(response.statusText)

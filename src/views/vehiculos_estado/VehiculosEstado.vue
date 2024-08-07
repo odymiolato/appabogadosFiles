@@ -10,12 +10,18 @@ async function saveVehiculoEstado() {
   try {
     await apiClient.post('/vehiculos-estados', VehiculoEstado.value)
     VehiculoEstado.value.descripcion_est = ''
+    VehiculoEstado.value.codestado_est = ''
     addAlert(2, 'El estado de vehiculo se registró correctamente.')
   }
   catch (error) {
     console.error('Error saving vehiculos_estados:', error)
     addAlert(3, 'Error al registrar el estado de vehiculo.')
   }
+}
+function handleInputUpperCase(event: Event) {
+  const input = event.target as HTMLInputElement
+  input.value = input.value.toUpperCase().replace(/\d/g, '')
+  VehiculoEstado.value.codestado_est = input.value
 }
 </script>
 
@@ -32,6 +38,16 @@ async function saveVehiculoEstado() {
             id="descripcion" v-model="VehiculoEstado.descripcion_est"
             type="text"
             class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+          >
+        </div>
+        <div class="block">
+          <label class="text-gray-700" for="descripcion">Codigo del Estado</label>
+          <input
+            id="descripcion" v-model="VehiculoEstado.codestado_est"
+            @input="handleInputUpperCase"
+            type="text"
+            maxlength="1"
+            class="block w-10 mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500 "
           >
         </div>
       </div>

@@ -13,7 +13,6 @@ import Calendar from './components/calendar.vue'
 import Expediente from './views/expDepToAbo.vue'
 import Expedientes from './views/expediente/Expedientes.vue'
 
-// import AsignacionExpediente from './views/componentes a revisar/expediente/AsignacionExpediente.vue'
 
 import Audiencia from './views/componentes a revisar/Audiencia.vue'
 
@@ -38,25 +37,24 @@ import CrearClientes from './views/clientes/CrearClientes.vue'
 import CrearInteracciones from './views/interacciones/CrearInteracciones.vue'
 import VehiculosModelos from './views/vehiculos_modelos/VehiculosModelos.vue'
 import VehiculosEstado from './views/vehiculos_estado/VehiculosEstado.vue'
+import VehiculosMarcas from './views/vehiculos_marcas/VehiculosMarcas.vue'
+import Vehiculos from './views/vehiculos/Vehiculos.vue'
+import CrearVehiculos from './views/vehiculos/CrearVehiculos.vue'
+import Asignacion from './views/asignacion_vehiculos/Asignacion.vue'
+import CrearAsignacion from './views/asignacion_vehiculos/CrearAsignacion.vue'
 
-// import GestionDocumento from './views/componentes a revisar/GestionDocumento.vue'
-// import FacturacionFinanza from './views/componentes a revisar/FacturacionFinanza.vue'
-// import GestionPago from './views/componentes a revisar/GestionPago.vue'
-// import UsuarioPermiso from './views/componentes a revisar/UsuariosPermiso.vue'
-// import Facturacion from './components/mantenimientos/facturacion.vue'
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/errors',
     children: [
       {
-        // the 404 route, when none of the above matches
         path: '/404',
         name: '404',
         component: () => import('./views/404/404page.vue'),
         // meta: {
         //   title: "Repositorio - 404",
-        //   layout: BaseLayout,
+        meta: { layout: 'empty' },
         //   requiresAuth: false,
         // },
       },
@@ -65,6 +63,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/:pathMatch(.*)*',
     redirect: '/404',
+    meta: { layout: 'empty' },
   },
   {
     path: '/',
@@ -210,6 +209,16 @@ const routes: RouteRecordRaw[] = [
     component: Movimientos,
   },
   {
+    path: '/vehiculos',
+    name: 'Vehiculos',
+    component: Vehiculos,
+  },
+  {
+    path: '/asignacionvehiculo',
+    name: 'AsignacionVehiculo',
+    component: Asignacion,
+  },
+  {
     path: '/vehiculosmodelos',
     name: 'VehiculosModelos',
     component: VehiculosModelos,
@@ -218,6 +227,11 @@ const routes: RouteRecordRaw[] = [
     path: '/vehiculosestado',
     name: 'VehiculosEstado',
     component: VehiculosEstado,
+  },
+  {
+    path: '/vehiculosmarca',
+    name: 'VehiculosMarca',
+    component: VehiculosMarcas,
   },
   {
     path: '/crearcliente/:id?',
@@ -229,6 +243,18 @@ const routes: RouteRecordRaw[] = [
     path: '/crear-interaccion/:id?',
     name: 'CrearInteraccion',
     component: CrearInteracciones,
+    props: true,
+  },
+  {
+    path: '/crear-vehiculo/:id?',
+    name: 'CrearVehiculo',
+    component: CrearVehiculos,
+    props: true,
+  },
+  {
+    path: '/crear-asignacion/:id?',
+    name: 'CrearAsignacion',
+    component: CrearAsignacion,
     props: true,
   },
 ]

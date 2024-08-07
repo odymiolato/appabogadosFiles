@@ -2,24 +2,19 @@
 import Sidebar from './Sidebar.vue'
 import Header from './Header.vue'
 import Alerts from './Alerts.vue';
-import { $alerts_list, addAlert, removeAlert } from '../stores/alerts'
+import { $alerts_list, removeAlert } from '../stores/alerts'
 import { useStore } from '@nanostores/vue';
 import { watchEffect } from 'vue';
 let list_alerts = useStore($alerts_list);
 
 
-watchEffect(() => { 
+watchEffect(() => {
   list_alerts.value.forEach((item, index) => {
     setTimeout(() => {
       removeAlert(index);
     }, 2500 * (index + 1));
   });
 });
-
-// addAlert(1, '');
-// addAlert(2, '');
-// addAlert(3, '');
-// addAlert(4, '');
 
 console.info(list_alerts.value);
 
@@ -41,7 +36,7 @@ console.info(list_alerts.value);
   <div class="w-[405px] fixed top-0 right-0 mt-20 mr-3 z-30">
     <ul class="flex flex-col gap-5">
       <li v-for="item in list_alerts">
-        <Alerts :typeAlert="item.type" :MessageAlert = "item.message"/>
+        <Alerts :typeAlert="item.type" :MessageAlert="item.message" />
       </li>
     </ul>
   </div>
