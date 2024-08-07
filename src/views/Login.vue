@@ -23,39 +23,28 @@ function login() {
       <form class="mt-4" @submit.prevent="login">
         <label class="block">
           <span class="text-sm text-gray-700">Usuario</span>
-          <input
-            v-model="email"
-            type="text"
-            class="block w-full mt-1 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-          >
+          <input v-model="email" type="text"
+            class="block w-full mt-1 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
         </label>
 
         <label class="block mt-3">
           <span class="text-sm text-gray-700">Contraseña</span>
-          <input
-            v-model="password"
-            type="password"
-            class="block w-full mt-1 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-          >
+          <input v-model="password" type="password"
+            class="block w-full mt-1 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
         </label>
 
         <div class="flex items-center justify-between mt-4">
           <div>
             <label class="inline-flex items-center">
-              <input type="checkbox" class="text-sky-700 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
+              <input type="checkbox"
+                class="text-sky-700 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
               <span class="mx-2 text-sm text-gray-600">Recuerdame</span>
             </label>
           </div>
         </div>
 
         <div class="mt-6">
-          <Buttons type="submit" class="w-full" Buttonstext="Inicia Session"/>
-          <!-- <button
-            type="submit"
-            class="w-full px-4 py-2 text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500"
-          >
-           Inicia Session
-          </button> -->
+          <Buttons type="submit" class="w-full" Buttonstext="Inicia Session" />
         </div>
       </form>
     </div>
