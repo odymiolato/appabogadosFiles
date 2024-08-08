@@ -23,7 +23,6 @@ if (!isset($data['USERID'])) {
 }
 
 $folderName = preg_replace('/[^a-zA-Z0-9_-]/', '', $data['USERID']);
-// $directoryPath = __DIR__ . '/' . $folderName;
 $directoryPath = '../abogadosfiles/exp' . $folderName;
 
 if (file_exists($directoryPath)) {
