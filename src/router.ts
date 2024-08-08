@@ -116,17 +116,11 @@ const routes: RouteRecordRaw[] = [
     name: 'Expediente',
     component: Expediente,
   },
-  // estas son las rutas que yo cree
   {
     path: '/expedientes',
     name: 'Expedientes',
     component: Expedientes,
   },
-  // {
-  //   path: '/asignacionexpediente',
-  //   name: 'AsignacionExpediente',
-  //   component: AsignacionExpediente,
-  // },
   {
     path: '/audiencia',
     name: 'Audiencia',

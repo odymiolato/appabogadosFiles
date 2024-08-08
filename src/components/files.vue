@@ -11,7 +11,7 @@ const props = defineProps({
   path: { type: String, default: '' },
 });
 
-const URL: string = 'http://localhost:8081/appabogadosFiles/'
+const URL: string = 'http://localhost/appabogadosFiles/'
 const files = ref<Array<any>>([])
 const filesCopy = ref<Array<any>>([])
 const searchTerm = ref('')
