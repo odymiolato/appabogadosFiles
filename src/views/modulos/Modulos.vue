@@ -46,7 +46,7 @@ function updateProgramOption(programId: number, value: boolean) {
 
 async function saveModule() {
     if (modulo.value.nombre_mod.trim() === '' || selectedPrograms.value.length === 0) {
-        addAlert(3, 'Por favor, complete todos los campos requeridos.')
+        addAlert(4, 'Por favor, complete todos los campos requeridos.')
         return
     }
 
@@ -66,6 +66,9 @@ async function saveModule() {
             addAlert(2, 'Módulo registrado exitosamente.')
             modulo.value = new modulos()
             selectedPrograms.value = []
+            let temp = [...availablePrograms.value]
+            availablePrograms.value = []
+            availablePrograms.value = temp
         } else {
             console.error('Error en la respuesta del servidor:', response.statusText)
             addAlert(3, 'Problemas al registrar el módulo.')
@@ -116,7 +119,7 @@ onMounted(() => {
                                         {{ value.name_pro }}
                                     </td>
                                     <td class="px-6 py-4 text-lg text-gray-700 border-b">
-                                        <input type="checkbox"
+                                        <input type="checkbox" class="w-5 h-5 text-sky-600 rounded-md focus:ring-sky-500"
                                             @change="(e: any) => updateProgramOption(value.codpro_pro, e.target.checked)">
                                     </td>
                                 </tr>
