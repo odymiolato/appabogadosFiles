@@ -27,8 +27,7 @@ function changeStatus(valor: boolean) {
 
     <!-- <div :class="isOpen ? 'translate-x-0 ease-out w-64' : '-translate-x-full ease-in w-16'" -->
     <div
-      class="inset-y-0 left-0 z-30  transition-transform relative overflow-hidden w-max bg-sky-900 lg:translate-x-0 lg:static lg:inset-0"
-    >
+      class="inset-y-0 left-0 z-30  transition-transform relative overflow-hidden w-max bg-sky-900 lg:translate-x-0 lg:static lg:inset-0">
       <div class="flex items-center justify-center mt-8">
         <div class="flex items-center">
           <img src="/public/img/cumplimiento.png" alt="" class="w-20 ml-[-1]">
@@ -65,7 +64,8 @@ function changeStatus(valor: boolean) {
           </MenuDesplegable>
 
           <MenuDesplegable label="Procesos" imagen="dashboard">
-            <MenuItem to="/interaccionescliente" name="InteraccionesCliente" label="Interaccion Clientes" imagen="dashboard" />
+            <MenuItem to="/interaccionescliente" name="InteraccionesCliente" label="Interaccion Clientes"
+              imagen="dashboard" />
           </MenuDesplegable>
         </MenuDesplegable>
 
@@ -75,7 +75,8 @@ function changeStatus(valor: boolean) {
           <MenuItem to="/vehiculosmodelos" name="VehiculosModelos" label="Modelos de Vehiculos" imagen="dashboard" />
           <MenuItem to="/vehiculosmarca" name="VehiculosMarca" label="Marcas de Vehiculos" imagen="dashboard" />
 
-          <MenuItem to="/asignacionvehiculo" name="AsignacionVehiculo" label="Asignacion de Vehiculos" imagen="dashboard" />
+          <MenuItem to="/asignacionvehiculo" name="AsignacionVehiculo" label="Asignacion de Vehiculos"
+            imagen="dashboard" />
         </MenuDesplegable>
 
         <!-- <MenuItem to="/ui-elements" name="UIElements" label="Elements" imagen="elements" /> -->
@@ -92,6 +93,10 @@ function changeStatus(valor: boolean) {
             <MenuItem to="/provincias" name="Provincias" label="Provincias" imagen="blank" />
             <MenuItem to="/ciudades" name="Ciudades" label="Ciudades" imagen="blank" />
             <MenuItem to="/origendireccion" name="Origen Direccion" label="Origen Direccion" imagen="blank" />
+
+          </MenuDesplegable>
+          <MenuDesplegable label="Usuarios" imagen="dashboard">
+            <MenuItem to="/programas" name="Programas" label="Programas" imagen="blank" />
           </MenuDesplegable>
         </MenuDesplegable>
         <!-- <MenuDesplegable class="transition duration-700" label="Revisar" imagen="maintenance" :is-active="IsActive"

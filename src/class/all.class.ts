@@ -214,32 +214,44 @@ export class modulos {
     this.fechmod = new Date()
   }
 }
-export class permisos_modulo_perfiles {
-  codpmp_pmp: number
-  codperf_pmp: number
-  codmod__pmp: number
-  eliminar_pmp: boolean
-  imprimir_pmp: boolean
-  modificar_pmp: boolean
-  insertar_pmp: boolean
-  usercrea: number
-  usermod: number
-  fechcrea: Date
-  fechmod: Date
+
+export class modulos_perfiles {
+  codperf_mop: number
+  codmod_mop: number
   constructor() {
-    this.codpmp_pmp = 0
-    this.codperf_pmp = 0
-    this.codmod__pmp = 0
-    this.eliminar_pmp = false
-    this.imprimir_pmp = false
-    this.modificar_pmp = false
-    this.insertar_pmp = false
-    this.usercrea = 0
-    this.usermod = 0
-    this.fechcrea = new Date()
-    this.fechmod = new Date()
+    this.codperf_mop = 0
+    this.codmod_mop = 0
   }
 }
+
+export class programas {
+  codpro_pro: number;
+  tippro_tpr: number;
+  name_pro: string;
+  path_pro: string;
+  constructor() {
+    this.codpro_pro = 0;
+    this.tippro_tpr = 0;
+    this.name_pro = "";
+    this.path_pro = "";
+  }
+}
+
+export class modulo_programa {
+  codmod_mop: number;
+  codpro_mop: number;
+  insertar_mop: boolean;
+  eliminar_mop: boolean;
+  modificar_mop: boolean;
+  constructor() {
+    this.codmod_mop = 0;
+    this.codpro_mop = 0;
+    this.insertar_mop = false;
+    this.eliminar_mop = false;
+    this.modificar_mop = false;
+  }
+}
+
 export class usuarios {
   codusr_usr: number
   nombre_usr: string
@@ -260,6 +272,7 @@ export class usuarios {
     this.fechmod = new Date()
   }
 }
+
 export class abogados {
   codabo_abo: number
   nombre_abo: string
