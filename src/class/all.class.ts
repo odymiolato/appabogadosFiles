@@ -215,12 +215,20 @@ export class modulos {
   }
 }
 
-export class modulos_perfiles {
-  codperf_mop: number
-  codmod_mop: number
+export class perfil_programas {
+  codperf_ppr: number;
+  codmod_ppr: number;
+  codpro_ppr: number;
+  insertar_ppr: boolean;
+  eliminar_ppr: boolean;
+  modificar_ppr: boolean;
   constructor() {
-    this.codperf_mop = 0
-    this.codmod_mop = 0
+    this.codperf_ppr = 0;
+    this.codmod_ppr = 0;
+    this.codpro_ppr = 0;
+    this.insertar_ppr = false;
+    this.eliminar_ppr = false;
+    this.modificar_ppr = false;
   }
 }
 
@@ -240,15 +248,11 @@ export class programas {
 export class modulo_programa {
   codmod_mop: number;
   codpro_mop: number;
-  insertar_mop: boolean;
-  eliminar_mop: boolean;
-  modificar_mop: boolean;
+  acceso:boolean;
   constructor() {
     this.codmod_mop = 0;
     this.codpro_mop = 0;
-    this.insertar_mop = false;
-    this.eliminar_mop = false;
-    this.modificar_mop = false;
+    this.acceso = false;
   }
 }
 

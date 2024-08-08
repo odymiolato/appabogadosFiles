@@ -21,7 +21,6 @@ const getSelectedTypeName = computed(() => {
     return selectedType ? selectedType.name : 'Seleccione un tipo'
 })
 
-
 function toggleDropdown() {
     isDropdownOpen.value = !isDropdownOpen.value
 }

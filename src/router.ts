@@ -43,6 +43,7 @@ import CrearVehiculos from './views/vehiculos/CrearVehiculos.vue'
 import Asignacion from './views/asignacion_vehiculos/Asignacion.vue'
 import CrearAsignacion from './views/asignacion_vehiculos/CrearAsignacion.vue'
 import Programas from './views/programas/Programas.vue'
+import Modulos from './views/modulos/Modulos.vue'
 
 
 const routes: RouteRecordRaw[] = [
@@ -256,7 +257,11 @@ const routes: RouteRecordRaw[] = [
     path: '/programas',
     name: 'Programas',
     component: Programas,
-    props: true,
+  },
+  {
+    path: '/modulos',
+    name: 'Modulos',
+    component: Modulos,
   },
 ]
 

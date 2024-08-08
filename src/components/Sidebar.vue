@@ -97,6 +97,7 @@ function changeStatus(valor: boolean) {
           </MenuDesplegable>
           <MenuDesplegable label="Usuarios" imagen="dashboard">
             <MenuItem to="/programas" name="Programas" label="Programas" imagen="blank" />
+            <MenuItem to="/modulos" name="Modulos" label="Modulos" imagen="blank" />
           </MenuDesplegable>
         </MenuDesplegable>
         <!-- <MenuDesplegable class="transition duration-700" label="Revisar" imagen="maintenance" :is-active="IsActive"
