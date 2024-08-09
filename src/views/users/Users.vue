@@ -140,6 +140,7 @@ async function saveUsuario() {
     }
 
     try {
+        usuario.value.codperf_usr = parseInt(PerfilSelected.value.codperf_perf)
         const response = await fetch(`${URL}usuarios`, {
             method: 'POST',
             headers: {
