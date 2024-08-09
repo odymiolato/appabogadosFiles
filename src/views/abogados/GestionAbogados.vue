@@ -168,7 +168,7 @@ function setCiudad(obj: ciudades) {
 
 async function saveAbogado() {
   // Asegúrate de que los valores numéricos estén correctamente parseados
-  Abogado.value.tipo_espcialidad_abo = Number.parseInt(especialidadSelected.value.tipesp_tip)
+  Abogado.value.tipo_especialidad_abo = Number.parseInt(especialidadSelected.value.tipesp_tip)
   Abogado.value.estado_abo = 'A'
 
   Direccion.value.codciu_dir = Number.parseInt(provinciaSelected.value.codpro_pro)
@@ -238,16 +238,16 @@ onMounted(() => {
           </div>
 
           <div>
-            <label class="text-gray-700" for="celula_abo">Cédula</label>
+            <label class="text-gray-700" for="cedula_abo">Cédula</label>
             <input
-              id="celula_abo" v-model="Abogado.celula_abo"
+              id="cedula_abo" v-model="Abogado.cedula_abo"
               type="text"
               class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
             >
           </div>
 
           <div class="">
-            <label class="text-gray-700" for="tipo_espcialidad_abo">Especialidad</label>
+            <label class="text-gray-700" for="tipo_especialidad_abo">Especialidad</label>
             <div class="flex gap-2 justify-center items-center">
               <input
                 id="fecnac_abo" v-model="especialidadSelected.tipesp_tip" type="text"
@@ -323,7 +323,7 @@ onMounted(() => {
 
             <div class="grid grid-cols-2 gap-6">
               <div class="">
-                <label class="text-gray-700" for="tipo_espcialidad_abo">Provincias</label>
+                <label class="text-gray-700" for="tipo_especialidad_abo">Provincias</label>
                 <div class="flex gap-2 justify-center items-center">
                   <input
                     id="fecnac_abo" v-model="provinciaSelected.codpro_pro" type="text"
@@ -356,7 +356,7 @@ onMounted(() => {
                 </div>
               </div>
               <div v-show="ShowCities" class="">
-                <label class="text-gray-700" for="tipo_espcialidad_abo">Ciudad</label>
+                <label class="text-gray-700" for="tipo_especialidad_abo">Ciudad</label>
                 <div class="flex gap-2 justify-center items-center">
                   <input
                     id="fecnac_abo" v-model="ciuadadSelected.codciu_ciu" type="text"

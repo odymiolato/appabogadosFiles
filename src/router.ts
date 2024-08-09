@@ -43,6 +43,7 @@ import Vehiculos from './views/vehiculos/Vehiculos.vue'
 import CrearVehiculos from './views/vehiculos/CrearVehiculos.vue'
 import Asignacion from './views/asignacion_vehiculos/Asignacion.vue'
 import CrearAsignacion from './views/asignacion_vehiculos/CrearAsignacion.vue'
+import Abogados from './views/abogados/Abogados.vue'
 
 // import GestionDocumento from './views/componentes a revisar/GestionDocumento.vue'
 // import FacturacionFinanza from './views/componentes a revisar/FacturacionFinanza.vue'
@@ -139,6 +140,11 @@ const routes: RouteRecordRaw[] = [
     component: Audiencia,
   },
 
+  {
+    path: '/abogados',
+    name: 'Abogados',
+    component: Abogados,
+  },
   {
     path: '/gestionabogados',
     name: 'GestionAbogados',
