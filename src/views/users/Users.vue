@@ -7,28 +7,20 @@ import Inputs from '../../components/Inputs.vue';
 
 const usuario = ref<usuarios>(new usuarios())
 const confirmarContrasena = ref('')
+const ColorFormatPassword = ref<string>('text-red-600')
+const ColorBorderPassword = ref<string>('focus:border-red-600 focus:ring focus:ring-opacity-40 focus:ring-red-500')
+const ColorBorderPasswordConfirm = ref<string>('focus:border-red-600 focus:ring focus:ring-opacity-40 focus:ring-red-500')
 
 /* @ts-ignore */
 const URL: string = import.meta.env.VITE_PATH_API
+const passwordErrorText = 'La contraseña debe tener al menos 8 caracteres, incluyendo una letra mayúscula, una letra minúscula y un número.'
 
 const passwordRules = {
     hasLowercase: (password: string) => /[a-z]/.test(password),
+    hasUppercase: (password: string) => /[A-Z]/.test(password),
     hasNumber: (password: string) => /[0-9]/.test(password),
     minLength: (password: string) => password.length >= 8
 }
-
-const isFormComplete = computed(() => {
-    const password = usuario.value.contrasena_usr
-    return (
-        usuario.value.nombre_usr !== '' &&
-        usuario.value.codperf_usr !== null &&
-        password !== '' &&
-        password === confirmarContrasena.value &&
-        passwordRules.hasLowercase(password) &&
-        passwordRules.hasNumber(password) &&
-        passwordRules.minLength(password)
-    )
-})
 
 const showModal = ref<boolean>(false);
 const PerfilSelected = ref({ codperf_perf: '', nombre_perf: '' });
@@ -68,6 +60,32 @@ function setPerfil(obj: perfiles) {
     handleAccept();
 }
 
+function validateFormat() {
+    let password: string = usuario.value.contrasena_usr
+
+    if (
+        passwordRules.minLength(password) &&
+        passwordRules.hasUppercase(password) &&
+        passwordRules.hasLowercase(password) &&
+        passwordRules.hasNumber(password)
+    ) {
+        ColorFormatPassword.value = 'text-green-600'
+        ColorBorderPassword.value = 'focus:border-green-600 focus:ring focus:ring-opacity-40 focus:ring-green-500'
+        return
+    } else {
+        ColorFormatPassword.value = 'text-red-600'
+        ColorBorderPassword.value = 'focus:border-red-600 focus:ring focus:ring-opacity-40 focus:ring-red-500'
+    }
+}
+
+function ConfirmPassword() {
+    if (usuario.value.contrasena_usr === confirmarContrasena.value) {
+        ColorBorderPasswordConfirm.value = 'focus:border-green-600 focus:ring focus:ring-opacity-40 focus:ring-green-500'
+    } else {
+        ColorBorderPasswordConfirm.value = 'focus:border-red-600 focus:ring focus:ring-opacity-40 focus:ring-red-500'
+    }
+}
+
 async function getPerfil() {
     try {
         const response = await fetch(`${URL}perfiles`, {
@@ -89,8 +107,35 @@ async function getPerfil() {
 }
 
 async function saveUsuario() {
-    if (!isFormComplete.value) {
-        addAlert(3, 'Por favor, completa todos los campos requeridos correctamente.')
+    const password = usuario.value.contrasena_usr
+
+    if (usuario.value.nombre_usr === '') {
+        addAlert(4, 'El nombre es requerido.')
+        return
+    }
+
+    if (PerfilSelected.value.codperf_perf === '') {
+        addAlert(4, 'El código de perfil es requerido.')
+        return
+    }
+
+    if (password === '') {
+        addAlert(4, 'La contraseña es requerida.')
+        return
+    }
+
+    if (
+        !passwordRules.minLength(password) ||
+        !passwordRules.hasUppercase(password) ||
+        !passwordRules.hasLowercase(password) ||
+        !passwordRules.hasNumber(password)
+    ) {
+        addAlert(4, 'Debes completar la contraseña.')
+        return
+    }
+
+    if (password !== confirmarContrasena.value) {
+        addAlert(4, 'Debes completar la contraseña.')
         return
     }
 
@@ -165,19 +210,28 @@ onMounted(() => {
                     <div>
                         <label class="text-gray-700" for="contrasena_usr">Contraseña</label>
                         <input id="contrasena_usr" v-model="usuario.contrasena_usr" type="password"
-                            class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
+                            @input="validateFormat" class="w-full mt-2 border-gray-200 rounded-md "
+                            :class="ColorBorderPassword">
+
+                        <div>
+                            <p class="font-medium" :class="ColorFormatPassword">
+                                {{ passwordErrorText }}
+                            </p>
+                        </div>
                     </div>
+
 
                     <div>
                         <label class="text-gray-700" for="confirmar_contrasena">Confirme la Contraseña</label>
                         <input id="confirmar_contrasena" v-model="confirmarContrasena" type="password"
-                            class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
+                            @input="ConfirmPassword" class="w-full mt-2 border-gray-200 rounded-md"
+                            :class="ColorBorderPasswordConfirm">
                     </div>
 
                 </div>
 
                 <div class="flex justify-end mt-4">
-                    <button type="button" :disabled="!isFormComplete"
+                    <button type="button"
                         class="px-4 py-2 text-gray-200 bg-gray-800 rounded-md hover:bg-gray-700 focus:outline-none focus:bg-gray-700"
                         @click="saveUsuario">
                         Guardar
