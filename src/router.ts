@@ -256,7 +256,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/programas',
-    name: 'Programas',
+    name: 'Programas', 
     component: Programas,
   },
   {

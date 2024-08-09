@@ -99,20 +99,21 @@ function updateProgramOption(programId: number, key: keyof perfil_programas, val
         program[key] = value
     } else {
         const newProgram: any = new perfil_programas()
-        newProgram.codpro_mop = programId
+        newProgram.codmod_ppr = parseInt(ModuloSelected.value.codmod_mod)
+        newProgram.codpro_ppr = programId
         newProgram[key] = value
         selectedPrograms.value.push(newProgram)
     }
 }
 
-async function saveModule() {
+async function savePerfil() {
     if (perfil.value.nombre_perf.trim() === '' || selectedPrograms.value.length === 0) {
         addAlert(3, 'Por favor, complete todos los campos requeridos.')
         return
     }
 
     try {
-        const response = await fetch(`${URL}modulos`, {
+        const response = await fetch(`${URL}perfiles`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -124,12 +125,14 @@ async function saveModule() {
         })
 
         if (response.ok) {
-            addAlert(2, 'Módulo registrado exitosamente.')
+            addAlert(2, 'Perfil registrado exitosamente.')
             perfil.value = new perfiles()
             selectedPrograms.value = []
+            availablePrograms.value = []
+            ModuloSelected.value = { codmod_mod: '', nombre_mod: '' }
         } else {
             console.error('Error en la respuesta del servidor:', response.statusText)
-            addAlert(3, 'Problemas al registrar el módulo.')
+            addAlert(3, 'Problemas al registrar el perfil.')
         }
     } catch (error) {
         console.error('Error en la solicitud:', error)
@@ -209,15 +212,18 @@ onMounted(() => {
                                         {{ value.name_pro }}
                                     </td>
                                     <td class="px-6 py-4 text-lg text-gray-700 border-b">
-                                        <input type="checkbox" class="w-5 h-5 text-sky-600 rounded-md focus:ring-sky-500"
+                                        <input type="checkbox"
+                                            class="w-5 h-5 text-sky-600 rounded-md focus:ring-sky-500"
                                             @change="(e: any) => updateProgramOption(value.codpro_pro, 'insertar_ppr', e.target.checked)">
                                     </td>
                                     <td class="px-6 py-4 text-lg text-gray-700 border-b">
-                                        <input type="checkbox" class="w-5 h-5 text-sky-600 rounded-md focus:ring-sky-500"
+                                        <input type="checkbox"
+                                            class="w-5 h-5 text-sky-600 rounded-md focus:ring-sky-500"
                                             @change="(e: any) => updateProgramOption(value.codpro_pro, 'eliminar_ppr', e.target.checked)">
                                     </td>
                                     <td class="px-6 py-4 text-lg text-gray-700 border-b">
-                                        <input type="checkbox" class="w-5 h-5 text-sky-600 rounded-md focus:ring-sky-500"
+                                        <input type="checkbox"
+                                            class="w-5 h-5 text-sky-600 rounded-md focus:ring-sky-500"
                                             @change="(e: any) => updateProgramOption(value.codpro_pro, 'modificar_ppr', e.target.checked)">
                                     </td>
                                 </tr>
@@ -240,7 +246,7 @@ onMounted(() => {
             <div class="flex justify-end mt-6">
                 <button
                     class="px-6 py-2 leading-5 text-white transition-colors duration-200 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600"
-                    @click="saveModule">
+                    @click="savePerfil">
                     Guardar
                 </button>
             </div>
