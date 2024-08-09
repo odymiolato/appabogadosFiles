@@ -124,7 +124,7 @@ onMounted(() => {
 
   <div class="mt-4">
     <div class="p-6 bg-white rounded-md shadow-md">
-      <form>
+      <div>
         <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
           <div>
             <label class="text-gray-700" for="tipesp_tip">Nombre</label>
@@ -164,7 +164,7 @@ onMounted(() => {
             Guardar
           </button>
         </div>
-      </form>
+      </div>
     </div>
   </div>
 
