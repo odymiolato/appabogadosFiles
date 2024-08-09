@@ -45,6 +45,7 @@ import CrearAsignacion from './views/asignacion_vehiculos/CrearAsignacion.vue'
 import Programas from './views/programas/Programas.vue'
 import Modulos from './views/modulos/Modulos.vue'
 import Perfil from './views/perfil/Perfil.vue'
+import Users from './views/users/Users.vue'
 
 
 const routes: RouteRecordRaw[] = [
@@ -268,6 +269,11 @@ const routes: RouteRecordRaw[] = [
     path: '/perfiles',
     name: 'Perfiles',
     component: Perfil,
+  },
+  {
+    path: '/usuarios',
+    name: 'Usuarios',
+    component: Users,
   },
 ]
 

@@ -248,7 +248,7 @@ export class programas {
 export class modulo_programa {
   codmod_mop: number;
   codpro_mop: number;
-  acceso:boolean;
+  acceso: boolean;
   constructor() {
     this.codmod_mop = 0;
     this.codpro_mop = 0;
@@ -257,23 +257,24 @@ export class modulo_programa {
 }
 
 export class usuarios {
-  codusr_usr: number
-  nombre_usr: string
-  codperf_usr: number
-  contrasena_usr: string
-  usercrea: number
-  usermod: number
-  fechcrea: Date
-  fechmod: Date
+  codusr_usr: number | null;
+  nombre_usr: string;
+  codperf_usr: number | null;
+  contrasena_usr: string;
+  usercrea: number | null;
+  usermod: number | null;
+  fechcrea: Date | null;
+  fechmod: Date | null;
+
   constructor() {
-    this.codusr_usr = 0
-    this.nombre_usr = ''
-    this.codperf_usr = 0
-    this.contrasena_usr = ''
-    this.usercrea = 0
-    this.usermod = 0
-    this.fechcrea = new Date()
-    this.fechmod = new Date()
+    this.codusr_usr = null;
+    this.nombre_usr = '';
+    this.codperf_usr = null;
+    this.contrasena_usr = '';
+    this.usercrea = null;
+    this.usermod = null;
+    this.fechcrea = new Date();
+    this.fechmod = new Date();
   }
 }
 

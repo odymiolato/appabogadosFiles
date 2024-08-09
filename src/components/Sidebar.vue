@@ -99,6 +99,7 @@ function changeStatus(valor: boolean) {
             <MenuItem to="/programas" name="Programas" label="Programas" imagen="blank" />
             <MenuItem to="/modulos" name="Modulos" label="Modulos" imagen="blank" />
             <MenuItem to="/perfiles" name="Perfiles" label="Perfiles" imagen="blank" />
+            <MenuItem to="/usuarios" name="Usuarios" label="Usuarios" imagen="blank" />
           </MenuDesplegable>
         </MenuDesplegable>
       </nav>
