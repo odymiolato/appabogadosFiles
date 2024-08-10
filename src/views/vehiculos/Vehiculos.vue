@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import apiClient from '../../axiosConfig'
-import type { vehiculos } from '../../class/all.class'
+import type { vehiculos, vehiculos_estados, vehiculos_marcas, vehiculos_modelos } from '../../class/all.class'
 import { addAlert } from '../../stores/alerts'
 import WideTable from '../../components/tablas/WideTable.vue'
 
@@ -33,13 +33,13 @@ async function fetchVehiculos() {
     const marcas = marcasResponse.data
 
     vehiculosList.value = response.data.map((vehiculo: vehiculos) => {
-      const modelo = modelos.find(modelo => modelo.codmodelo_mod === vehiculo.codmodelo_veh)
-      const marca = modelo ? marcas.find(marca => marca.codmarca_mar === modelo.codmarca_mod) : null
+      const modelo = modelos.find((modelo:vehiculos_modelos) => modelo.codmodelo_mod === vehiculo.codmodelo_veh)
+      const marca = modelo ? marcas.find((marca:vehiculos_marcas) => marca.codmarca_mar === modelo.codmarca_mod) : null
       return {
         ...vehiculo,
         nombre_mod: modelo?.nombre_mod || 'Desconocido',
         nombre_mar: marca?.nombre_mar || 'Desconocido',
-        descripcion_est: estados.find(estado => estado.codestado_est === vehiculo.codestado_veh)?.descripcion_est || 'Desconocido',
+        descripcion_est: estados.find((estado:vehiculos_estados) => estado.codestado_est === vehiculo.codestado_veh)?.descripcion_est || 'Desconocido',
       }
     })
   }

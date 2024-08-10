@@ -28,10 +28,13 @@ async function fetchInteraccion(id: string) {
     const response = await apiClient.get(`/interacciones/${id}`)
     interaccion.value = response.data
     interaccion.value.fecha_int = formatDate(interaccion.value.fecha_int)
+
     const cliente = await apiClient.get(`/clientes/${interaccion.value.codcli_int}`)
     clienteSelected.value = { codigo: String(cliente.data.codcli_cli), nombre: cliente.data.nombre_cli }
+
     const tipointeraccion = await apiClient.get(`/tipointeraccion/${interaccion.value.codtin_int}`)
     interaccionSelected.value = { codigo: String(tipointeraccion.data.codtin_tin), nombre: tipointeraccion.data.descripcion_tin }
+    
     addAlert(1, 'Interacción cargada correctamente.')
   } catch (error) {
     console.error('Error fetching interacciones:', error)

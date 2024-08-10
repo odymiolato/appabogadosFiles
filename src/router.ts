@@ -146,9 +146,10 @@ const routes: RouteRecordRaw[] = [
     component: Abogados,
   },
   {
-    path: '/gestionabogados',
+    path: '/gestionabogados/:id?',
     name: 'GestionAbogados',
     component: GestionAbogados,
+    props: true,
   },
   {
     path: '/gestioncontraparte',

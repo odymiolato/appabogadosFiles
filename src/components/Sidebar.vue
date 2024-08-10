@@ -40,6 +40,7 @@ function changeStatus(valor: boolean) {
         <MenuItem to="/dashboard" name="Dashboard" label="Dashboard" imagen="dashboard" />
 
         <MenuDesplegable class="transition-all duration-1000" label="Expediente" imagen="dashboard">
+          
           <MenuDesplegable label="Mantenimientos" imagen="dashboard">
             <MenuItem to="/abogados" name="Abogados" label="Abogados" imagen="dashboard" />
             <MenuItem to="/gestionabogados" name="GestionAbogados" label="Gestion Abogados" imagen="dashboard" />
@@ -60,6 +61,7 @@ function changeStatus(valor: boolean) {
         </MenuDesplegable>
 
         <MenuDesplegable class="transition duration-500" label="Clientes" imagen="dashboard">
+
           <MenuDesplegable label="Mantenimientos" imagen="dashboard">
             <MenuItem to="/clientes" name="Clientes" label="Clientes" imagen="dashboard" />
             <MenuItem to="/tipointeraccion" name="TipoInteraccion" label="Tipo de Interacciones" imagen="dashboard" />
@@ -71,12 +73,21 @@ function changeStatus(valor: boolean) {
         </MenuDesplegable>
 
         <MenuDesplegable label="Vehiculos" imagen="dashboard">
-          <MenuItem to="/vehiculos" name="Vehiculos" label="Vehiculos" imagen="dashboard" />
-          <MenuItem to="/vehiculosestado" name="VehiculosEstado" label="Estado de vehiculos" imagen="dashboard" />
-          <MenuItem to="/vehiculosmodelos" name="VehiculosModelos" label="Modelos de Vehiculos" imagen="dashboard" />
-          <MenuItem to="/vehiculosmarca" name="VehiculosMarca" label="Marcas de Vehiculos" imagen="dashboard" />
 
-          <MenuItem to="/asignacionvehiculo" name="AsignacionVehiculo" label="Asignacion de Vehiculos" imagen="dashboard" />
+          <MenuDesplegable label="Mantenimientos" imagen="dashboard">
+            
+            <MenuItem to="/vehiculos" name="Vehiculos" label="Vehiculos" imagen="dashboard" />
+            <MenuItem to="/vehiculosestado" name="VehiculosEstado" label="Estado de vehiculos" imagen="dashboard" />
+            <MenuItem to="/vehiculosmodelos" name="VehiculosModelos" label="Modelos de Vehiculos" imagen="dashboard" />
+            <MenuItem to="/vehiculosmarca" name="VehiculosMarca" label="Marcas de Vehiculos" imagen="dashboard" />
+
+          </MenuDesplegable>
+
+          <MenuDesplegable label="Procesos" imagen="dashboard">
+            
+            <MenuItem to="/asignacionvehiculo" name="AsignacionVehiculo" label="Asignacion de Vehiculos" imagen="dashboard" />
+
+          </MenuDesplegable>
         </MenuDesplegable>
 
         <!-- <MenuItem to="/ui-elements" name="UIElements" label="Elements" imagen="elements" /> -->

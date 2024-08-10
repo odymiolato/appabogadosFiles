@@ -8,6 +8,10 @@ const VehiculoEstado = ref<vehiculos_estados>(new vehiculos_estados())
 
 async function saveVehiculoEstado() {
   try {
+    if (!VehiculoEstado.value.descripcion_est || !VehiculoEstado.value.codestado_est) {
+      addAlert(3, 'Debe completar todos los campos.')
+      return
+    }
     await apiClient.post('/vehiculos-estados', VehiculoEstado.value)
     VehiculoEstado.value.descripcion_est = ''
     VehiculoEstado.value.codestado_est = ''

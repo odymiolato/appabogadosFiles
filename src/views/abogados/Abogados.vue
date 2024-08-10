@@ -35,6 +35,8 @@ async function fetchAbogados() {
       return {
         ...abogado,
         descri_tip: especialidades?.find((especialidad: especialidades) => especialidad.tipesp_tip === abogado.tipo_especialidad_abo)?.descri_tip || 'Desconocido',
+        fecnac_abo: formatDate(abogado.fecnac_abo),
+        fecini_abo: formatDate(abogado.fecini_abo),
       }
     })
   }
@@ -51,6 +53,15 @@ function handleEditAsignacion(asignacion: asignaciones_vehiculos) {
 function openCreateAsignacion() {
   router.push({ name: 'CrearAsignacion' })
 }
+
+function formatDate(dateString: string): string {
+  const date = new Date(dateString)
+  const day = String(date.getUTCDate()).padStart(2, '0')
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0')
+  const year = date.getUTCFullYear()
+  return `${day}/${month}/${year}`
+}
+
 </script>
 
 <template>

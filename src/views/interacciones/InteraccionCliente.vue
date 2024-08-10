@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import apiClient from '../../axiosConfig'
-import type { interacciones } from '../../class/all.class'
+import type { clientes, interacciones, tipo_interaccion } from '../../class/all.class'
 import { addAlert } from '../../stores/alerts'
 import WideTable from '../../components/tablas/WideTable.vue'
 
@@ -31,8 +31,8 @@ async function fetchInteracciones() {
     
     interaccionList.value = response.data.map((interaccion: interacciones) => ({
       ...interaccion,
-      nombre_cliente: clientes.find(cliente => cliente.codcli_cli === interaccion.codcli_int)?.nombre_cli || 'Desconocido',
-      tipo_interaccion: tiposInteraccion.find(tipo => tipo.codtin_tin === interaccion.codtin_int)?.descripcion_tin || 'Desconocido',
+      nombre_cliente: clientes.find((cliente:clientes) => cliente.codcli_cli === interaccion.codcli_int)?.nombre_cli || 'Desconocido',
+      tipo_interaccion: tiposInteraccion.find((tipo:tipo_interaccion) => tipo.codtin_tin === interaccion.codtin_int)?.descripcion_tin || 'Desconocido',
       fecha_int: formatDate(interaccion.fecha_int), // Formatea la fecha
     }))
   } catch (error) {

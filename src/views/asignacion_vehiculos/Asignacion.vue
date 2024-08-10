@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import apiClient from '../../axiosConfig'
-import type { asignaciones_vehiculos } from '../../class/all.class'
+import type { abogados, asignaciones_vehiculos, vehiculos } from '../../class/all.class'
 import { addAlert } from '../../stores/alerts'
 import WideTable from '../../components/tablas/WideTable.vue'
 
@@ -33,8 +33,8 @@ async function fetchAsignarVehiculos() {
     asignacionesList.value = response.data.map((asignacion: asignaciones_vehiculos) => {
       return {
         ...asignacion,
-        nombre_abo: abogados?.find(abogado => abogado.codabo_abo === asignacion.codabo_asv)?.nombre_abo || 'Desconocido',
-        placa_veh: vehiculos?.find(vehiculo => vehiculo.codvehiculo_mod === asignacion.codveh_asv)?.placa_veh || 'Desconocido',
+        nombre_abo: abogados?.find((abogado:abogados) => abogado.codabo_abo === asignacion.codabo_asv)?.nombre_abo || 'Desconocido',
+        placa_veh: vehiculos?.find((vehiculo:vehiculos) => vehiculo.codveh_veh === asignacion.codveh_asv)?.placa_veh || 'Desconocido',
       }
     })
   }

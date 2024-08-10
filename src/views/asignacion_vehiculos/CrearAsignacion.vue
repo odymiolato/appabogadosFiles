@@ -150,7 +150,7 @@ function handleaudienciaSelected(audiencia: audiencias) {
             readonly
           >
           <input
-            id="abogado-nombre" v-model="audienciaSelected.fecha_aud"
+            id="abogado-nombre" v-model="audienciaSelected.nombre"
             type="text"
             disabled
             class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"

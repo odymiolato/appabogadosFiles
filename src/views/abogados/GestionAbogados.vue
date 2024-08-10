@@ -5,6 +5,8 @@ import Inputs from '../../components/Inputs.vue'
 import type { ciudades, especialidades, provincias } from '../../class/all.class'
 import { abogados, direcciones } from '../../class/all.class'
 import { addAlert } from '../../stores/alerts'
+import { useRoute, useRouter } from 'vue-router'
+import apiClient from '../../axiosConfig'
 
 // import Dropdown from '../../components/dropdown2.vue';
 
@@ -15,6 +17,9 @@ const TypeModal = ref<number>(0)
 const ShowCities = ref<boolean>(false)
 /* @ts-expect-error */
 const URL: string = import.meta.env.VITE_PATH_API
+
+const route = useRoute()
+const router = useRouter()
 
 function handleAccept() {
   console.log('Accepted')
@@ -201,10 +206,34 @@ async function saveAbogado() {
     addAlert(3, 'Comunicarce con los administradores.')
   }
 }
+async function fetchAbogado(id: string) {
+  try {
+    const response = await apiClient.get(`/abogados/${id}`)
+    Abogado.value = response.data
+    Abogado.value.fecha_int = formatDate(Abogado.value.fecha_int)
 
-onMounted(() => {
-  GetEspecialidades()
-  getProvincias()
+    const especialidad = await apiClient.get(`/clientes/${Abogado.value.codcli_int}`)
+    especialidadSelected.value = { codigo: String(cliente.data.codcli_cli), nombre: cliente.data.nombre_cli }
+
+    const provincia = await apiClient.get(`/tipoAbogado/${Abogado.value.codtin_int}`)
+    provinciaSelected.value = { codigo: String(tipoAbogado.data.codtin_tin), nombre: tipoAbogado.data.descripcion_tin }
+
+    const ciudadad = await apiClient.get(`/tipoAbogado/${Abogado.value.codtin_int}`)
+    ciuadadSelected.value = { codigo: String(tipoAbogado.data.codtin_tin), nombre: tipoAbogado.data.descripcion_tin }
+
+    addAlert(1, 'Interacción cargada correctamente.')
+  } catch (error) {
+    console.error('Error fetching Abogadoes:', error)
+    addAlert(3, 'Error al obtener la interacción.')
+  }
+}
+
+onMounted(async () => {
+  if (route.params.id) {
+    await fetchAbogado(route.params.id as string)
+  }
+    GetEspecialidades()
+    getProvincias()
 })
 </script>
 
