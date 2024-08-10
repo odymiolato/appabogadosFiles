@@ -145,7 +145,7 @@ function searchCiudades(value: any) {
 const especialidadSelected = ref({ tipesp_tip: '', descri_tip: '' })
 const provinciaSelected = ref({ codpro_pro: '', nombre_pro: '' })
 const ciuadadSelected = ref({ codciu_ciu: '', nombre_ciu: '' })
-
+const direccionSelected = ref({ direccion_dir: '', codciu_dir: '' })
 function setEspecialidad(obj: especialidades) {
   if (especialidadSelected.value !== undefined) {
     especialidadSelected.value.tipesp_tip = String(obj.tipesp_tip)
@@ -205,27 +205,36 @@ async function saveAbogado() {
     console.error('Error en la solicitud:', error)
     addAlert(3, 'Comunicarce con los administradores.')
   }
+  goBack()
 }
 async function fetchAbogado(id: string) {
   try {
     const response = await apiClient.get(`/abogados/${id}`)
     Abogado.value = response.data
-    Abogado.value.fecha_int = formatDate(Abogado.value.fecha_int)
 
-    const especialidad = await apiClient.get(`/clientes/${Abogado.value.codcli_int}`)
-    especialidadSelected.value = { codigo: String(cliente.data.codcli_cli), nombre: cliente.data.nombre_cli }
 
-    const provincia = await apiClient.get(`/tipoAbogado/${Abogado.value.codtin_int}`)
-    provinciaSelected.value = { codigo: String(tipoAbogado.data.codtin_tin), nombre: tipoAbogado.data.descripcion_tin }
+    const especialidad = await apiClient.get(`/especialidades/${Abogado.value.tipo_especialidad_abo}`)
+    especialidadSelected.value = { tipesp_tip: String(especialidad.data.tipesp_tip), descri_tip: especialidad.data.descri_tip }
 
-    const ciudadad = await apiClient.get(`/tipoAbogado/${Abogado.value.codtin_int}`)
-    ciuadadSelected.value = { codigo: String(tipoAbogado.data.codtin_tin), nombre: tipoAbogado.data.descripcion_tin }
+
+    Direccion.value = (await apiClient.get(`/direcciones/${Abogado.value.codabo_abo}`)).data
+
+    const ciudad = await apiClient.get(`/ciudades/${Direccion.value.codciu_dir}`)
+    ciuadadSelected.value = { codciu_ciu: String(ciudad.data.codciu_ciu), nombre_ciu: ciudad.data.nombre_ciu }
+
+    const provincia = await apiClient.get(`/provincias/${ciudad.data.codpro_ciu}`)
+    provinciaSelected.value = { codpro_pro: String(provincia.data.codpro_pro), nombre_pro: provincia.data.nombre_pro }
+
 
     addAlert(1, 'Interacción cargada correctamente.')
   } catch (error) {
     console.error('Error fetching Abogadoes:', error)
     addAlert(3, 'Error al obtener la interacción.')
   }
+}
+
+function goBack() {
+  router.push({ name: 'Abogados' })
 }
 
 onMounted(async () => {
@@ -243,6 +252,10 @@ onMounted(async () => {
       Gestion de Abogados
     </h3>
     <div class="mt-4 p-6 bg-white rounded-md shadow-md">
+      <div class="flex items-center mb-4 cursor-pointer" @click="goBack">
+      <img src="../../assets/img/returnArrow.svg" alt="Back" class="w-6 h-6 mr-2">
+      <span class="text-gray-700">Volver</span>
+    </div>
       <h3>
         Informacion General
       </h3>

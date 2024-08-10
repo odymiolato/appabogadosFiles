@@ -46,12 +46,12 @@ async function fetchAbogados() {
   }
 }
 
-function handleEditAsignacion(asignacion: asignaciones_vehiculos) {
-  router.push({ name: 'CrearAsignacion', params: { id: asignacion.codveh_asv } })
+function handleEditAbogados(abogado: abogados) {
+  router.push({ name: 'GestionAbogados', params: { id: abogado.codabo_abo } })
 }
 
-function openCreateAsignacion() {
-  router.push({ name: 'CrearAsignacion' })
+function openGestionAbogados() {
+  router.push({ name: 'GestionAbogados' })
 }
 
 function formatDate(dateString: string): string {
@@ -68,9 +68,9 @@ function formatDate(dateString: string): string {
   <button
     type="button"
     class="mt-1 mb-5 p-3 text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
-    @click="openCreateAsignacion"
+    @click="openGestionAbogados"
   >
-    Crear Nueva Asignacion
+    Crear Nuevo Abogado
   </button>
   <div class="p-6 bg-white rounded-md shadow-md">
     <div class="mb-4">
@@ -80,10 +80,10 @@ function formatDate(dateString: string): string {
     <WideTable
       :columns="columns"
       :tabledata="abogadosList"
-      label="Asignar Vehiculos"
+      label="Abogados"
       default-image="/path/to/default-image.jpg"
       :editable="true"
-      @edit="handleEditAsignacion"
+      @edit="handleEditAbogados"
     />
   </div>
 </template>
