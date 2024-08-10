@@ -176,34 +176,49 @@ async function saveAbogado() {
   Abogado.value.tipo_especialidad_abo = Number.parseInt(especialidadSelected.value.tipesp_tip)
   Abogado.value.estado_abo = 'A'
 
-  Direccion.value.codciu_dir = Number.parseInt(provinciaSelected.value.codpro_pro)
+  // Direccion.value.codciu_dir = Number.parseInt(provinciaSelected.value.codpro_pro)
   Direccion.value.codciu_dir = Number.parseInt(ciuadadSelected.value.codciu_ciu)
 
   const requestBody = { information: Abogado.value, direccion: Direccion.value }
 
   console.info('Datos enviados:', requestBody)
 
-  try {
-    const response = await fetch(`${URL}abogados`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestBody),
-    })
-
-    if (response.ok) {
-      console.info('Abogado registrado exitosamente')
-      addAlert(2, 'Abogado registrado exitosamente.')
+  if (route.params.id) {
+    //actualizar
+    try {
+      await apiClient.patch(`/abogados`, requestBody)
+      addAlert(2, 'Abogado actualizado exitosamente.')
+      
+    } catch (error) {
+      console.error('Error en la solicitud:', error)
+      addAlert(3, 'Comunicarce con los administradores.')
+      
     }
-    else {
-      console.error('Error en la respuesta del servidor:', response.statusText)
-      addAlert(3, 'Problemas al registrar el abogado.')
+    
+  } else {
+    //crear
+    try {
+      const response = await fetch(`${URL}abogados`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      })
+  
+      if (response.ok) {
+        console.info('Abogado registrado exitosamente')
+        addAlert(2, 'Abogado registrado exitosamente.')
+      }
+      else {
+        console.error('Error en la respuesta del servidor:', response.statusText)
+        addAlert(3, 'Problemas al registrar el abogado.')
+      }
     }
-  }
-  catch (error) {
-    console.error('Error en la solicitud:', error)
-    addAlert(3, 'Comunicarce con los administradores.')
+    catch (error) {
+      console.error('Error en la solicitud:', error)
+      addAlert(3, 'Comunicarce con los administradores.')
+    }
   }
   goBack()
 }
@@ -219,12 +234,15 @@ async function fetchAbogado(id: string) {
 
     Direccion.value = (await apiClient.get(`/direcciones/${Abogado.value.codabo_abo}`)).data
 
+    
     const ciudad = await apiClient.get(`/ciudades/${Direccion.value.codciu_dir}`)
-    ciuadadSelected.value = { codciu_ciu: String(ciudad.data.codciu_ciu), nombre_ciu: ciudad.data.nombre_ciu }
 
     const provincia = await apiClient.get(`/provincias/${ciudad.data.codpro_ciu}`)
+    
     provinciaSelected.value = { codpro_pro: String(provincia.data.codpro_pro), nombre_pro: provincia.data.nombre_pro }
+    ciuadadSelected.value = { codciu_ciu: String(ciudad.data.codciu_ciu), nombre_ciu: ciudad.data.nombre_ciu }
 
+    ShowCities.value = true
 
     addAlert(1, 'Interacción cargada correctamente.')
   } catch (error) {
