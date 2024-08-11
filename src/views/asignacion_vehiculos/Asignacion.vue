@@ -63,7 +63,7 @@ function openCreateAsignacion() {
   </button>
   <div class="p-6 bg-white rounded-md shadow-md">
     <div class="mb-4">
-      <label class="text-gray-700 " for="descripcion">vehiculos</label>
+      <label class="text-gray-700 " for="descripcion">Asignar vehiculos</label>
     </div>
 
     <WideTable

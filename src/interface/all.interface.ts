@@ -27,3 +27,9 @@ export interface ContextMenuInstance {
     showMenu: (event: MouseEvent) => void;
     hideMenu: () => void;
   }
+
+  export interface diccionSelected{
+    direccion_dir:string,
+    nombre_ciu:string,
+    nombre_pro:string
+  }
