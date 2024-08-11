@@ -232,7 +232,7 @@ async function fetchAbogado(id: string) {
     especialidadSelected.value = { tipesp_tip: String(especialidad.data.tipesp_tip), descri_tip: especialidad.data.descri_tip }
 
 
-    Direccion.value = (await apiClient.get(`/direcciones/${Abogado.value.codabo_abo}`)).data
+    Direccion.value = (await apiClient.get(`/direcciones/${Abogado.value.codabo_abo}/A`)).data
 
     
     const ciudad = await apiClient.get(`/ciudades/${Direccion.value.codciu_dir}`)
