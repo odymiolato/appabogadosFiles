@@ -2,13 +2,13 @@
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import apiClient from '../../axiosConfig';
-import type { abogados, ciudades } from '../../class/all.class';
+import type { abogados, ciudades,direcciones, provincias,especialidades  } from '../../class/all.class';
 import WideTable from '../../components/tablas/WideTable.vue';
 import { addAlert } from '../../stores/alerts';
 import Modal from '../../components/Modal.vue';
 
 import { diccionSelected } from '../../interface/all.interface';
-import { direcciones, provincias } from '../../class/all.class';
+
 
 const columns = [
   { title: 'Nombre', field: 'nombre_abo' },
@@ -18,7 +18,7 @@ const columns = [
   { title: 'Correo', field: 'email_abo' },
   { title: 'Fecha de nacimiento', field: 'fecnac_abo' },
   { title: 'Fecha de inicio', field: 'fecini_abo' },
-  { title: 'Direccion', field: 'direcc_abo', isButton: true, buttonTitle: 'Ver Ubicaciones' },
+  { title: 'Direccion', field: 'direcc_abo', isButton: true, buttonTitle: 'direccion' },
 ];
 const columnsDirecciones = [
   { title: 'Direccion', field: 'direccion_dir' },
@@ -114,6 +114,7 @@ function formatDate(dateString: string): string {
 </script>
 
 <template>
+  
   <button
     type="button"
     class="mt-1 mb-5 p-3 text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
