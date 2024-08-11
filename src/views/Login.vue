@@ -49,7 +49,6 @@ async function FN_login() {
     });
 
     const data = await response.json();
-    console.info(data)
 
     if (response.ok && data.STATUS) {
       localStorage.setItem('access_token', data.access_token);
