@@ -724,3 +724,13 @@ export class ExpedienteDetalle {
     this.tribunales = tribunales;
   }
 }
+
+export class login {
+  Name: string;
+  Password: string;
+
+  constructor() {
+      this.Name = '';
+      this.Password = '';
+  }
+}
