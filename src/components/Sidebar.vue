@@ -18,7 +18,7 @@ function changeStatus(valor: boolean) {
 </script>
 
 <template>
-  <div class="flex transition-transform duration-[2000ms] w-max overflow-hidden">
+  <div class="flex transition-transform duration-[2000ms] w-max h-full overflow-hidden">
     <!-- Backdrop -->
     <!-- <div :class="isOpen ? 'block' : 'hidden'" -->
     <!-- <div class="fixed inset-0 z-20 transition-opacity bg-black opacity-50 lg:hidden" @click="isOpen = false" /> -->
@@ -35,7 +35,7 @@ function changeStatus(valor: boolean) {
         </div>
       </div>
 
-      <nav class="mt-5 overflow-y-auto h-full transition-transform duration-[2000ms]">
+      <nav class="mt-5 h-[85%] overflow-y-auto">
         <MenuItem to="/dashboard" name="Dashboard" label="Dashboard" imagen="dashboard" />
 
         <MenuDesplegable class="transition-all duration-1000" label="Expediente" imagen="dashboard">
@@ -78,6 +78,7 @@ function changeStatus(valor: boolean) {
           <MenuItem to="/asignacionvehiculo" name="AsignacionVehiculo" label="Asignacion de Vehiculos"
             imagen="dashboard" />
         </MenuDesplegable>
+        
 
         <!-- <MenuItem to="/ui-elements" name="UIElements" label="Elements" imagen="elements" /> -->
         <MenuItem to="/eventos" name="Eventos" label="Eventos" imagen="elements" />
