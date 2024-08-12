@@ -115,6 +115,7 @@ onMounted(() => {
           <div class="flex flex-col px-5 py-6 gap-3 bg-white rounded-md shadow-sm h-[180px]">
             <div>
               <Label labeltext="Numero de Expediente:  " labelclass="font-bold" />
+
               <Label :labeltext="ExpedienteSelected.codexp_exp" labelclass="" />
             </div>
             <div>
