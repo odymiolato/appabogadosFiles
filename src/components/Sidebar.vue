@@ -43,7 +43,6 @@ function changeStatus(valor: boolean) {
           
           <MenuDesplegable label="Mantenimientos" imagen="dashboard">
             <MenuItem to="/abogados" name="Abogados" label="Abogados" imagen="dashboard" />
-            <MenuItem to="/gestionabogados" name="GestionAbogados" label="Gestion Abogados" imagen="dashboard" />
             <MenuItem to="/tribunales" name="Tribunales" label="Tribunales" imagen="dashboard" />
             <MenuItem to="/tiposgastos" name="TiposGastos" label="Tipos Gastos" imagen="dashboard" />
             <MenuItem to="/gestioncontraparte" name="GestionContraparte" label="Contrapartes" imagen="dashboard" />
@@ -56,6 +55,7 @@ function changeStatus(valor: boolean) {
             <MenuItem to="/expedientes" name="Expendientes" label="Expendientes" imagen="dashboard" />
             <MenuItem to="/expediente" name="Expediente" label="Control de Expedientes" imagen="dashboard" />
             <MenuItem to="/audiencia" name="Audiencia" label="Gestion de Audiencias" imagen="dashboard" />
+            <MenuItem to="/crearaudiencia" name="CrearAudiencia" label="Creacion de Audiencias" imagen="dashboard" />
             <MenuItem to="/movimientos" name="Movimientos" label="Movimientos" imagen="dashboard" />
           </MenuDesplegable>
         </MenuDesplegable>
