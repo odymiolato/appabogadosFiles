@@ -27,7 +27,7 @@ async function fetchClientes() {
     const response = await apiClient.get('/clientes')
     clienteList.value = response.data.map((cliente: clientes) => ({
       ...cliente,
-      fecnac_cli: formatDate(cliente.fecnac_cli), // Formatea la fecha
+      fecnac_cli: formatDate(String(cliente.fecnac_cli)),
     }))
   }
   catch (error) {
@@ -54,11 +54,9 @@ function openCreateCliente() {
 </script>
 
 <template>
-  <button
-    type="button"
+  <button type="button"
     class="mt-1 mb-5 p-3 text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
-    @click="openCreateCliente"
-  >
+    @click="openCreateCliente">
     Crear Nuevo Cliente
   </button>
   <div class="p-6 bg-white rounded-md shadow-md">
@@ -66,13 +64,7 @@ function openCreateCliente() {
       <label class="text-gray-700 " for="descripcion">Clientes</label>
     </div>
 
-    <WideTable
-      :columns="columns"
-      :tabledata="clienteList"
-      label="Clientes"
-      default-image="/path/to/default-image.jpg"
-      :editable="true"
-      @edit="handleEditCliente"
-    />
+    <WideTable :columns="columns" :tabledata="clienteList" label="Clientes" default-image="/path/to/default-image.jpg"
+      :editable="true" @edit="handleEditCliente" />
   </div>
 </template>

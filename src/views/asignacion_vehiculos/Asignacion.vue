@@ -33,8 +33,8 @@ async function fetchAsignarVehiculos() {
     asignacionesList.value = response.data.map((asignacion: asignaciones_vehiculos) => {
       return {
         ...asignacion,
-        nombre_abo: abogados?.find(abogado => abogado.codabo_abo === asignacion.codabo_asv)?.nombre_abo || 'Desconocido',
-        placa_veh: vehiculos?.find(vehiculo => vehiculo.codvehiculo_mod === asignacion.codveh_asv)?.placa_veh || 'Desconocido',
+        nombre_abo: abogados?.find((abogado: any) => abogado.codabo_abo === asignacion.codabo_asv)?.nombre_abo || 'Desconocido',
+        placa_veh: vehiculos?.find((vehiculo: any) => vehiculo.codvehiculo_mod === asignacion.codveh_asv)?.placa_veh || 'Desconocido',
       }
     })
   }
@@ -54,25 +54,17 @@ function openCreateAsignacion() {
 </script>
 
 <template>
-  <button
-    type="button"
+  <button type="button"
     class="mt-1 mb-5 p-3 text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
-    @click="openCreateAsignacion"
-  >
-    Crear Nueva Asignacion
+    @click="openCreateAsignacion">
+    Asignacion Nueva
   </button>
   <div class="p-6 bg-white rounded-md shadow-md">
     <div class="mb-4">
       <label class="text-gray-700 " for="descripcion">vehiculos</label>
     </div>
 
-    <WideTable
-      :columns="columns"
-      :tabledata="asignacionesList"
-      label="Asignar Vehiculos"
-      default-image="/path/to/default-image.jpg"
-      :editable="true"
-      @edit="handleEditAsignacion"
-    />
+    <WideTable :columns="columns" :tabledata="asignacionesList" label="Asignar Vehiculos"
+      default-image="/path/to/default-image.jpg" :editable="true" @edit="handleEditAsignacion" />
   </div>
 </template>

@@ -25,15 +25,15 @@ async function fetchInteracciones() {
     const response = await apiClient.get('/interacciones')
     const clientesResponse = await apiClient.get('/clientes')
     const tiposInteraccionResponse = await apiClient.get('/tipointeraccion')
-    
+
     const clientes = clientesResponse.data
     const tiposInteraccion = tiposInteraccionResponse.data
-    
+
     interaccionList.value = response.data.map((interaccion: interacciones) => ({
       ...interaccion,
-      nombre_cliente: clientes.find(cliente => cliente.codcli_cli === interaccion.codcli_int)?.nombre_cli || 'Desconocido',
-      tipo_interaccion: tiposInteraccion.find(tipo => tipo.codtin_tin === interaccion.codtin_int)?.descripcion_tin || 'Desconocido',
-      fecha_int: formatDate(interaccion.fecha_int), // Formatea la fecha
+      nombre_cliente: clientes.find((cliente: any) => cliente.codcli_cli === interaccion.codcli_int)?.nombre_cli || 'Desconocido',
+      tipo_interaccion: tiposInteraccion.find((tipo: any) => tipo.codtin_tin === interaccion.codtin_int)?.descripcion_tin || 'Desconocido',
+      fecha_int: formatDate(String(interaccion.fecha_int)),
     }))
   } catch (error) {
     console.error('Error fetching interacciones:', error)
@@ -59,11 +59,9 @@ function openCreateInteraccion() {
 </script>
 
 <template>
-  <button
-    type="button"
+  <button type="button"
     class="mt-1 mb-5 p-3 text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
-    @click="openCreateInteraccion"
-  >
+    @click="openCreateInteraccion">
     Crear Nueva Interacción
   </button>
   <div class="p-6 bg-white rounded-md shadow-md">
@@ -71,13 +69,7 @@ function openCreateInteraccion() {
       <label class="text-gray-700 " for="descripcion">Interacciones</label>
     </div>
 
-    <WideTable
-      :columns="columns"
-      :tabledata="interaccionList"
-      label="Interacciones"
-      default-image="/path/to/default-image.jpg"
-      :editable="true"
-      @edit="handleEditInteraccion"
-    />
+    <WideTable :columns="columns" :tabledata="interaccionList" label="Interacciones"
+      default-image="/path/to/default-image.jpg" :editable="true" @edit="handleEditInteraccion" />
   </div>
 </template>

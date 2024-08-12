@@ -145,13 +145,13 @@ const routes: RouteRecordRaw[] = [
 
   {
     path: '/gestionabogados',
-    name: 'GestionAbogados',
+    name: 'Gestion Abogados',
     component: GestionAbogados,
     meta: { requiresAuth: true },
   },
   {
     path: '/gestioncontraparte',
-    name: 'GestionContraparte',
+    name: 'Gestion Contraparte',
     component: GestionContraparte,
     meta: { requiresAuth: true },
   },
@@ -163,7 +163,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/tipomovimientos',
-    name: 'TipoMovimientos',
+    name: 'Tipo Movimientos',
     component: TipoMovimientos,
     meta: { requiresAuth: true },
   },
@@ -175,7 +175,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/tiposgastos',
-    name: 'TiposGastos',
+    name: 'Tipos Gastos',
     component: TiposGastos,
     meta: { requiresAuth: true },
   },
@@ -211,19 +211,19 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/interaccionescliente',
-    name: 'InteraccionesCliente',
+    name: 'Interacciones Cliente',
     component: InteraccionCliente,
     meta: { requiresAuth: true },
   },
   {
     path: '/tipointeraccion',
-    name: 'TipoInteraccion',
+    name: 'Tipo Interaccion',
     component: TipoInteraccion,
     meta: { requiresAuth: true },
   },
   {
     path: '/tipoexpediente',
-    name: 'TipoExpediente',
+    name: 'Tipo Expediente',
     component: TiposExpedientes,
     meta: { requiresAuth: true },
   },
@@ -241,25 +241,25 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/asignacionvehiculo',
-    name: 'AsignacionVehiculo',
+    name: 'Asignacion Vehiculo',
     component: Asignacion,
     meta: { requiresAuth: true },
   },
   {
     path: '/vehiculosmodelos',
-    name: 'VehiculosModelos',
+    name: 'Vehiculos Modelos',
     component: VehiculosModelos,
     meta: { requiresAuth: true },
   },
   {
     path: '/vehiculosestado',
-    name: 'VehiculosEstado',
+    name: 'Vehiculos Estado',
     component: VehiculosEstado,
     meta: { requiresAuth: true },
   },
   {
     path: '/vehiculosmarca',
-    name: 'VehiculosMarca',
+    name: 'Vehiculos Marca',
     component: VehiculosMarcas,
     meta: { requiresAuth: true },
   },
