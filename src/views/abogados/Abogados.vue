@@ -2,12 +2,12 @@
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import apiClient from '../../axiosConfig';
-import type { abogados, ciudades,direcciones, provincias,especialidades  } from '../../class/all.class';
+import { abogados, ciudades,direcciones, provincias,especialidades  } from '../../class/all.class';
 import WideTable from '../../components/tablas/WideTable.vue';
 import { addAlert } from '../../stores/alerts';
 import Modal from '../../components/Modal.vue';
-
-import { diccionSelected } from '../../interface/all.interface';
+import ModalDelete from '../../components/ModalDelete.vue';
+import { diccionSelected, DTOAbogado } from '../../interface/all.interface';
 
 
 const columns = [
@@ -30,7 +30,9 @@ function handleClose() {
 }
 
 const ShowModal = ref(false);
+const ShowModalDelete = ref(false);
 const abogadosList = ref<abogados[]>([]);
+const abogadoSelected = ref();
 const direccionSelected = ref<diccionSelected[]>([]);
 const router = useRouter();
 
@@ -53,8 +55,8 @@ async function fetchAbogados() {
             (especialidad: especialidades) =>
               especialidad.tipesp_tip === abogado.tipo_especialidad_abo
           )?.descri_tip || 'Desconocido',
-        fecnac_abo: formatDate(abogado.fecnac_abo),
-        fecini_abo: formatDate(abogado.fecini_abo),
+        fecnac_abo: formatDate(abogado.fecnac_abo.toString()),
+        fecini_abo: formatDate(abogado.fecini_abo.toString()),
       };
     });
   } catch (error) {
@@ -67,9 +69,51 @@ function handleEditAbogado(abogado: abogados) {
   router.push({ name: 'GestionAbogados', params: { id: abogado.codabo_abo } });
 }
 
-function handleDeleteAbogado(abogado: abogados) {
-  // Lógica para eliminar el abogado
+const Abogado = ref<abogados>();
+const Direccion = ref<direcciones>();
+
+async function handleDeleteAbogado(abogado: abogados) {
+  
+  const response = await apiClient.get(`/abogados/${abogado.codabo_abo}`)
+  Abogado.value = response.data
+  
+  if (Abogado.value) {
+    Direccion.value = (await apiClient.get(`/direcciones/${Abogado.value.codabo_abo}/A`)).data;
+  }
+  
+  abogadoSelected.value={ information: Abogado.value, direccion: Direccion.value }
+
+  
+  ShowModalDelete.value = true;
+  
+  
 }
+
+async function eliminarAbogado() {
+  ShowModalDelete.value = false;
+  // Extraer los valores de las referencias
+  const abogadoInfo = abogadoSelected.value.information;
+  const direccionInfo = abogadoSelected.value.direccion;
+
+  // Crear el objeto con el formato correcto
+  const requestBody = {
+    information: { ...abogadoInfo },
+    direccion: { ...direccionInfo },
+  };
+
+  // Asegúrate de que el estado esté correctamente actualizado
+  requestBody.information.estado_abo = 'I';
+
+  try {
+    await apiClient.patch(`/abogados`, requestBody);
+    console.log('Abogado eliminado:', requestBody);
+    addAlert(2, 'Abogado eliminado exitosamente.');
+  } catch (error) {
+    console.error('Error eliminando Abogado:', error);
+    addAlert(3, 'Error eliminando Abogado');
+  }
+}
+
 
 async function handleViewLocations(abogado: abogados) {
   await searchDirecciones(abogado.codabo_abo);
@@ -78,7 +122,7 @@ async function handleViewLocations(abogado: abogados) {
 
 async function searchDirecciones(id: number) {
   try {
-    const response = await apiClient.get(`/direcciones/${id}`);
+    const response = await apiClient.get(`/direcciones/${id}/A`);
     const direccion: direcciones = response.data;
 
     const ciudad: ciudades = (
@@ -151,4 +195,13 @@ function formatDate(dateString: string): string {
       />
     </template>
   </Modal>
+  <ModalDelete
+    v-if="ShowModalDelete"
+    v-model:ShowModalDelete="ShowModalDelete"
+    class="flex justify-center items-center"
+    @eliminar="eliminarAbogado"
+    :registro="`Abogado &quot;${abogadoSelected.information.nombre_abo}&quot; con el código '${abogadoSelected.information.codabo_abo}'`"
+
+>
+    </ModalDelete>
 </template>

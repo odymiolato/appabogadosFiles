@@ -225,7 +225,11 @@ async function saveAbogado() {
 async function fetchAbogado(id: string) {
   try {
     const response = await apiClient.get(`/abogados/${id}`)
-    Abogado.value = response.data
+    Abogado.value = {
+      ...response.data,
+      fecnac_abo: formatDate(response.data.fecnac_abo.toString()),
+      fecini_abo: formatDate(response.data.fecini_abo.toString()),
+    }
 
 
     const especialidad = await apiClient.get(`/especialidades/${Abogado.value.tipo_especialidad_abo}`)
@@ -259,9 +263,16 @@ onMounted(async () => {
   if (route.params.id) {
     await fetchAbogado(route.params.id as string)
   }
-    GetEspecialidades()
-    getProvincias()
+  await Promise.all([GetEspecialidades(), getProvincias()])
 })
+function formatDate(dateString: string): string {
+  const date = new Date(dateString)
+  const year = date.getUTCFullYear()
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0')
+  const day = String(date.getUTCDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
 </script>
 
 <template>
@@ -364,6 +375,15 @@ onMounted(async () => {
               class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
             >
           </div>
+          <div v-if="route.params.id">
+            <label class="text-gray-700" for="estado">Estado</label>
+            <select id="estado" v-model="Abogado.estado_abo"
+            class="block mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+            >
+              <option value="A">Activo</option>
+              <option value="I">Inactivo</option>
+            </select>
+          </div>
         </div>
 
         <h3 class="mt-5">
@@ -448,6 +468,7 @@ onMounted(async () => {
                   <!-- <Dropdown labalItemNoselected="Codigo Postal" /> -->
                 </div>
               </div>
+
             </div>
           </div>
         </div>

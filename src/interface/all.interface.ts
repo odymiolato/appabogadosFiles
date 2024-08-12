@@ -1,3 +1,4 @@
+import { abogados, direcciones } from "../class/all.class";
 import Alerts from "../components/Alerts.vue"
 
 export interface menu {
@@ -26,10 +27,16 @@ export interface Alerts {
 export interface ContextMenuInstance {
     showMenu: (event: MouseEvent) => void;
     hideMenu: () => void;
-  }
+}
 
-  export interface diccionSelected{
+export interface diccionSelected{
     direccion_dir:string,
     nombre_ciu:string,
     nombre_pro:string
-  }
+}
+
+export interface DTOAbogado {
+    information:abogados,
+    direccion:direcciones,
+}
+
