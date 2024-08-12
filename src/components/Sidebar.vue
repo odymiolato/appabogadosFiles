@@ -1,20 +1,42 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
+import { Modules } from '../class/all.class';
 import MenuItem from './SideBar/MenuItem.vue'
 import MenuDesplegable from './SideBar/MenuDesplegable.vue'
 
-// const { isOpen } = useSidebar()
+const modules = ref<Array<Modules>>([]);
+/*@ts-ignore*/
+const URL: string = import.meta.env.VITE_PATH_API
 
-const activeClass = ref(
-  'duration-700 bg-sky-500 bg-opacity-25 text-gray-100 border-gray-100',
-)
-const inactiveClass = ref(
-  'duration-700 border-sky-900 text-white transition duration-700 hover:bg-sky-500 hover:bg-opacity-25 hover:text-gray-100 hover:duration-200',
-)
-const IsActive = ref(false)
-function changeStatus(valor: boolean) {
-  IsActive.value = valor
+async function getModules() {
+  try {
+    const token = localStorage.getItem('access_token');
+
+
+    const response = await fetch(`${URL}usuarios/modulos`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Error en la petición: ' + response.statusText);
+    }
+
+    modules.value = await response.json();
+
+    console.log('Datos recibidos:', modules.value);
+  } catch (error) {
+    console.error('Ocurrió un error:', error);
+  }
 }
+
+onMounted(() => {
+  getModules()
+})
+
 </script>
 
 <template>
@@ -36,9 +58,17 @@ function changeStatus(valor: boolean) {
       </div>
 
       <nav class="mt-5 h-[85%] overflow-y-auto">
-        <MenuItem to="/dashboard" name="Dashboard" label="Dashboard" imagen="dashboard" />
+        <!-- <MenuItem to="/dashboard" name="Dashboard" label="Dashboard" imagen="dashboard" /> -->
 
-        <MenuDesplegable class="transition-all duration-1000" label="Expediente" imagen="dashboard">
+        <MenuDesplegable v-for="module in modules" class="transition-all duration-1000" :label="module.Name"
+          imagen="dashboard">
+          <MenuDesplegable v-for="type in module.TypePrograms" class="transition-all duration-1000" :label="type.Name"
+            imagen="dashboard">
+            <MenuItem v-for="program in type.Programs" :to="program.path_pro" :name="program.name_pro" :label="program.name_pro" imagen="dashboard" />  
+          </MenuDesplegable>
+        </MenuDesplegable>
+
+        <!-- <MenuDesplegable class="transition-all duration-1000" label="Expediente" imagen="dashboard">
           <MenuDesplegable label="Mantenimientos" imagen="dashboard">
             <MenuItem to="/gestionabogados" name="GestionAbogados" label="Abogados" imagen="dashboard" />
             <MenuItem to="/tribunales" name="Tribunales" label="Tribunales" imagen="dashboard" />
@@ -67,9 +97,9 @@ function changeStatus(valor: boolean) {
             <MenuItem to="/interaccionescliente" name="InteraccionesCliente" label="Interaccion Clientes"
               imagen="dashboard" />
           </MenuDesplegable>
-        </MenuDesplegable>
+        </MenuDesplegable> -->
 
-        <MenuDesplegable label="Vehiculos" imagen="dashboard">
+        <!-- <MenuDesplegable label="Vehiculos" imagen="dashboard">
           <MenuItem to="/vehiculos" name="Vehiculos" label="Vehiculos" imagen="dashboard" />
           <MenuItem to="/vehiculosestado" name="VehiculosEstado" label="Estado de vehiculos" imagen="dashboard" />
           <MenuItem to="/vehiculosmodelos" name="VehiculosModelos" label="Modelos de Vehiculos" imagen="dashboard" />
@@ -77,18 +107,18 @@ function changeStatus(valor: boolean) {
 
           <MenuItem to="/asignacionvehiculo" name="AsignacionVehiculo" label="Asignacion de Vehiculos"
             imagen="dashboard" />
-        </MenuDesplegable>
-        
+        </MenuDesplegable> -->
+
 
         <!-- <MenuItem to="/ui-elements" name="UIElements" label="Elements" imagen="elements" /> -->
-        <MenuItem to="/eventos" name="Eventos" label="Eventos" imagen="elements" />
+        <!-- <MenuItem to="/eventos" name="Eventos" label="Eventos" imagen="elements" /> -->
         <!-- <MenuItem to="/tables" name="Tables" label="Tables" imagen="tables" />
         <MenuItem to="/forms" name="Forms" label="Forms" imagen="forms" />
         <MenuItem to="/cards" name="Cards" label="Cards" imagen="cards" />
         <MenuItem to="/modal" name="Modal" label="Modal" imagen="modal" /> -->
         <!-- <MenuItem to="/blank" name="Blank" label="Blank" imagen="blank" /> -->
 
-        <MenuDesplegable label="Configuracion" imagen="dashboard">
+        <!-- <MenuDesplegable label="Configuracion" imagen="dashboard">
           <MenuDesplegable label="Direccion" imagen="dashboard">
             <MenuItem to="/paises" name="Paises" label="Paises" imagen="blank" />
             <MenuItem to="/provincias" name="Provincias" label="Provincias" imagen="blank" />
@@ -102,7 +132,7 @@ function changeStatus(valor: boolean) {
             <MenuItem to="/perfiles" name="Perfiles" label="Perfiles" imagen="blank" />
             <MenuItem to="/usuarios" name="Usuarios" label="Usuarios" imagen="blank" />
           </MenuDesplegable>
-        </MenuDesplegable>
+        </MenuDesplegable> -->
       </nav>
     </div>
   </div>

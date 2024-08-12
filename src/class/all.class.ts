@@ -734,3 +734,24 @@ export class login {
       this.Password = '';
   }
 }
+
+export class Modules {
+  Name: string;
+  TypePrograms: {
+      Name: string;
+      Programs: {
+          name_pro: string;
+          path_pro: string;
+      }[];
+  }[];
+
+  constructor() {
+      this.Name = "";
+      this.TypePrograms = [
+          {
+              Name: "",
+              Programs: []
+          }
+      ];
+  }
+}
