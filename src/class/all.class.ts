@@ -474,7 +474,7 @@ export class especialidades {
 export class expedientes {
   codexp_exp: number
   descri_exp: string
-  fecini_exp: Date
+  fecini_exp: Date | null
   estatu_exp: string
   fecfin_exp: Date | null
   tipexp_exp: number
@@ -490,7 +490,7 @@ export class expedientes {
   constructor() {
     this.codexp_exp = 0
     this.descri_exp = ''
-    this.fecini_exp = new Date()
+    this.fecini_exp = null
     this.estatu_exp = ''
     this.fecfin_exp = null
     this.tipexp_exp = 0

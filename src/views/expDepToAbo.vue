@@ -1,12 +1,19 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import Label from '../components/label.vue'
 import Inputs from '../components/Inputs.vue'
 import Files from '../components/files.vue'
 
 import { useTableData } from '../composables/useTableData'
+import { expedientes, tipos_expedientes } from '../class/all.class'
 
 const tap = ref<number>(1)
+const tiposexpedientesLits = ref<tipos_expedientes[]>([])
+const ExpedientesLits = ref<expedientes[]>([])
+const ExpedienteSelected = ref<expedientes>(new expedientes)
+/* @ts-expect-error */
+const URL: string = import.meta.env.VITE_PATH_API
+
 
 const {
   simpleTableData,
@@ -15,6 +22,53 @@ const {
 function ChageTaps(value: number) {
   tap.value = value
 }
+
+async function GetTipoExpediente() {
+  try {
+    const response = await fetch(`${URL}tiposexpedientes`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Error al obtener los tipos de expedientes');
+    }
+
+    tiposexpedientesLits.value = await response.json();
+    GetTipoExpedienteById(tiposexpedientesLits.value[0].tipexp_tip)
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function GetTipoExpedienteById(id: number) {
+  try {
+    const response = await fetch(`${URL}expedientes/tipoexpediente/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Error al obtener el tipo de expediente');
+    }
+
+    ExpedientesLits.value = await response.json();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+function SelectExpediente(selected: expedientes) {
+  ExpedienteSelected.value = selected
+}
+
+onMounted(() => {
+  GetTipoExpediente()
+})
 </script>
 
 <template>
@@ -32,24 +86,23 @@ function ChageTaps(value: number) {
                 <thead class="top-0 sticky">
                   <tr>
                     <th
-                      class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200"
-                    >
+                      class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
                       Codigo
                     </th>
                     <th
-                      class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200"
-                    >
+                      class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
                       Departamento
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(i, index) in simpleTableData" :key="index" class="hover:bg-gray-200">
+                  <tr v-for="(i, index) in tiposexpedientesLits" :key="index" class="hover:bg-gray-200"
+                    @click="GetTipoExpedienteById(i.tipexp_tip)">
                     <td class="px-6 py-4 text-lg text-gray-700 border-b">
-                      {{ i.city }}
+                      {{ i.tipexp_tip }}
                     </td>
                     <td class="px-6 py-4 text-gray-500 border-b">
-                      {{ i.totalOrders }}
+                      {{ i.descri_tip }}
                     </td>
                   </tr>
                 </tbody>
@@ -62,20 +115,22 @@ function ChageTaps(value: number) {
           <div class="flex flex-col px-5 py-6 gap-3 bg-white rounded-md shadow-sm h-[180px]">
             <div>
               <Label labeltext="Numero de Expediente:  " labelclass="font-bold" />
-              <Label labeltext="1500" labelclass="" />
+              <Label :labeltext="ExpedienteSelected.codexp_exp" labelclass="" />
             </div>
             <div>
-              <Label labeltext="Fecha:   " labelclass="font-bold" />
-              <Label labeltext="10/10/2024" labelclass="" />
+              <Label labeltext="Fecha Inicio:   " labelclass="font-bold" />
+              <Label :labeltext="ExpedienteSelected.fecini_exp" labelclass="" />
             </div>
             <div>
-              <Label labeltext="Cliente:   " labelclass="font-bold" />
-              <Label labeltext="Joselito Perla Negra" labelclass="" />
+              <Label labeltext="Fecha Fin:   " labelclass="font-bold" />
+              <Label
+                :labeltext="(ExpedienteSelected.fecfin_exp !== null) ? ExpedienteSelected.fecfin_exp : 'Este espediente no se ha finalizado.'"
+                labelclass="" />
             </div>
-            <div>
+            <!-- <div>
               <Label labeltext="Contraparte:  " labelclass="font-bold" />
               <Label labeltext="Joselito Perla Negra" labelclass="" />
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -85,126 +140,96 @@ function ChageTaps(value: number) {
     <div class="flex flex-col mt-8 ">
       <div class="md:flex">
         <ul
-          class="flex-column space-y space-y-4 text-sm font-medium text-gray-500 dark:text-gray-400 md:me-4 mb-4 md:mb-0"
-        >
+          class="flex-column space-y space-y-4 text-sm font-medium text-gray-500 dark:text-gray-400 md:me-4 mb-4 md:mb-0">
           <li>
             <div
               :class="`inline-flex justify-center items-center px-4 py-3 rounded-lg active w-full select-none cursor-pointer ${(tap === 1) ? 'text-white bg-sky-700 ' : 'hover:text-gray-900 bg-white hover:bg-gray-100 w-full text-gray-700'}`"
-              @click="ChageTaps(1)"
-            >
+              @click="ChageTaps(1)">
               Expedientes
             </div>
           </li>
           <li>
             <div
               :class="`inline-flex justify-center items-center px-4 py-3 rounded-lg active w-full select-none cursor-pointer ${(tap === 2) ? 'text-white bg-sky-700 ' : 'hover:text-gray-900 bg-white hover:bg-gray-100 w-full text-gray-700'}`"
-              @click="ChageTaps(2)"
-            >
+              @click="ChageTaps(2)">
               Documentos
             </div>
           </li>
           <li>
-            <div
-              div :class="`inline-flex justify-center items-center px-4 py-3 rounded-lg active w-full select-none cursor-pointer ${(tap === 3) ? 'text-white bg-sky-700 ' : 'hover:text-gray-900 bg-white hover:bg-gray-100 w-full text-gray-700'}`"
-              @click="ChageTaps(3)"
-            >
+            <div div
+              :class="`inline-flex justify-center items-center px-4 py-3 rounded-lg active w-full select-none cursor-pointer ${(tap === 3) ? 'text-white bg-sky-700 ' : 'hover:text-gray-900 bg-white hover:bg-gray-100 w-full text-gray-700'}`"
+              @click="ChageTaps(3)">
               Movimientos
             </div>
           </li>
           <li>
-            <div
-              div :class="`inline-flex justify-center items-center px-4 py-3 rounded-lg active w-full select-none cursor-pointer ${(tap === 4) ? 'text-white bg-sky-700 ' : 'hover:text-gray-900 bg-white hover:bg-gray-100 w-full text-gray-700'}`"
-              @click="ChageTaps(4)"
-            >
+            <div div
+              :class="`inline-flex justify-center items-center px-4 py-3 rounded-lg active w-full select-none cursor-pointer ${(tap === 4) ? 'text-white bg-sky-700 ' : 'hover:text-gray-900 bg-white hover:bg-gray-100 w-full text-gray-700'}`"
+              @click="ChageTaps(4)">
               Seguimiento
             </div>
           </li>
         </ul>
         <div
-          :class="`p-6 bg-white text-medium text-gray-500 rounded-lg w-full h-[27em] max-h-[27em] ${+(tap === 1) ? '' : 'hidden'}`"
-        >
+          :class="`p-6 bg-white text-medium text-gray-500 rounded-lg w-full h-[27em] max-h-[27em] ${+(tap === 1) ? '' : 'hidden'}`">
           <Inputs typeinput="search" labeltext="Buscar" />
           <div class="my-6 rounded-md shadow bg-white h-[17.9em] max-h-[17.9em] overflow-auto">
             <table class="w-full text-left border-collapse">
               <thead class="sticky top-0">
                 <tr>
                   <th
-                    class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200"
-                  >
-                    Cliente
-                  </th>
-                  <th
-                    class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200"
-                  >
+                    class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
                     Numero Expediente
                   </th>
                   <th
-                    class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200"
-                  >
-                    Fecha
+                    class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
+                    Descripción
                   </th>
                   <th
-                    class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200"
-                  >
+                    class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
+                    Fecha Inicio
+                  </th>
+                  <th
+                    class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
+                    Fecha Fin
+                  </th>
+
+                  <th
+                    class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
                     Estado
-                  </th>
-                  <th
-                    class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200"
-                  >
-                    Contraparte
                   </th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(i, index) in simpleTableData" :key="index" class="hover:bg-gray-200">
+                <tr v-for="(i, index) in ExpedientesLits" :key="index" class="hover:bg-gray-200"
+                  @click="SelectExpediente(i)">
                   <td class="px-6 py-4 text-lg text-gray-700 border-b">
-                    {{ i.city }}
+                    {{ i.codexp_exp }}
                   </td>
                   <td class="px-6 py-4 text-gray-500 border-b">
-                    {{ i.totalOrders }}
+                    {{ i.descri_exp }}
                   </td>
                   <td class="px-6 py-4 text-lg text-gray-700 border-b">
-                    {{ i.city }}
+                    {{ i.fecini_exp }}
                   </td>
                   <td class="px-6 py-4 text-gray-500 border-b">
-                    {{ i.totalOrders }}
+                    {{ (i.fecfin_exp !== null) ? i.fecfin_exp : 'Este espediente no se ha finalizado.' }}
                   </td>
                   <td class="px-6 py-4 text-lg text-gray-700 border-b">
-                    {{ i.city }}
-                  </td>
-                </tr>
-                <tr v-for="(i, index) in simpleTableData" :key="index" class="hover:bg-gray-200">
-                  <td class="px-6 py-4 text-lg text-gray-700 border-b">
-                    {{ i.city }}
-                  </td>
-                  <td class="px-6 py-4 text-gray-500 border-b">
-                    {{ i.totalOrders }}
-                  </td>
-                  <td class="px-6 py-4 text-lg text-gray-700 border-b">
-                    {{ i.city }}
-                  </td>
-                  <td class="px-6 py-4 text-gray-500 border-b">
-                    {{ i.totalOrders }}
-                  </td>
-                  <td class="px-6 py-4 text-lg text-gray-700 border-b">
-                    {{ i.city }}
+                    {{ (i.estatu_exp === 'A') ? 'Activo' : 'Inactivo' }}
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
-        <div
-          id="tap-2"
-          :class="`p-6 bg-white text-medium text-gray-500 rounded-lg w-full h-[27em] max-h-[27em] ${+(tap === 2) ? '' : 'hidden'}`"
-        >
-          <Files path="/abogadosfiles/exp01/" />
+        <div id="tap-2"
+          :class="`p-6 bg-white text-medium text-gray-500 rounded-lg w-full h-[27em] max-h-[27em] ${+(tap === 2) ? '' : 'hidden'}`">
+          <Files :path="ExpedienteSelected.ubi_exp" />
         </div>
 
-        <div
-          id="tap-2"
-          :class="`p-6 bg-white text-medium text-gray-500 rounded-lg w-full  ${+(tap === 3) ? '' : 'hidden'}`"
-        >
+        <div id="tap-2"
+          :class="`p-6 bg-white text-medium text-gray-500 rounded-lg w-full  ${+(tap === 3) ? '' : 'hidden'}`">
           <Inputs typeinput="search" labeltext="Buscar" />
           <div class="my-6 flex w-full flex-col">
             <div class="">
@@ -213,28 +238,23 @@ function ChageTaps(value: number) {
                   <thead class="sticky top-0">
                     <tr>
                       <th
-                        class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200"
-                      >
+                        class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
                         Codigo
                       </th>
                       <th
-                        class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200"
-                      >
+                        class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
                         tipo
                       </th>
                       <th
-                        class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200"
-                      >
+                        class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
                         Fecha
                       </th>
                       <th
-                        class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200"
-                      >
+                        class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
                         Debito
                       </th>
                       <th
-                        class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200"
-                      >
+                        class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
                         Credito
                       </th>
                     </tr>
@@ -290,37 +310,28 @@ function ChageTaps(value: number) {
                       <h3 class="font-bold" for="username">
                         Honorarios
                       </h3>
-                      <label
-                        class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center"
-                        for="username"
-                      >
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center"
+                        for="username">
                         <Strong>Ingresos:</Strong>
                         <input
                           class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-                          type="text" value="1500.00" readonly
-                        >
+                          type="text" value="1500.00" readonly>
                       </label>
 
-                      <label
-                        class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center "
-                        for="username"
-                      >
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center "
+                        for="username">
                         <Strong>Gastos:</Strong>
                         <input
                           class="text-end w-48 mt-2 font-normal border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-                          type="text" value="1500.00" readonly
-                        >
+                          type="text" value="1500.00" readonly>
                       </label>
 
-                      <label
-                        class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center"
-                        for="username"
-                      >
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center"
+                        for="username">
                         <Strong>Total:</Strong>
                         <input
                           class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-                          type="text" value="1500.00" readonly
-                        >
+                          type="text" value="1500.00" readonly>
                       </label>
                     </div>
 
@@ -328,37 +339,28 @@ function ChageTaps(value: number) {
                       <h3 class="font-bold" for="username">
                         Judiciales
                       </h3>
-                      <label
-                        class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center"
-                        for="username"
-                      >
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center"
+                        for="username">
                         <Strong>Ingresos:</Strong>
                         <input
                           class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-                          type="text" value="1500.00" readonly
-                        >
+                          type="text" value="1500.00" readonly>
                       </label>
 
-                      <label
-                        class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center "
-                        for="username"
-                      >
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center "
+                        for="username">
                         <Strong>Gastos:</Strong>
                         <input
                           class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-                          type="text" value="1500.00" readonly
-                        >
+                          type="text" value="1500.00" readonly>
                       </label>
 
-                      <label
-                        class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center"
-                        for="username"
-                      >
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center"
+                        for="username">
                         <Strong>Total:</Strong>
                         <input
                           class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-                          type="text" value="1500.00" readonly
-                        >
+                          type="text" value="1500.00" readonly>
                       </label>
                     </div>
 
@@ -366,37 +368,28 @@ function ChageTaps(value: number) {
                       <h3 class="font-bold" for="username">
                         Operacionales
                       </h3>
-                      <label
-                        class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center"
-                        for="username"
-                      >
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center"
+                        for="username">
                         <Strong>Ingresos:</Strong>
                         <input
                           class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-                          type="text" value="1500.00" readonly
-                        >
+                          type="text" value="1500.00" readonly>
                       </label>
 
-                      <label
-                        class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center "
-                        for="username"
-                      >
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center "
+                        for="username">
                         <Strong>Gastos:</Strong>
                         <input
                           class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-                          type="text" value="1500.00" readonly
-                        >
+                          type="text" value="1500.00" readonly>
                       </label>
 
-                      <label
-                        class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center"
-                        for="username"
-                      >
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center"
+                        for="username">
                         <Strong>Total:</Strong>
                         <input
                           class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-                          type="text" value="1500.00" readonly
-                        >
+                          type="text" value="1500.00" readonly>
                       </label>
                     </div>
 
@@ -404,37 +397,28 @@ function ChageTaps(value: number) {
                       <h3 class="font-bold" for="username">
                         Terceros
                       </h3>
-                      <label
-                        class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center"
-                        for="username"
-                      >
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center"
+                        for="username">
                         <Strong>Ingresos:</Strong>
                         <input
                           class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-                          type="text" value="1500.00" readonly
-                        >
+                          type="text" value="1500.00" readonly>
                       </label>
 
-                      <label
-                        class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center "
-                        for="username"
-                      >
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center "
+                        for="username">
                         <Strong>Gastos:</Strong>
                         <input
                           class="text-end w-48 mt-2 border-gray-200 font-normal  rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-                          type="text" value="1500.00" readonly
-                        >
+                          type="text" value="1500.00" readonly>
                       </label>
 
-                      <label
-                        class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center"
-                        for="username"
-                      >
+                      <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center"
+                        for="username">
                         <Strong>Total:</Strong>
                         <input
                           class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-                          type="text" value="1500.00" readonly
-                        >
+                          type="text" value="1500.00" readonly>
                       </label>
                     </div>
                   </div>
@@ -462,28 +446,23 @@ function ChageTaps(value: number) {
             </div>
           </div>
         </div>
-        <div
-          id="tap-2"
-          :class="`p-6 bg-white text-medium text-gray-500 rounded-lg w-full h-[27em] max-h-[27em] ${+(tap === 4) ? '' : 'hidden'}`"
-        >
+        <div id="tap-2"
+          :class="`p-6 bg-white text-medium text-gray-500 rounded-lg w-full h-[27em] max-h-[27em] ${+(tap === 4) ? '' : 'hidden'}`">
           <Inputs typeinput="search" labeltext="Buscar" />
           <div class="my-6 rounded-md shadow bg-white h-[17.9em] max-h-[17.9em] overflow-auto">
             <table class="w-full text-left border-collapse">
               <thead class="sticky top-0">
                 <tr>
                   <th
-                    class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200"
-                  >
+                    class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
                     Codigo
                   </th>
                   <th
-                    class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200"
-                  >
+                    class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
                     Fecha
                   </th>
                   <th
-                    class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200"
-                  >
+                    class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
                     Usuario
                   </th>
                 </tr>
