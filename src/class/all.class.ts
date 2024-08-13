@@ -314,6 +314,7 @@ export class audiencias {
   codaud_aud: number
   fecha_aud: Date
   numexp_aud: number
+  descri_aud: string
   codtri_aud: number
   estado_aud: string
   hora_aud: Date
@@ -325,6 +326,7 @@ export class audiencias {
     this.codaud_aud = 0
     this.fecha_aud = new Date()
     this.numexp_aud = 0
+    this.descri_aud = ''
     this.codtri_aud = 0
     this.estado_aud = ''
     this.hora_aud = new Date()
@@ -722,6 +724,15 @@ export class ExpedienteDetalle {
     this.clientes = clientes
     this.contrapartes = contrapartes
     this.tribunales = tribunales
+  }
+}
+export class AudienciaDetalle {
+  abogados: { id: number; name: string }[]
+
+  constructor(
+    abogados: { id: number; name: string }[],
+  ) {
+    this.abogados = abogados
   }
 }
 

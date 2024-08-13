@@ -1,42 +1,40 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { Modules } from '../class/all.class';
+import type { Modules } from '../class/all.class'
 import MenuItem from './SideBar/MenuItem.vue'
 import MenuDesplegable from './SideBar/MenuDesplegable.vue'
 
-const modules = ref<Array<Modules>>([]);
-/*@ts-ignore*/
+const modules = ref<Array<Modules>>([])
+/* @ts-expect-error */
 const URL: string = import.meta.env.VITE_PATH_API
 
 async function getModules() {
   try {
-    const token = localStorage.getItem('access_token');
-
+    const token = localStorage.getItem('access_token')
 
     const response = await fetch(`${URL}usuarios/modulos`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
-    });
+        'Content-Type': 'application/json',
+      },
+    })
 
-    if (!response.ok) {
-      throw new Error('Error en la petición: ' + response.statusText);
-    }
+    if (!response.ok)
+      throw new Error(`Error en la petición: ${response.statusText}`)
 
-    modules.value = await response.json();
+    modules.value = await response.json()
 
-    console.log('Datos recibidos:', modules.value);
-  } catch (error) {
-    console.error('Ocurrió un error:', error);
+    console.log('Datos recibidos:', modules.value)
+  }
+  catch (error) {
+    console.error('Ocurrió un error:', error)
   }
 }
 
 onMounted(() => {
   getModules()
 })
-
 </script>
 
 <template>
@@ -49,7 +47,8 @@ onMounted(() => {
 
     <!-- <div :class="isOpen ? 'translate-x-0 ease-out w-64' : '-translate-x-full ease-in w-16'" -->
     <div
-      class="inset-y-0 left-0 z-30  transition-transform relative overflow-hidden w-max bg-sky-900 lg:translate-x-0 lg:static lg:inset-0">
+      class="inset-y-0 left-0 z-30  transition-transform relative overflow-hidden w-max bg-sky-900 lg:translate-x-0 lg:static lg:inset-0"
+    >
       <div class="flex items-center justify-center mt-8">
         <div class="flex items-center">
           <img src="/public/img/cumplimiento.png" alt="" class="w-20 ml-[-1]">
@@ -64,14 +63,16 @@ onMounted(() => {
           imagen="dashboard">
           <MenuDesplegable v-for="type in module.TypePrograms" class="transition-all duration-1000" :label="type.Name"
             imagen="dashboard">
-            <MenuItem v-for="program in type.Programs" :to="program.path_pro" :name="program.name_pro" :label="program.name_pro" imagen="dashboard" />  
+            <MenuItem v-for="program in type.Programs" :to="program.path_pro" :name="program.name_pro" :label="program.name_pro" imagen="dashboard" />
           </MenuDesplegable>
         </MenuDesplegable> -->
 
         <MenuDesplegable class="transition-all duration-1000" label="Expediente" imagen="dashboard">
           <MenuDesplegable label="Mantenimientos" imagen="dashboard">
             <MenuItem to="/abogados" name="Abogados" label="Abogados" imagen="dashboard" />
+
             <MenuItem to="/gestionabogados" name="GestionAbogados" label="Gestion Abogados" imagen="dashboard" />
+
             <MenuItem to="/tribunales" name="Tribunales" label="Tribunales" imagen="dashboard" />
             <MenuItem to="/tiposgastos" name="TiposGastos" label="Tipos Gastos" imagen="dashboard" />
             <MenuItem to="/gestioncontraparte" name="GestionContraparte" label="Contrapartes" imagen="dashboard" />
@@ -83,7 +84,8 @@ onMounted(() => {
           <MenuDesplegable label="Procesos" imagen="dashboard">
             <MenuItem to="/expedientes" name="Expendientes" label="Expendientes" imagen="dashboard" />
             <MenuItem to="/expediente" name="Expediente" label="Control de Expedientes" imagen="dashboard" />
-            <MenuItem to="/audiencia" name="Audiencia" label="Gestion de Audiencias" imagen="dashboard" />
+            <MenuItem to="/audiencia" name="Audiencia" label="Audiencias" imagen="dashboard" />
+            <MenuItem to="/crearaudiencia" name="CrearAudiencia" label="Creacion de Audiencias" imagen="dashboard" />
             <MenuItem to="/movimientos" name="Movimientos" label="Movimientos" imagen="dashboard" />
           </MenuDesplegable>
         </MenuDesplegable>
@@ -95,21 +97,25 @@ onMounted(() => {
           </MenuDesplegable>
 
           <MenuDesplegable label="Procesos" imagen="dashboard">
-            <MenuItem to="/interaccionescliente" name="InteraccionesCliente" label="Interaccion Clientes"
-              imagen="dashboard" />
+            <MenuItem
+              to="/interaccionescliente" name="InteraccionesCliente" label="Interaccion Clientes"
+              imagen="dashboard"
+            />
           </MenuDesplegable>
         </MenuDesplegable>
 
         <MenuDesplegable label="Vehiculos" imagen="dashboard">
-          <MenuItem to="/vehiculos" name="Vehiculos" label="Vehiculos" imagen="dashboard" />
-          <MenuItem to="/vehiculosestado" name="VehiculosEstado" label="Estado de vehiculos" imagen="dashboard" />
-          <MenuItem to="/vehiculosmodelos" name="VehiculosModelos" label="Modelos de Vehiculos" imagen="dashboard" />
-          <MenuItem to="/vehiculosmarca" name="VehiculosMarca" label="Marcas de Vehiculos" imagen="dashboard" />
+          <MenuDesplegable label="Mantenimientos" imagen="dashboard">
+            <MenuItem to="/vehiculos" name="Vehiculos" label="Vehiculos" imagen="dashboard" />
+            <MenuItem to="/vehiculosestado" name="VehiculosEstado" label="Estado de vehiculos" imagen="dashboard" />
+            <MenuItem to="/vehiculosmodelos" name="VehiculosModelos" label="Modelos de Vehiculos" imagen="dashboard" />
+            <MenuItem to="/vehiculosmarca" name="VehiculosMarca" label="Marcas de Vehiculos" imagen="dashboard" />
+          </MenuDesplegable>
 
-          <MenuItem to="/asignacionvehiculo" name="AsignacionVehiculo" label="Asignacion de Vehiculos"
-            imagen="dashboard" />
+          <MenuDesplegable label="Procesos" imagen="dashboard">
+            <MenuItem to="/asignacionvehiculo" name="AsignacionVehiculo" label="Asignacion de Vehiculos" imagen="dashboard" />
+          </MenuDesplegable>
         </MenuDesplegable>
-
 
         <!-- <MenuItem to="/ui-elements" name="UIElements" label="Elements" imagen="elements" /> -->
         <MenuItem to="/eventos" name="Eventos" label="Eventos" imagen="elements" />
@@ -125,7 +131,6 @@ onMounted(() => {
             <MenuItem to="/provincias" name="Provincias" label="Provincias" imagen="blank" />
             <MenuItem to="/ciudades" name="Ciudades" label="Ciudades" imagen="blank" />
             <MenuItem to="/origendireccion" name="Origen Direccion" label="Origen Direccion" imagen="blank" />
-
           </MenuDesplegable>
           <MenuDesplegable label="Usuarios" imagen="dashboard">
             <MenuItem to="/programas" name="Programas" label="Programas" imagen="blank" />

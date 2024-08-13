@@ -1,20 +1,31 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import Modal from '../../components/Modal.vue'
 import Inputs from '../../components/Inputs.vue'
 import type { ciudades, especialidades, provincias } from '../../class/all.class'
 import { abogados, direcciones } from '../../class/all.class'
 import { addAlert } from '../../stores/alerts'
+import apiClient from '../../axiosConfig'
 
 // import Dropdown from '../../components/dropdown2.vue';
-
+const especialidadSelected = ref({ tipesp_tip: '', descri_tip: '' })
+const provinciaSelected = ref({ codpro_pro: '', nombre_pro: '' })
+const ciuadadSelected = ref({ codciu_ciu: '', nombre_ciu: '' })
 const showModal = ref(false)
 const Abogado = ref<abogados>(new abogados())
 const Direccion = ref<direcciones>(new direcciones())
 const TypeModal = ref<number>(0)
 const ShowCities = ref<boolean>(false)
+const especialidadesList = ref<especialidades[]>([])
+const provinciasList = ref<provincias[]>([])
+const ciudadesList = ref<ciudades[]>([])
+
 /* @ts-expect-error */
 const URL: string = import.meta.env.VITE_PATH_API
+
+const route = useRoute()
+const router = useRouter()
 
 function handleAccept() {
   console.log('Accepted')
@@ -36,10 +47,6 @@ function handleClose() {
 }
 
 const searchTerm = ref('')
-
-const especialidadesList = ref<especialidades[]>([])
-const provinciasList = ref<provincias[]>([])
-const ciudadesList = ref<ciudades[]>([])
 
 async function GetEspecialidades() {
   try {
@@ -137,10 +144,6 @@ function searchCiudades(value: any) {
   searchTerm.value = value
 }
 
-const especialidadSelected = ref({ tipesp_tip: '', descri_tip: '' })
-const provinciaSelected = ref({ codpro_pro: '', nombre_pro: '' })
-const ciuadadSelected = ref({ codciu_ciu: '', nombre_ciu: '' })
-
 function setEspecialidad(obj: especialidades) {
   if (especialidadSelected.value !== undefined) {
     especialidadSelected.value.tipesp_tip = String(obj.tipesp_tip)
@@ -171,41 +174,99 @@ async function saveAbogado() {
   Abogado.value.tipo_especialidad_abo = Number.parseInt(especialidadSelected.value.tipesp_tip)
   Abogado.value.estado_abo = 'A'
 
-  Direccion.value.codciu_dir = Number.parseInt(provinciaSelected.value.codpro_pro)
+  // Direccion.value.codciu_dir = Number.parseInt(provinciaSelected.value.codpro_pro)
   Direccion.value.codciu_dir = Number.parseInt(ciuadadSelected.value.codciu_ciu)
 
   const requestBody = { information: Abogado.value, direccion: Direccion.value }
 
   console.info('Datos enviados:', requestBody)
 
-  try {
-    const response = await fetch(`${URL}abogados`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestBody),
-    })
-
-    if (response.ok) {
-      console.info('Abogado registrado exitosamente')
-      addAlert(2, 'Abogado registrado exitosamente.')
+  if (route.params.id) {
+    // actualizar
+    try {
+      await apiClient.patch('/abogados', requestBody)
+      addAlert(2, 'Abogado actualizado exitosamente.')
     }
-    else {
-      console.error('Error en la respuesta del servidor:', response.statusText)
-      addAlert(3, 'Problemas al registrar el abogado.')
+    catch (error) {
+      console.error('Error en la solicitud:', error)
+      addAlert(3, 'Comunicarce con los administradores.')
     }
   }
+  else {
+    // crear
+    try {
+      const response = await fetch(`${URL}abogados`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      })
+
+      if (response.ok) {
+        console.info('Abogado registrado exitosamente')
+        addAlert(2, 'Abogado registrado exitosamente.')
+      }
+      else {
+        console.error('Error en la respuesta del servidor:', response.statusText)
+        addAlert(3, 'Problemas al registrar el abogado.')
+      }
+    }
+    catch (error) {
+      console.error('Error en la solicitud:', error)
+      addAlert(3, 'Comunicarce con los administradores.')
+    }
+  }
+  goBack()
+}
+async function fetchAbogado(id: string) {
+  try {
+    const response = await apiClient.get(`/abogados/${id}`)
+    Abogado.value = {
+      ...response.data,
+      fecnac_abo: formatDate(response.data.fecnac_abo.toString()),
+      fecini_abo: formatDate(response.data.fecini_abo.toString()),
+    }
+
+    const especialidad = await apiClient.get(`/especialidades/${Abogado.value.tipo_espcialidad_abo}`)
+    especialidadSelected.value = { tipesp_tip: String(especialidad.data.tipesp_tip), descri_tip: especialidad.data.descri_tip }
+
+    Direccion.value = (await apiClient.get(`/direcciones/${Abogado.value.codabo_abo}/A`)).data
+
+    const ciudad = await apiClient.get(`/ciudades/${Direccion.value.codciu_dir}`)
+
+    const provincia = await apiClient.get(`/provincias/${ciudad.data.codpro_ciu}`)
+
+    provinciaSelected.value = { codpro_pro: String(provincia.data.codpro_pro), nombre_pro: provincia.data.nombre_pro }
+    ciuadadSelected.value = { codciu_ciu: String(ciudad.data.codciu_ciu), nombre_ciu: ciudad.data.nombre_ciu }
+
+    ShowCities.value = true
+
+    addAlert(1, 'Interacción cargada correctamente.')
+  }
   catch (error) {
-    console.error('Error en la solicitud:', error)
-    addAlert(3, 'Comunicarce con los administradores.')
+    console.error('Error fetching Abogadoes:', error)
+    addAlert(3, 'Error al obtener la interacción.')
   }
 }
 
-onMounted(() => {
-  GetEspecialidades()
-  getProvincias()
+function goBack() {
+  router.push({ name: 'Abogados' })
+}
+
+onMounted(async () => {
+  if (route.params.id)
+    await fetchAbogado(route.params.id as string)
+
+  await Promise.all([GetEspecialidades(), getProvincias()])
 })
+function formatDate(dateString: string): string {
+  const date = new Date(dateString)
+  const year = date.getUTCFullYear()
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0')
+  const day = String(date.getUTCDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
 </script>
 
 <template>
@@ -214,6 +275,10 @@ onMounted(() => {
       Gestion de Abogados
     </h3>
     <div class="mt-4 p-6 bg-white rounded-md shadow-md">
+      <div class="flex items-center mb-4 cursor-pointer" @click="goBack">
+        <img src="../../assets/img/returnArrow.svg" alt="Back" class="w-6 h-6 mr-2">
+        <span class="text-gray-700">Volver</span>
+      </div>
       <h3>
         Informacion General
       </h3>
@@ -303,6 +368,20 @@ onMounted(() => {
               type="date"
               class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
             >
+          </div>
+          <div v-if="route.params.id">
+            <label class="text-gray-700" for="estado">Estado</label>
+            <select
+              id="estado" v-model="Abogado.estado_abo"
+              class="block mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+            >
+              <option value="A">
+                Activo
+              </option>
+              <option value="I">
+                Inactivo
+              </option>
+            </select>
           </div>
         </div>
 
@@ -528,15 +607,3 @@ onMounted(() => {
     </template>
   </Modal>
 </template>
-
-<style scoped>
-/* .rb-table {
-  transform: scale(2);
-  opacity: 0;
-  cursor: pointer;
-}
-
-.row-rb:has(input:checked) {
-  background-color: #000 !important;
-} */
-</style>

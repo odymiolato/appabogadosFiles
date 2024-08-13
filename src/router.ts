@@ -1,6 +1,6 @@
 import type { RouteRecordRaw } from 'vue-router'
 import { createRouter, createWebHistory } from 'vue-router'
-import { isAuthenticated } from './utils/auth';
+import { isAuthenticated } from './utils/auth'
 
 import Dashboard from './views/Dashboard.vue'
 import Forms from './views/Forms.vue'
@@ -13,7 +13,6 @@ import Blank from './views/Blank.vue'
 import Calendar from './components/calendar.vue'
 import Expediente from './views/expDepToAbo.vue'
 import Expedientes from './views/expediente/Expedientes.vue'
-
 
 import Audiencia from './views/componentes a revisar/Audiencia.vue'
 
@@ -49,6 +48,7 @@ import Perfil from './views/perfil/Perfil.vue'
 import Users from './views/users/Users.vue'
 import Abogados from './views/abogados/Abogados.vue'
 
+import CrearAudiencia from './views/audiencias/CrearAudiencia.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -143,6 +143,11 @@ const routes: RouteRecordRaw[] = [
     component: Audiencia,
     meta: { requiresAuth: true },
   },
+  {
+    path: '/crearaudiencia',
+    name: 'CrearAudiencia',
+    component: CrearAudiencia,
+  },
 
   {
     path: '/abogados',
@@ -150,10 +155,11 @@ const routes: RouteRecordRaw[] = [
     component: Abogados,
   },
   {
-    path: '/gestionabogados',
-    name: 'Gestion Abogados',
+    path: '/gestionabogados/:id?',
+    name: 'GestionAbogados',
     component: GestionAbogados,
     meta: { requiresAuth: true },
+    props: true,
   },
   {
     path: '/gestioncontraparte',
@@ -331,12 +337,11 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
   const status: boolean = await isAuthenticated()
- 
-  if (requiresAuth && !status) {
-    next('/');
-  } else {
-    next();
-  }
-});
+
+  if (requiresAuth && !status)
+    next('/')
+  else
+    next()
+})
 
 export default router

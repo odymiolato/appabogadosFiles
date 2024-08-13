@@ -2,9 +2,12 @@
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import apiClient from '../../axiosConfig'
-import type { abogados, asignaciones_vehiculos, especialidades } from '../../class/all.class'
-import { addAlert } from '../../stores/alerts'
+import type { abogados, ciudades, direcciones, especialidades, provincias } from '../../class/all.class'
 import WideTable from '../../components/tablas/WideTable.vue'
+import { addAlert } from '../../stores/alerts'
+import Modal from '../../components/Modal.vue'
+import ModalDelete from '../../components/ModalDelete.vue'
+import type { diccionSelected } from '../../interface/all.interface'
 
 const columns = [
   { title: 'Nombre', field: 'nombre_abo' },
@@ -14,11 +17,23 @@ const columns = [
   { title: 'Correo', field: 'email_abo' },
   { title: 'Fecha de nacimiento', field: 'fecnac_abo' },
   { title: 'Fecha de inicio', field: 'fecini_abo' },
-  { title: 'Direccion', field: 'direcc_abo' },
+  { title: 'Direccion', field: 'direcc_abo', isButton: true, buttonTitle: 'direccion' },
+]
+const columnsDirecciones = [
+  { title: 'Direccion', field: 'direccion_dir' },
+  { title: 'Ciudad', field: 'nombre_ciu' },
+  { title: 'Provincia', field: 'nombre_pro' },
 ]
 
+const ShowModal = ref(false)
+const ShowModalDelete = ref(false)
 const abogadosList = ref<abogados[]>([])
+const abogadoSelected = ref()
+const direccionSelected = ref<diccionSelected[]>([])
 const router = useRouter()
+function handleClose() {
+  ShowModal.value = falsez
+}
 
 onMounted(async () => {
   await fetchAbogados()
@@ -34,6 +49,13 @@ async function fetchAbogados() {
     abogadosList.value = response.data.map((abogado: abogados) => {
       return {
         ...abogado,
+        descri_tip:
+          especialidades?.find(
+            (especialidad: especialidades) =>
+              especialidad.tipesp_tip === abogado.tipo_espcialidad_abo,
+          )?.descri_tip || 'Desconocido',
+        fecnac_abo: formatDate(abogado.fecnac_abo.toString()),
+        fecini_abo: formatDate(abogado.fecini_abo.toString()),
         descri_tip: especialidades?.find((especialidad: especialidades) => especialidad.tipesp_tip === abogado.tipo_especialidad_abo)?.descri_tip || 'Desconocido',
       }
     })
@@ -44,12 +66,91 @@ async function fetchAbogados() {
   }
 }
 
-function handleEditAsignacion(asignacion: asignaciones_vehiculos) {
-  router.push({ name: 'CrearAsignacion', params: { id: asignacion.codveh_asv } })
+function handleEditAbogado(abogado: abogados) {
+  router.push({ name: 'GestionAbogados', params: { id: abogado.codabo_abo } })
 }
 
-function openCreateAsignacion() {
-  router.push({ name: 'CrearAsignacion' })
+const Abogado = ref<abogados>()
+const Direccion = ref<direcciones>()
+
+async function handleDeleteAbogado(abogado: abogados) {
+  const response = await apiClient.get(`/abogados/${abogado.codabo_abo}`)
+  Abogado.value = response.data
+
+  if (Abogado.value)
+    Direccion.value = (await apiClient.get(`/direcciones/${Abogado.value.codabo_abo}/A`)).data
+
+  abogadoSelected.value = { information: Abogado.value, direccion: Direccion.value }
+
+  ShowModalDelete.value = true
+}
+
+async function eliminarAbogado() {
+  ShowModalDelete.value = false
+  // Extraer los valores de las referencias
+  const abogadoInfo = abogadoSelected.value.information
+  const direccionInfo = abogadoSelected.value.direccion
+
+  // Crear el objeto con el formato correcto
+  const requestBody = {
+    information: { ...abogadoInfo },
+    direccion: { ...direccionInfo },
+  }
+
+  // Asegúrate de que el estado esté correctamente actualizado
+  requestBody.information.estado_abo = 'I'
+
+  try {
+    await apiClient.patch('/abogados', requestBody)
+    console.log('Abogado eliminado:', requestBody)
+    addAlert(2, 'Abogado eliminado exitosamente.')
+  }
+  catch (error) {
+    console.error('Error eliminando Abogado:', error)
+    addAlert(3, 'Error eliminando Abogado')
+  }
+}
+
+async function handleViewLocations(abogado: abogados) {
+  await searchDirecciones(abogado.codabo_abo)
+  ShowModal.value = true // Mostrar el modal solo después de que los datos se han cargado
+}
+
+async function searchDirecciones(id: number) {
+  try {
+    const response = await apiClient.get(`/direcciones/${id}/A`)
+    const direccion: direcciones = response.data
+
+    const ciudad: ciudades = (
+      await apiClient.get(`/ciudades/${direccion.codciu_dir}`)
+    ).data
+    const provincia: provincias = (
+      await apiClient.get(`/provincias/${ciudad.codpro_ciu}`)
+    ).data
+
+    direccionSelected.value = [
+      {
+        direccion_dir: direccion.direccion_dir,
+        nombre_ciu: ciudad.nombre_ciu,
+        nombre_pro: provincia.nombre_pro,
+      },
+    ]
+
+    console.log(columnsDirecciones)
+    console.log(direccionSelected)
+  }
+  catch (error) {
+    console.error('Error fetching Direcciones:', error)
+    addAlert(3, 'Error cargando Direcciones')
+  }
+}
+
+function formatDate(dateString: string): string {
+  const date = new Date(dateString)
+  const day = String(date.getUTCDate()).padStart(2, '0')
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0')
+  const year = date.getUTCFullYear()
+  return `${day}/${month}/${year}`
 }
 </script>
 
@@ -57,22 +158,44 @@ function openCreateAsignacion() {
   <button
     type="button"
     class="mt-1 mb-5 p-3 text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
-    @click="openCreateAsignacion"
+    @click="() => router.push({ name: 'GestionAbogados' })"
   >
-    Crear Nueva Asignacion
+    Crear Nuevo Abogado
   </button>
   <div class="p-6 bg-white rounded-md shadow-md">
-    <div class="mb-4">
-      <label class="text-gray-700 " for="descripcion">vehiculos</label>
-    </div>
-
     <WideTable
       :columns="columns"
       :tabledata="abogadosList"
-      label="Asignar Vehiculos"
-      default-image="/path/to/default-image.jpg"
+      label="Abogados"
       :editable="true"
-      @edit="handleEditAsignacion"
+      :eliminable="true"
+      @edit="handleEditAbogado"
+      @delete="handleDeleteAbogado"
+      @button-click="handleViewLocations"
     />
   </div>
+
+  <Modal
+    v-if="ShowModal"
+    class="flex justify-center items-center"
+    title="Direcciones del abogado"
+    :btn-visible="false"
+    @close="handleClose"
+  >
+    <template #body>
+      <WideTable
+        :columns="columnsDirecciones"
+        :tabledata="direccionSelected"
+        :editable="false"
+        :eliminable="false"
+      />
+    </template>
+  </Modal>
+  <ModalDelete
+    v-if="ShowModalDelete"
+    v-model:ShowModalDelete="ShowModalDelete"
+    class="flex justify-center items-center"
+    :registro="`Abogado &quot;${abogadoSelected.information.nombre_abo}&quot; con el código '${abogadoSelected.information.codabo_abo}'`"
+    @eliminar="eliminarAbogado"
+  />
 </template>

@@ -47,6 +47,12 @@ async function saveOrigen() {
   }
 }
 
+function handleInputUpperCase(event: Event) {
+  const input = event.target as HTMLInputElement
+  input.value = input.value.toUpperCase().replace(/\d/g, '')
+  origen.value.codorigen_ori = input.value
+}
+
 
 </script>
 
@@ -60,16 +66,20 @@ async function saveOrigen() {
       <form>
         <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
           <div>
-            <label class="text-gray-700" for="tipesp_tip">Codigo</label>
-            <input id="tipesp_tip" type="text"
-              class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-              v-model="origen.codorigen_ori">
-          </div>
-          <div>
             <label class="text-gray-700" for="tipesp_tip">Nombre</label>
             <input id="tipesp_tip" type="text"
-              class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-              v-model="origen.descricion_ori">
+            class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+            v-model="origen.descricion_ori">
+          </div>
+          <div>
+            <label class="text-gray-700" for="tipesp_tip">Codigo</label>
+            <input 
+              id="tipesp_tip" 
+              @input="handleInputUpperCase"
+              type="text"
+              maxlength="1"
+              class="block w-10 mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500 "
+              v-model="origen.codorigen_ori">
           </div>
         </div>
         <div class="flex justify-end mt-4">
