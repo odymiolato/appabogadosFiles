@@ -33,7 +33,7 @@ async function getModules() {
 }
 
 onMounted(() => {
-  getModules()
+  // getModules()
 })
 </script>
 
