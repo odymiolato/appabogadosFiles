@@ -1,11 +1,16 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useSidebar } from '../composables/useSidebar'
-
-// import Inputs from './Inputs.vue';
+import { useRouter } from 'vue-router'
 
 const dropdownOpen = ref(false)
 const { isOpen } = useSidebar()
+const router = useRouter()
+
+function LogOut() {
+  localStorage.removeItem('access_token')
+  router.push('/')
+}
 </script>
 
 <template>
@@ -49,11 +54,11 @@ const { isOpen } = useSidebar()
           enter-from-class="scale-95 opacity-0" enter-to-class="scale-100 opacity-100"
           leave-active-class="transition duration-150 ease-in transform" leave-from-class="scale-100 opacity-100"
           leave-to-class="scale-95 opacity-0">
-          <div v-show="dropdownOpen" class="absolute right-0 z-20 w-48 p-2 mt-2 bg-white rounded-md shadow-xl">
-            <router-link to="/"
-              class="block px-4 py-2 text-sm text-gray-700 hover:bg-sky-600 hover:rounded hover:text-white">
+          <div v-show="dropdownOpen" class="absolute right-0 z-20 p-2 mt-2 bg-white rounded-md shadow-xl w-full">
+            <button @click="LogOut()"
+              class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-500 hover:rounded hover:text-white">
               Cerrer Sesion
-            </router-link>
+            </button>
           </div>
         </transition>
       </div>

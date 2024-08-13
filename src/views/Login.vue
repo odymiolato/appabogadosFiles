@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import Buttons from '../components/Buttons.vue';
 import { login } from '../class/all.class';
@@ -10,10 +10,12 @@ const EmptyUsername = ref<boolean>(false)
 const EmptyPassword = ref<boolean>(false)
 const IncorrectUsername = ref<boolean>(false)
 const IncorrectPassword = ref<boolean>(false)
+const remember = ref<boolean>(false)
 /* @ts-ignore */
 const URL: string = import.meta.env.VITE_PATH_API;
 
 const router = useRouter();
+
 
 function validate(): boolean {
   if (Login.Name === '') {
@@ -52,6 +54,12 @@ async function FN_login() {
 
     if (response.ok && data.STATUS) {
       localStorage.setItem('access_token', data.access_token);
+      if (remember.value) {
+        localStorage.setItem('username', Login.Name);
+      } else {
+        localStorage.removeItem('username');
+      }
+
       router.push('/inicio');
     } else {
       if (data.CODSTATUS === 2) {
@@ -66,6 +74,15 @@ async function FN_login() {
     loader.value = false;
   }
 }
+
+onMounted(() => {
+  const username: string | null = localStorage.getItem('username');
+  if (username === null) {
+    return;
+  }
+  remember.value = true;
+  Login.Name = username;
+})
 </script>
 <template>
   <div class="flex items-center justify-center h-screen px-6 bg-gray-200">
@@ -95,7 +112,7 @@ async function FN_login() {
         <div class="flex items-center justify-between mt-4">
           <div>
             <label class="inline-flex items-center">
-              <input type="checkbox"
+              <input type="checkbox" v-model="remember"
                 class="text-sky-700 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500">
               <span class="mx-2 text-sm text-gray-600">Recuerdame</span>
             </label>
