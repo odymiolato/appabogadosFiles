@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { abogados, asignaciones_vehiculos, vehiculos } from '../../class/all.class';
-import { audiencias } from '../../class/all.class';
+import type { abogados, audiencias, vehiculos } from '../../class/all.class'
+import { asignaciones_vehiculos } from '../../class/all.class'
 
 import ModalReutilizable from '../../components/ModalReutilizable.vue'
 import apiClient from '../../axiosConfig'
@@ -77,11 +77,11 @@ function handlevehiculoSelected(vehiculo: vehiculos) {
 }
 
 function handleabogadoSelected(abogado: abogados) {
-  abogadoSelected.value = { codigo: String(abogado.codabo_abo), nombre: abogado.nombre_abo}
+  abogadoSelected.value = { codigo: String(abogado.codabo_abo), nombre: abogado.nombre_abo }
 }
 
 function handleaudienciaSelected(audiencia: audiencias) {
-  audienciaSelected.value = { codigo: String(audiencia.codaud_aud), nombre: audiencia.fecha_aud }
+  audienciaSelected.value = { codigo: String(audiencia.codaud_aud), nombre: audiencia.descri_aud }
 }
 </script>
 
@@ -93,7 +93,6 @@ function handleaudienciaSelected(audiencia: audiencias) {
     </div>
 
     <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
-
       <div>
         <label class="text-gray-700" for="nombre">Año del Vehiculo</label>
         <input
@@ -138,7 +137,7 @@ function handleaudienciaSelected(audiencia: audiencias) {
           </button>
         </div>
       </div>
-      
+
       <div>
         <label class="text-gray-700" for="abogado">audiencias</label>
         <div class="flex gap-2 justify-center items-center">
@@ -241,7 +240,7 @@ function handleaudienciaSelected(audiencia: audiencias) {
         modal-title="Audiencias"
         endpoint="/audiencias"
         code-field="codaud_aud"
-        name-field="fecha_aud"
+        name-field="descri_aud"
         @selected="handleaudienciaSelected"
       />
     </div>

@@ -265,8 +265,8 @@ export class abogados {
   nombre_abo: string
   direcc_abo: string
   telefo_abo: string
-  cedula_abo: string
-  tipo_especialidad_abo: number
+  celula_abo: string
+  tipo_espcialidad_abo: number
   estado_abo: string
   fecnac_abo: Date
   email_abo: string
@@ -280,8 +280,8 @@ export class abogados {
     this.nombre_abo = ''
     this.direcc_abo = ''
     this.telefo_abo = ''
-    this.cedula_abo = ''
-    this.tipo_especialidad_abo = 0
+    this.celula_abo = ''
+    this.tipo_espcialidad_abo = 0
     this.estado_abo = ''
     this.fecnac_abo = new Date()
     this.email_abo = ''
@@ -296,6 +296,7 @@ export class audiencias {
   codaud_aud: number
   fecha_aud: Date
   numexp_aud: number
+  descri_aud: string
   codtri_aud: number
   estado_aud: string
   hora_aud: Date
@@ -307,6 +308,7 @@ export class audiencias {
     this.codaud_aud = 0
     this.fecha_aud = new Date()
     this.numexp_aud = 0
+    this.descri_aud = ''
     this.codtri_aud = 0
     this.estado_aud = ''
     this.hora_aud = new Date()
@@ -704,5 +706,14 @@ export class ExpedienteDetalle {
     this.clientes = clientes
     this.contrapartes = contrapartes
     this.tribunales = tribunales
+  }
+}
+export class AudienciaDetalle {
+  abogados: { id: number; name: string }[]
+
+  constructor(
+    abogados: { id: number; name: string }[],
+  ) {
+    this.abogados = abogados
   }
 }

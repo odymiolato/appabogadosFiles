@@ -1,51 +1,50 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
-import apiClient from '../../axiosConfig';
-import { abogados, ciudades,direcciones, provincias,especialidades  } from '../../class/all.class';
-import WideTable from '../../components/tablas/WideTable.vue';
-import { addAlert } from '../../stores/alerts';
-import Modal from '../../components/Modal.vue';
-import ModalDelete from '../../components/ModalDelete.vue';
-import { diccionSelected, DTOAbogado } from '../../interface/all.interface';
-
+import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import apiClient from '../../axiosConfig'
+import type { abogados, ciudades, direcciones, especialidades, provincias } from '../../class/all.class'
+import WideTable from '../../components/tablas/WideTable.vue'
+import { addAlert } from '../../stores/alerts'
+import Modal from '../../components/Modal.vue'
+import ModalDelete from '../../components/ModalDelete.vue'
+import type { diccionSelected } from '../../interface/all.interface'
 
 const columns = [
   { title: 'Nombre', field: 'nombre_abo' },
   { title: 'Telefono', field: 'telefo_abo' },
-  { title: 'Cedula', field: 'cedula_abo' },
+  { title: 'Cedula', field: 'celula_abo' },
   { title: 'Especialidad', field: 'descri_tip' },
   { title: 'Correo', field: 'email_abo' },
   { title: 'Fecha de nacimiento', field: 'fecnac_abo' },
   { title: 'Fecha de inicio', field: 'fecini_abo' },
   { title: 'Direccion', field: 'direcc_abo', isButton: true, buttonTitle: 'direccion' },
-];
+]
 const columnsDirecciones = [
   { title: 'Direccion', field: 'direccion_dir' },
   { title: 'Ciudad', field: 'nombre_ciu' },
   { title: 'Provincia', field: 'nombre_pro' },
-];
+]
+
+const ShowModal = ref(false)
+const ShowModalDelete = ref(false)
+const abogadosList = ref<abogados[]>([])
+const abogadoSelected = ref()
+const direccionSelected = ref<diccionSelected[]>([])
+const router = useRouter()
 function handleClose() {
-  ShowModal.value = false;
+  ShowModal.value = false
 }
 
-const ShowModal = ref(false);
-const ShowModalDelete = ref(false);
-const abogadosList = ref<abogados[]>([]);
-const abogadoSelected = ref();
-const direccionSelected = ref<diccionSelected[]>([]);
-const router = useRouter();
-
 onMounted(async () => {
-  await fetchAbogados();
-});
+  await fetchAbogados()
+})
 
 async function fetchAbogados() {
   try {
-    const response = await apiClient.get('/abogados');
-    const especialidadesResponse = await apiClient.get('/especialidades');
+    const response = await apiClient.get('/abogados')
+    const especialidadesResponse = await apiClient.get('/especialidades')
 
-    const especialidades = especialidadesResponse.data;
+    const especialidades = especialidadesResponse.data
 
     abogadosList.value = response.data.map((abogado: abogados) => {
       return {
@@ -53,84 +52,80 @@ async function fetchAbogados() {
         descri_tip:
           especialidades?.find(
             (especialidad: especialidades) =>
-              especialidad.tipesp_tip === abogado.tipo_especialidad_abo
+              especialidad.tipesp_tip === abogado.tipo_espcialidad_abo,
           )?.descri_tip || 'Desconocido',
         fecnac_abo: formatDate(abogado.fecnac_abo.toString()),
         fecini_abo: formatDate(abogado.fecini_abo.toString()),
-      };
-    });
-  } catch (error) {
-    console.error('Error fetching Abogado:', error);
-    addAlert(3, 'Error cargando Abogado');
+      }
+    })
+  }
+  catch (error) {
+    console.error('Error fetching Abogado:', error)
+    addAlert(3, 'Error cargando Abogado')
   }
 }
 
 function handleEditAbogado(abogado: abogados) {
-  router.push({ name: 'GestionAbogados', params: { id: abogado.codabo_abo } });
+  router.push({ name: 'GestionAbogados', params: { id: abogado.codabo_abo } })
 }
 
-const Abogado = ref<abogados>();
-const Direccion = ref<direcciones>();
+const Abogado = ref<abogados>()
+const Direccion = ref<direcciones>()
 
 async function handleDeleteAbogado(abogado: abogados) {
-  
   const response = await apiClient.get(`/abogados/${abogado.codabo_abo}`)
   Abogado.value = response.data
-  
-  if (Abogado.value) {
-    Direccion.value = (await apiClient.get(`/direcciones/${Abogado.value.codabo_abo}/A`)).data;
-  }
-  
-  abogadoSelected.value={ information: Abogado.value, direccion: Direccion.value }
 
-  
-  ShowModalDelete.value = true;
-  
-  
+  if (Abogado.value)
+    Direccion.value = (await apiClient.get(`/direcciones/${Abogado.value.codabo_abo}/A`)).data
+
+  abogadoSelected.value = { information: Abogado.value, direccion: Direccion.value }
+
+  ShowModalDelete.value = true
 }
 
 async function eliminarAbogado() {
-  ShowModalDelete.value = false;
+  ShowModalDelete.value = false
   // Extraer los valores de las referencias
-  const abogadoInfo = abogadoSelected.value.information;
-  const direccionInfo = abogadoSelected.value.direccion;
+  const abogadoInfo = abogadoSelected.value.information
+  const direccionInfo = abogadoSelected.value.direccion
 
   // Crear el objeto con el formato correcto
   const requestBody = {
     information: { ...abogadoInfo },
     direccion: { ...direccionInfo },
-  };
+  }
 
   // Asegúrate de que el estado esté correctamente actualizado
-  requestBody.information.estado_abo = 'I';
+  requestBody.information.estado_abo = 'I'
 
   try {
-    await apiClient.patch(`/abogados`, requestBody);
-    console.log('Abogado eliminado:', requestBody);
-    addAlert(2, 'Abogado eliminado exitosamente.');
-  } catch (error) {
-    console.error('Error eliminando Abogado:', error);
-    addAlert(3, 'Error eliminando Abogado');
+    await apiClient.patch('/abogados', requestBody)
+    console.log('Abogado eliminado:', requestBody)
+    addAlert(2, 'Abogado eliminado exitosamente.')
+  }
+  catch (error) {
+    console.error('Error eliminando Abogado:', error)
+    addAlert(3, 'Error eliminando Abogado')
   }
 }
 
-
 async function handleViewLocations(abogado: abogados) {
-  await searchDirecciones(abogado.codabo_abo);
-  ShowModal.value = true; // Mostrar el modal solo después de que los datos se han cargado
+  await searchDirecciones(abogado.codabo_abo)
+  ShowModal.value = true // Mostrar el modal solo después de que los datos se han cargado
 }
 
 async function searchDirecciones(id: number) {
   try {
-    const response = await apiClient.get(`/direcciones/${id}/A`);
-    const direccion: direcciones = response.data;
+    const response = await apiClient.get(`/direcciones/${id}/A`)
+    const direccion: direcciones = response.data
 
     const ciudad: ciudades = (
       await apiClient.get(`/ciudades/${direccion.codciu_dir}`)
-    ).data;
+    ).data
     const provincia: provincias = (
       await apiClient.get(`/provincias/${ciudad.codpro_ciu}`)
-    ).data;
+    ).data
 
     direccionSelected.value = [
       {
@@ -138,27 +133,27 @@ async function searchDirecciones(id: number) {
         nombre_ciu: ciudad.nombre_ciu,
         nombre_pro: provincia.nombre_pro,
       },
-    ];
+    ]
 
-    console.log(columnsDirecciones);
-    console.log(direccionSelected);
-  } catch (error) {
-    console.error('Error fetching Direcciones:', error);
-    addAlert(3, 'Error cargando Direcciones');
+    console.log(columnsDirecciones)
+    console.log(direccionSelected)
+  }
+  catch (error) {
+    console.error('Error fetching Direcciones:', error)
+    addAlert(3, 'Error cargando Direcciones')
   }
 }
 
 function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  const day = String(date.getUTCDate()).padStart(2, '0');
-  const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-  const year = date.getUTCFullYear();
-  return `${day}/${month}/${year}`;
+  const date = new Date(dateString)
+  const day = String(date.getUTCDate()).padStart(2, '0')
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0')
+  const year = date.getUTCFullYear()
+  return `${day}/${month}/${year}`
 }
 </script>
 
 <template>
-  
   <button
     type="button"
     class="mt-1 mb-5 p-3 text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
@@ -175,7 +170,7 @@ function formatDate(dateString: string): string {
       :eliminable="true"
       @edit="handleEditAbogado"
       @delete="handleDeleteAbogado"
-      @buttonClick="handleViewLocations"
+      @button-click="handleViewLocations"
     />
   </div>
 
@@ -199,9 +194,7 @@ function formatDate(dateString: string): string {
     v-if="ShowModalDelete"
     v-model:ShowModalDelete="ShowModalDelete"
     class="flex justify-center items-center"
-    @eliminar="eliminarAbogado"
     :registro="`Abogado &quot;${abogadoSelected.information.nombre_abo}&quot; con el código '${abogadoSelected.information.codabo_abo}'`"
-
->
-    </ModalDelete>
+    @eliminar="eliminarAbogado"
+  />
 </template>

@@ -1,20 +1,26 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import Modal from '../../components/Modal.vue'
 import Inputs from '../../components/Inputs.vue'
 import type { ciudades, especialidades, provincias } from '../../class/all.class'
 import { abogados, direcciones } from '../../class/all.class'
 import { addAlert } from '../../stores/alerts'
-import { useRoute, useRouter } from 'vue-router'
 import apiClient from '../../axiosConfig'
 
 // import Dropdown from '../../components/dropdown2.vue';
-
+const especialidadSelected = ref({ tipesp_tip: '', descri_tip: '' })
+const provinciaSelected = ref({ codpro_pro: '', nombre_pro: '' })
+const ciuadadSelected = ref({ codciu_ciu: '', nombre_ciu: '' })
 const showModal = ref(false)
 const Abogado = ref<abogados>(new abogados())
 const Direccion = ref<direcciones>(new direcciones())
 const TypeModal = ref<number>(0)
 const ShowCities = ref<boolean>(false)
+const especialidadesList = ref<especialidades[]>([])
+const provinciasList = ref<provincias[]>([])
+const ciudadesList = ref<ciudades[]>([])
+
 /* @ts-expect-error */
 const URL: string = import.meta.env.VITE_PATH_API
 
@@ -41,10 +47,6 @@ function handleClose() {
 }
 
 const searchTerm = ref('')
-
-const especialidadesList = ref<especialidades[]>([])
-const provinciasList = ref<provincias[]>([])
-const ciudadesList = ref<ciudades[]>([])
 
 async function GetEspecialidades() {
   try {
@@ -142,10 +144,6 @@ function searchCiudades(value: any) {
   searchTerm.value = value
 }
 
-const especialidadSelected = ref({ tipesp_tip: '', descri_tip: '' })
-const provinciaSelected = ref({ codpro_pro: '', nombre_pro: '' })
-const ciuadadSelected = ref({ codciu_ciu: '', nombre_ciu: '' })
-const direccionSelected = ref({ direccion_dir: '', codciu_dir: '' })
 function setEspecialidad(obj: especialidades) {
   if (especialidadSelected.value !== undefined) {
     especialidadSelected.value.tipesp_tip = String(obj.tipesp_tip)
@@ -173,7 +171,7 @@ function setCiudad(obj: ciudades) {
 
 async function saveAbogado() {
   // Asegúrate de que los valores numéricos estén correctamente parseados
-  Abogado.value.tipo_especialidad_abo = Number.parseInt(especialidadSelected.value.tipesp_tip)
+  Abogado.value.tipo_espcialidad_abo = Number.parseInt(especialidadSelected.value.tipesp_tip)
   Abogado.value.estado_abo = 'A'
 
   // Direccion.value.codciu_dir = Number.parseInt(provinciaSelected.value.codpro_pro)
@@ -184,19 +182,18 @@ async function saveAbogado() {
   console.info('Datos enviados:', requestBody)
 
   if (route.params.id) {
-    //actualizar
+    // actualizar
     try {
-      await apiClient.patch(`/abogados`, requestBody)
+      await apiClient.patch('/abogados', requestBody)
       addAlert(2, 'Abogado actualizado exitosamente.')
-      
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Error en la solicitud:', error)
       addAlert(3, 'Comunicarce con los administradores.')
-      
     }
-    
-  } else {
-    //crear
+  }
+  else {
+    // crear
     try {
       const response = await fetch(`${URL}abogados`, {
         method: 'POST',
@@ -205,7 +202,7 @@ async function saveAbogado() {
         },
         body: JSON.stringify(requestBody),
       })
-  
+
       if (response.ok) {
         console.info('Abogado registrado exitosamente')
         addAlert(2, 'Abogado registrado exitosamente.')
@@ -231,25 +228,23 @@ async function fetchAbogado(id: string) {
       fecini_abo: formatDate(response.data.fecini_abo.toString()),
     }
 
-
-    const especialidad = await apiClient.get(`/especialidades/${Abogado.value.tipo_especialidad_abo}`)
+    const especialidad = await apiClient.get(`/especialidades/${Abogado.value.tipo_espcialidad_abo}`)
     especialidadSelected.value = { tipesp_tip: String(especialidad.data.tipesp_tip), descri_tip: especialidad.data.descri_tip }
-
 
     Direccion.value = (await apiClient.get(`/direcciones/${Abogado.value.codabo_abo}/A`)).data
 
-    
     const ciudad = await apiClient.get(`/ciudades/${Direccion.value.codciu_dir}`)
 
     const provincia = await apiClient.get(`/provincias/${ciudad.data.codpro_ciu}`)
-    
+
     provinciaSelected.value = { codpro_pro: String(provincia.data.codpro_pro), nombre_pro: provincia.data.nombre_pro }
     ciuadadSelected.value = { codciu_ciu: String(ciudad.data.codciu_ciu), nombre_ciu: ciudad.data.nombre_ciu }
 
     ShowCities.value = true
 
     addAlert(1, 'Interacción cargada correctamente.')
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error fetching Abogadoes:', error)
     addAlert(3, 'Error al obtener la interacción.')
   }
@@ -260,9 +255,9 @@ function goBack() {
 }
 
 onMounted(async () => {
-  if (route.params.id) {
+  if (route.params.id)
     await fetchAbogado(route.params.id as string)
-  }
+
   await Promise.all([GetEspecialidades(), getProvincias()])
 })
 function formatDate(dateString: string): string {
@@ -272,7 +267,6 @@ function formatDate(dateString: string): string {
   const day = String(date.getUTCDate()).padStart(2, '0')
   return `${year}-${month}-${day}`
 }
-
 </script>
 
 <template>
@@ -282,9 +276,9 @@ function formatDate(dateString: string): string {
     </h3>
     <div class="mt-4 p-6 bg-white rounded-md shadow-md">
       <div class="flex items-center mb-4 cursor-pointer" @click="goBack">
-      <img src="../../assets/img/returnArrow.svg" alt="Back" class="w-6 h-6 mr-2">
-      <span class="text-gray-700">Volver</span>
-    </div>
+        <img src="../../assets/img/returnArrow.svg" alt="Back" class="w-6 h-6 mr-2">
+        <span class="text-gray-700">Volver</span>
+      </div>
       <h3>
         Informacion General
       </h3>
@@ -309,9 +303,9 @@ function formatDate(dateString: string): string {
           </div>
 
           <div>
-            <label class="text-gray-700" for="cedula_abo">Cédula</label>
+            <label class="text-gray-700" for="celula_abo">Cédula</label>
             <input
-              id="cedula_abo" v-model="Abogado.cedula_abo"
+              id="celula_abo" v-model="Abogado.celula_abo"
               type="text"
               class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
             >
@@ -377,11 +371,16 @@ function formatDate(dateString: string): string {
           </div>
           <div v-if="route.params.id">
             <label class="text-gray-700" for="estado">Estado</label>
-            <select id="estado" v-model="Abogado.estado_abo"
-            class="block mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
+            <select
+              id="estado" v-model="Abogado.estado_abo"
+              class="block mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
             >
-              <option value="A">Activo</option>
-              <option value="I">Inactivo</option>
+              <option value="A">
+                Activo
+              </option>
+              <option value="I">
+                Inactivo
+              </option>
             </select>
           </div>
         </div>
@@ -468,7 +467,6 @@ function formatDate(dateString: string): string {
                   <!-- <Dropdown labalItemNoselected="Codigo Postal" /> -->
                 </div>
               </div>
-
             </div>
           </div>
         </div>
@@ -609,15 +607,3 @@ function formatDate(dateString: string): string {
     </template>
   </Modal>
 </template>
-
-<style scoped>
-/* .rb-table {
-  transform: scale(2);
-  opacity: 0;
-  cursor: pointer;
-}
-
-.row-rb:has(input:checked) {
-  background-color: #000 !important;
-} */
-</style>
