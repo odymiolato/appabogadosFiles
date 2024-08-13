@@ -49,6 +49,7 @@ import Users from './views/users/Users.vue'
 import Abogados from './views/abogados/Abogados.vue'
 
 import CrearAudiencia from './views/audiencias/CrearAudiencia.vue'
+import Home from './views/home/Home.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -325,6 +326,12 @@ const routes: RouteRecordRaw[] = [
     path: '/usuarios',
     name: 'Usuarios',
     component: Users,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/inicio',
+    name: 'Inicio',
+    component: Home,
     meta: { requiresAuth: true },
   },
 ]

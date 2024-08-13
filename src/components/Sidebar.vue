@@ -58,6 +58,7 @@ onMounted(() => {
 
       <nav class="mt-5 h-[85%] overflow-y-auto">
         <!-- <MenuItem to="/dashboard" name="Dashboard" label="Dashboard" imagen="dashboard" /> -->
+        <MenuItem to="/inicio" name="Inicio" label="Inicio" imagen="dashboard" />
 
         <!-- <MenuDesplegable v-for="module in modules" class="transition-all duration-1000" :label="module.Name"
           imagen="dashboard">

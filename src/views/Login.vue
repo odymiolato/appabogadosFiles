@@ -52,7 +52,7 @@ async function FN_login() {
 
     if (response.ok && data.STATUS) {
       localStorage.setItem('access_token', data.access_token);
-      router.push('/dashboard');
+      router.push('/inicio');
     } else {
       if (data.CODSTATUS === 2) {
         IncorrectUsername.value = true;
