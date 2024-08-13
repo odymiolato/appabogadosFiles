@@ -12,7 +12,7 @@ import type { diccionSelected } from '../../interface/all.interface'
 const columns = [
   { title: 'Nombre', field: 'nombre_abo' },
   { title: 'Telefono', field: 'telefo_abo' },
-  { title: 'Cedula', field: 'celula_abo' },
+  { title: 'Cedula', field: 'cedula_abo' },
   { title: 'Especialidad', field: 'descri_tip' },
   { title: 'Correo', field: 'email_abo' },
   { title: 'Fecha de nacimiento', field: 'fecnac_abo' },
@@ -32,7 +32,7 @@ const abogadoSelected = ref()
 const direccionSelected = ref<diccionSelected[]>([])
 const router = useRouter()
 function handleClose() {
-  ShowModal.value = false
+  ShowModal.value = falsez
 }
 
 onMounted(async () => {
@@ -56,6 +56,7 @@ async function fetchAbogados() {
           )?.descri_tip || 'Desconocido',
         fecnac_abo: formatDate(abogado.fecnac_abo.toString()),
         fecini_abo: formatDate(abogado.fecini_abo.toString()),
+        descri_tip: especialidades?.find((especialidad: especialidades) => especialidad.tipesp_tip === abogado.tipo_especialidad_abo)?.descri_tip || 'Desconocido',
       }
     })
   }

@@ -171,7 +171,7 @@ function setCiudad(obj: ciudades) {
 
 async function saveAbogado() {
   // Asegúrate de que los valores numéricos estén correctamente parseados
-  Abogado.value.tipo_espcialidad_abo = Number.parseInt(especialidadSelected.value.tipesp_tip)
+  Abogado.value.tipo_especialidad_abo = Number.parseInt(especialidadSelected.value.tipesp_tip)
   Abogado.value.estado_abo = 'A'
 
   // Direccion.value.codciu_dir = Number.parseInt(provinciaSelected.value.codpro_pro)
@@ -303,9 +303,9 @@ function formatDate(dateString: string): string {
           </div>
 
           <div>
-            <label class="text-gray-700" for="celula_abo">Cédula</label>
+            <label class="text-gray-700" for="cedula_abo">Cédula</label>
             <input
-              id="celula_abo" v-model="Abogado.celula_abo"
+              id="cedula_abo" v-model="Abogado.cedula_abo"
               type="text"
               class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
             >

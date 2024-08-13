@@ -47,6 +47,7 @@ import Modulos from './views/modulos/Modulos.vue'
 import Perfil from './views/perfil/Perfil.vue'
 import Users from './views/users/Users.vue'
 import Abogados from './views/abogados/Abogados.vue'
+
 import CrearAudiencia from './views/audiencias/CrearAudiencia.vue'
 
 const routes: RouteRecordRaw[] = [
@@ -154,7 +155,6 @@ const routes: RouteRecordRaw[] = [
     component: Abogados,
   },
   {
-
     path: '/gestionabogados/:id?',
     name: 'GestionAbogados',
     component: GestionAbogados,
