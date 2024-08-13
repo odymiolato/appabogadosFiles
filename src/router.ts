@@ -47,6 +47,7 @@ import Programas from './views/programas/Programas.vue'
 import Modulos from './views/modulos/Modulos.vue'
 import Perfil from './views/perfil/Perfil.vue'
 import Users from './views/users/Users.vue'
+import Abogados from './views/abogados/Abogados.vue'
 
 
 const routes: RouteRecordRaw[] = [
@@ -143,6 +144,11 @@ const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true },
   },
 
+  {
+    path: '/abogados',
+    name: 'Abogados',
+    component: Abogados,
+  },
   {
     path: '/gestionabogados',
     name: 'Gestion Abogados',

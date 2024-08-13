@@ -283,8 +283,8 @@ export class abogados {
   nombre_abo: string
   direcc_abo: string
   telefo_abo: string
-  celula_abo: string
-  tipo_espcialidad_abo: number
+  cedula_abo: string
+  tipo_especialidad_abo: number
   estado_abo: string
   fecnac_abo: Date
   email_abo: string
@@ -298,8 +298,8 @@ export class abogados {
     this.nombre_abo = ''
     this.direcc_abo = ''
     this.telefo_abo = ''
-    this.celula_abo = ''
-    this.tipo_espcialidad_abo = 0
+    this.cedula_abo = ''
+    this.tipo_especialidad_abo = 0
     this.estado_abo = ''
     this.fecnac_abo = new Date()
     this.email_abo = ''
@@ -397,7 +397,7 @@ export class movimientos_h {
   constructor() {
     this.codmov_movh = 0
     this.comentario_movh = ''
-    this.fecha_movh = null;
+    this.fecha_movh = null
     this.total_movh = 0
     this.estado_movh = ''
     this.usercrea = 0
@@ -707,21 +707,21 @@ export class provincias {
 }
 
 export class ExpedienteDetalle {
-  abogados: { id: number; name: string }[];
-  clientes: { id: number; name: string }[];
-  contrapartes: { id: number; name: string }[];
-  tribunales: { id: number; name: string }[];
+  abogados: { id: number; name: string }[]
+  clientes: { id: number; name: string }[]
+  contrapartes: { id: number; name: string }[]
+  tribunales: { id: number; name: string }[]
 
   constructor(
     abogados: { id: number; name: string }[],
     clientes: { id: number; name: string }[],
     contrapartes: { id: number; name: string }[],
-    tribunales: { id: number; name: string }[]
+    tribunales: { id: number; name: string }[],
   ) {
-    this.abogados = abogados;
-    this.clientes = clientes;
-    this.contrapartes = contrapartes;
-    this.tribunales = tribunales;
+    this.abogados = abogados
+    this.clientes = clientes
+    this.contrapartes = contrapartes
+    this.tribunales = tribunales
   }
 }
 

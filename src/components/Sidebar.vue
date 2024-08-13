@@ -70,7 +70,8 @@ onMounted(() => {
 
         <MenuDesplegable class="transition-all duration-1000" label="Expediente" imagen="dashboard">
           <MenuDesplegable label="Mantenimientos" imagen="dashboard">
-            <MenuItem to="/gestionabogados" name="GestionAbogados" label="Abogados" imagen="dashboard" />
+            <MenuItem to="/abogados" name="Abogados" label="Abogados" imagen="dashboard" />
+            <MenuItem to="/gestionabogados" name="GestionAbogados" label="Gestion Abogados" imagen="dashboard" />
             <MenuItem to="/tribunales" name="Tribunales" label="Tribunales" imagen="dashboard" />
             <MenuItem to="/tiposgastos" name="TiposGastos" label="Tipos Gastos" imagen="dashboard" />
             <MenuItem to="/gestioncontraparte" name="GestionContraparte" label="Contrapartes" imagen="dashboard" />
