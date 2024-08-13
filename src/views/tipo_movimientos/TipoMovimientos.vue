@@ -23,7 +23,7 @@ const tipo = ref<tipo_movimientos>(new tipo_movimientos());
 const TiposGastosList = ref<Array<tipos_gastos>>([]);
 const TipoGatosSelected = ref<{ tipgas_tga: string, descri_tga: string }>({ tipgas_tga: '', descri_tga: '' });
 let searchTerm = ref('');
-const origen = ref<string>('');
+const origen = ref<string>('D');
 /* @ts-ignore */
 const URL: string = import.meta.env.VITE_PATH_API;
 
@@ -88,6 +88,7 @@ async function saveTipoMoviento() {
     }
 
     tipo.value.tipgas_tmo = TipoGatosSelected.value.tipgas_tga;
+    tipo.value.origen_tmo = origen.value
 
     const response = await fetch(URL + 'tipomovimientos', {
       method: 'POST',
@@ -159,7 +160,7 @@ onMounted(() => {
             </div>
           </div>
 
-          <!-- <div>
+          <div>
             <label class="text-gray-700" for="tipo_especialidad_abo">Origen</label>
             <div class="mt-3 flex flex-row gap-3 items-end">
               <label class="flex flex-row items-center">
@@ -173,7 +174,7 @@ onMounted(() => {
                 <span class="ml-2 text-gray-700">Crédito</span>
               </label>
             </div>
-          </div> -->
+          </div>
 
         </div>
 

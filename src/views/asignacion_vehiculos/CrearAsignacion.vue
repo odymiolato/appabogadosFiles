@@ -69,7 +69,7 @@ async function saveVehiculo() {
 }
 
 function goBack() {
-  router.push({ name: 'AsignacionVehiculo' })
+  router.push({ name: 'Asignacion Vehiculo' })
 }
 
 function handlevehiculoSelected(vehiculo: vehiculos) {

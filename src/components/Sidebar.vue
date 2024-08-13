@@ -1,24 +1,44 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
+import type { Modules } from '../class/all.class'
 import MenuItem from './SideBar/MenuItem.vue'
 import MenuDesplegable from './SideBar/MenuDesplegable.vue'
 
-// const { isOpen } = useSidebar()
+const modules = ref<Array<Modules>>([])
+/* @ts-expect-error */
+const URL: string = import.meta.env.VITE_PATH_API
 
-const activeClass = ref(
-  'duration-700 bg-sky-500 bg-opacity-25 text-gray-100 border-gray-100',
-)
-const inactiveClass = ref(
-  'duration-700 border-sky-900 text-white transition duration-700 hover:bg-sky-500 hover:bg-opacity-25 hover:text-gray-100 hover:duration-200',
-)
-const IsActive = ref(false)
-function changeStatus(valor: boolean) {
-  IsActive.value = valor
+async function getModules() {
+  try {
+    const token = localStorage.getItem('access_token')
+
+    const response = await fetch(`${URL}usuarios/modulos`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+
+    if (!response.ok)
+      throw new Error(`Error en la petición: ${response.statusText}`)
+
+    modules.value = await response.json()
+
+    console.log('Datos recibidos:', modules.value)
+  }
+  catch (error) {
+    console.error('Ocurrió un error:', error)
+  }
 }
+
+onMounted(() => {
+  getModules()
+})
 </script>
 
 <template>
-  <div class="flex transition-transform duration-[2000ms] w-max overflow-hidden">
+  <div class="flex transition-transform duration-[2000ms] w-max h-full overflow-hidden">
     <!-- Backdrop -->
     <!-- <div :class="isOpen ? 'block' : 'hidden'" -->
     <!-- <div class="fixed inset-0 z-20 transition-opacity bg-black opacity-50 lg:hidden" @click="isOpen = false" /> -->
@@ -36,8 +56,16 @@ function changeStatus(valor: boolean) {
         </div>
       </div>
 
-      <nav class="mt-5 overflow-y-auto h-full transition-transform duration-[2000ms]">
-        <MenuItem to="/dashboard" name="Dashboard" label="Dashboard" imagen="dashboard" />
+      <nav class="mt-5 h-[85%] overflow-y-auto">
+        <!-- <MenuItem to="/dashboard" name="Dashboard" label="Dashboard" imagen="dashboard" /> -->
+
+        <!-- <MenuDesplegable v-for="module in modules" class="transition-all duration-1000" :label="module.Name"
+          imagen="dashboard">
+          <MenuDesplegable v-for="type in module.TypePrograms" class="transition-all duration-1000" :label="type.Name"
+            imagen="dashboard">
+            <MenuItem v-for="program in type.Programs" :to="program.path_pro" :name="program.name_pro" :label="program.name_pro" imagen="dashboard" />
+          </MenuDesplegable>
+        </MenuDesplegable> -->
 
         <MenuDesplegable class="transition-all duration-1000" label="Expediente" imagen="dashboard">
           <MenuDesplegable label="Mantenimientos" imagen="dashboard">
@@ -66,7 +94,10 @@ function changeStatus(valor: boolean) {
           </MenuDesplegable>
 
           <MenuDesplegable label="Procesos" imagen="dashboard">
-            <MenuItem to="/interaccionescliente" name="InteraccionesCliente" label="Interaccion Clientes" imagen="dashboard" />
+            <MenuItem
+              to="/interaccionescliente" name="InteraccionesCliente" label="Interaccion Clientes"
+              imagen="dashboard"
+            />
           </MenuDesplegable>
         </MenuDesplegable>
 
@@ -98,13 +129,13 @@ function changeStatus(valor: boolean) {
             <MenuItem to="/ciudades" name="Ciudades" label="Ciudades" imagen="blank" />
             <MenuItem to="/origendireccion" name="Origen Direccion" label="Origen Direccion" imagen="blank" />
           </MenuDesplegable>
+          <MenuDesplegable label="Usuarios" imagen="dashboard">
+            <MenuItem to="/programas" name="Programas" label="Programas" imagen="blank" />
+            <MenuItem to="/modulos" name="Modulos" label="Modulos" imagen="blank" />
+            <MenuItem to="/perfiles" name="Perfiles" label="Perfiles" imagen="blank" />
+            <MenuItem to="/usuarios" name="Usuarios" label="Usuarios" imagen="blank" />
+          </MenuDesplegable>
         </MenuDesplegable>
-        <!-- <MenuDesplegable class="transition duration-700" label="Revisar" imagen="maintenance" :is-active="IsActive"
-          @change-status="changeStatus">
-          <MenuItem to="/gestioncliente" name="GestionCliente" label="Gestion Clientes" imagen="dashboard"
-            :class="IsActive ? 'opacity-100' : 'opacity-0'" />
-          <MenuItem to="/" name="" label="" imagen="dashboard" :class="IsActive ? 'opacity-100' : 'opacity-0'" />
-        </MenuDesplegable> -->
       </nav>
     </div>
   </div>

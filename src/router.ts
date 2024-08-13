@@ -1,5 +1,6 @@
 import type { RouteRecordRaw } from 'vue-router'
 import { createRouter, createWebHistory } from 'vue-router'
+import { isAuthenticated } from './utils/auth'
 
 import Dashboard from './views/Dashboard.vue'
 import Forms from './views/Forms.vue'
@@ -12,8 +13,6 @@ import Blank from './views/Blank.vue'
 import Calendar from './components/calendar.vue'
 import Expediente from './views/expDepToAbo.vue'
 import Expedientes from './views/expediente/Expedientes.vue'
-
-// import AsignacionExpediente from './views/componentes a revisar/expediente/AsignacionExpediente.vue'
 
 import Audiencia from './views/componentes a revisar/Audiencia.vue'
 
@@ -43,27 +42,24 @@ import Vehiculos from './views/vehiculos/Vehiculos.vue'
 import CrearVehiculos from './views/vehiculos/CrearVehiculos.vue'
 import Asignacion from './views/asignacion_vehiculos/Asignacion.vue'
 import CrearAsignacion from './views/asignacion_vehiculos/CrearAsignacion.vue'
+import Programas from './views/programas/Programas.vue'
+import Modulos from './views/modulos/Modulos.vue'
+import Perfil from './views/perfil/Perfil.vue'
+import Users from './views/users/Users.vue'
 import Abogados from './views/abogados/Abogados.vue'
 import CrearAudiencia from './views/audiencias/CrearAudiencia.vue'
-
-// import GestionDocumento from './views/componentes a revisar/GestionDocumento.vue'
-// import FacturacionFinanza from './views/componentes a revisar/FacturacionFinanza.vue'
-// import GestionPago from './views/componentes a revisar/GestionPago.vue'
-// import UsuarioPermiso from './views/componentes a revisar/UsuariosPermiso.vue'
-// import Facturacion from './components/mantenimientos/facturacion.vue'
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/errors',
     children: [
       {
-        // the 404 route, when none of the above matches
         path: '/404',
         name: '404',
         component: () => import('./views/404/404page.vue'),
         // meta: {
         //   title: "Repositorio - 404",
-        //   layout: BaseLayout,
+        meta: { layout: 'empty' },
         //   requiresAuth: false,
         // },
       },
@@ -72,6 +68,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/:pathMatch(.*)*',
     redirect: '/404',
+    meta: { layout: 'empty' },
   },
   {
     path: '/',
@@ -83,62 +80,67 @@ const routes: RouteRecordRaw[] = [
     path: '/dashboard',
     name: 'Dashboard',
     component: Dashboard,
+    meta: { requiresAuth: true },
   },
   {
     path: '/forms',
     name: 'Forms',
     component: Forms,
+    meta: { requiresAuth: true },
   },
   {
     path: '/cards',
     name: 'Cards',
     component: Card,
+    meta: { requiresAuth: true },
   },
   {
     path: '/tables',
     name: 'Tables',
     component: Tables,
+    meta: { requiresAuth: true },
   },
   {
     path: '/ui-elements',
     name: 'UIElements',
     component: UIElements,
+    meta: { requiresAuth: true },
   },
   {
     path: '/modal',
     name: 'Modal',
     component: Modal,
+    meta: { requiresAuth: true },
   },
   {
     path: '/blank',
     name: 'Blank',
     component: Blank,
+    meta: { requiresAuth: true },
   },
   {
     path: '/eventos',
     name: 'Eventos',
     component: Calendar,
+    meta: { requiresAuth: true },
   },
   {
     path: '/expediente',
     name: 'Expediente',
     component: Expediente,
+    meta: { requiresAuth: true },
   },
-  // estas son las rutas que yo cree
   {
     path: '/expedientes',
     name: 'Expedientes',
     component: Expedientes,
+    meta: { requiresAuth: true },
   },
-  // {
-  //   path: '/asignacionexpediente',
-  //   name: 'AsignacionExpediente',
-  //   component: AsignacionExpediente,
-  // },
   {
     path: '/audiencia',
     name: 'Audiencia',
     component: Audiencia,
+    meta: { requiresAuth: true },
   },
   {
     path: '/crearaudiencia',
@@ -152,135 +154,194 @@ const routes: RouteRecordRaw[] = [
     component: Abogados,
   },
   {
+
     path: '/gestionabogados/:id?',
     name: 'GestionAbogados',
     component: GestionAbogados,
+    meta: { requiresAuth: true },
     props: true,
   },
   {
     path: '/gestioncontraparte',
-    name: 'GestionContraparte',
+    name: 'Gestion Contraparte',
     component: GestionContraparte,
+    meta: { requiresAuth: true },
   },
   {
     path: '/especialidades',
     name: 'Especialidades',
     component: Especialidades,
+    meta: { requiresAuth: true },
   },
   {
     path: '/tipomovimientos',
-    name: 'TipoMovimientos',
+    name: 'Tipo Movimientos',
     component: TipoMovimientos,
+    meta: { requiresAuth: true },
   },
   {
     path: '/tribunales',
     name: 'Tribunales',
     component: Tribunales,
+    meta: { requiresAuth: true },
   },
   {
     path: '/tiposgastos',
-    name: 'TiposGastos',
+    name: 'Tipos Gastos',
     component: TiposGastos,
+    meta: { requiresAuth: true },
   },
   {
     path: '/paises',
     name: 'Paises',
     component: Paises,
+    meta: { requiresAuth: true },
   },
   {
     path: '/provincias',
     name: 'Provincias',
     component: Provincias,
+    meta: { requiresAuth: true },
   },
   {
     path: '/ciudades',
     name: 'Ciudades',
     component: Ciudades,
+    meta: { requiresAuth: true },
   },
   {
     path: '/origendireccion',
     name: 'Origen Direccion',
     component: OrigenDireccion,
+    meta: { requiresAuth: true },
   },
   {
     path: '/clientes',
     name: 'Clientes',
     component: Clientes,
+    meta: { requiresAuth: true },
   },
   {
     path: '/interaccionescliente',
-    name: 'InteraccionesCliente',
+    name: 'Interacciones Cliente',
     component: InteraccionCliente,
+    meta: { requiresAuth: true },
   },
   {
     path: '/tipointeraccion',
-    name: 'TipoInteraccion',
+    name: 'Tipo Interaccion',
     component: TipoInteraccion,
+    meta: { requiresAuth: true },
   },
   {
     path: '/tipoexpediente',
-    name: 'TipoExpediente',
+    name: 'Tipo Expediente',
     component: TiposExpedientes,
+    meta: { requiresAuth: true },
   },
   {
     path: '/movimientos',
     name: 'Movimientos',
     component: Movimientos,
+    meta: { requiresAuth: true },
   },
   {
     path: '/vehiculos',
     name: 'Vehiculos',
     component: Vehiculos,
+    meta: { requiresAuth: true },
   },
   {
     path: '/asignacionvehiculo',
-    name: 'AsignacionVehiculo',
+    name: 'Asignacion Vehiculo',
     component: Asignacion,
+    meta: { requiresAuth: true },
   },
   {
     path: '/vehiculosmodelos',
-    name: 'VehiculosModelos',
+    name: 'Vehiculos Modelos',
     component: VehiculosModelos,
+    meta: { requiresAuth: true },
   },
   {
     path: '/vehiculosestado',
-    name: 'VehiculosEstado',
+    name: 'Vehiculos Estado',
     component: VehiculosEstado,
+    meta: { requiresAuth: true },
   },
   {
     path: '/vehiculosmarca',
-    name: 'VehiculosMarca',
+    name: 'Vehiculos Marca',
     component: VehiculosMarcas,
+    meta: { requiresAuth: true },
   },
   {
     path: '/crearcliente/:id?',
     name: 'CrearCliente',
     component: CrearClientes,
     props: true,
+    meta: { requiresAuth: true },
   },
   {
     path: '/crear-interaccion/:id?',
     name: 'CrearInteraccion',
     component: CrearInteracciones,
     props: true,
+    meta: { requiresAuth: true },
   },
   {
     path: '/crear-vehiculo/:id?',
     name: 'CrearVehiculo',
     component: CrearVehiculos,
     props: true,
+    meta: { requiresAuth: true },
   },
   {
     path: '/crear-asignacion/:id?',
     name: 'CrearAsignacion',
     component: CrearAsignacion,
     props: true,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/programas',
+    name: 'Programas',
+    component: Programas,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/modulos',
+    name: 'Modulos',
+    component: Modulos,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/perfiles',
+    name: 'Perfiles',
+    component: Perfil,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/usuarios',
+    name: 'Usuarios',
+    component: Users,
+    meta: { requiresAuth: true },
   },
 ]
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
+})
+
+router.beforeEach(async (to, from, next) => {
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+  const status: boolean = await isAuthenticated()
+
+  if (requiresAuth && !status)
+    next('/')
+  else
+    next()
 })
 
 export default router

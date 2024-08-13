@@ -19,7 +19,7 @@ interface modulo {
 }
 
 export interface Alerts {
-    index:number;
+    index: number;
     type: number;
     message: string;
 }
@@ -40,3 +40,11 @@ export interface DTOAbogado {
     direccion:direcciones,
 }
 
+
+}
+
+export interface BalanceMovimientos {
+    tipgas_tmo: string
+    Debito: number
+    Credito: number
+}

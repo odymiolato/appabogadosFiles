@@ -214,52 +214,70 @@ export class modulos {
     this.fechmod = new Date()
   }
 }
-export class permisos_modulo_perfiles {
-  codpmp_pmp: number
-  codperf_pmp: number
-  codmod__pmp: number
-  eliminar_pmp: boolean
-  imprimir_pmp: boolean
-  modificar_pmp: boolean
-  insertar_pmp: boolean
-  usercrea: number
-  usermod: number
-  fechcrea: Date
-  fechmod: Date
+
+export class perfil_programas {
+  codperf_ppr: number;
+  codmod_ppr: number;
+  codpro_ppr: number;
+  insertar_ppr: boolean;
+  eliminar_ppr: boolean;
+  modificar_ppr: boolean;
   constructor() {
-    this.codpmp_pmp = 0
-    this.codperf_pmp = 0
-    this.codmod__pmp = 0
-    this.eliminar_pmp = false
-    this.imprimir_pmp = false
-    this.modificar_pmp = false
-    this.insertar_pmp = false
-    this.usercrea = 0
-    this.usermod = 0
-    this.fechcrea = new Date()
-    this.fechmod = new Date()
+    this.codperf_ppr = 0;
+    this.codmod_ppr = 0;
+    this.codpro_ppr = 0;
+    this.insertar_ppr = false;
+    this.eliminar_ppr = false;
+    this.modificar_ppr = false;
   }
 }
+
+export class programas {
+  codpro_pro: number;
+  tippro_tpr: number;
+  name_pro: string;
+  path_pro: string;
+  constructor() {
+    this.codpro_pro = 0;
+    this.tippro_tpr = 0;
+    this.name_pro = "";
+    this.path_pro = "";
+  }
+}
+
+export class modulo_programa {
+  codmod_mop: number;
+  codpro_mop: number;
+  acceso: boolean;
+  constructor() {
+    this.codmod_mop = 0;
+    this.codpro_mop = 0;
+    this.acceso = false;
+  }
+}
+
 export class usuarios {
-  codusr_usr: number
-  nombre_usr: string
-  codperf_usr: number
-  contrasena_usr: string
-  usercrea: number
-  usermod: number
-  fechcrea: Date
-  fechmod: Date
+  codusr_usr: number | null;
+  nombre_usr: string;
+  codperf_usr: number | null;
+  contrasena_usr: string;
+  usercrea: number | null;
+  usermod: number | null;
+  fechcrea: Date | null;
+  fechmod: Date | null;
+
   constructor() {
-    this.codusr_usr = 0
-    this.nombre_usr = ''
-    this.codperf_usr = 0
-    this.contrasena_usr = ''
-    this.usercrea = 0
-    this.usermod = 0
-    this.fechcrea = new Date()
-    this.fechmod = new Date()
+    this.codusr_usr = null;
+    this.nombre_usr = '';
+    this.codperf_usr = null;
+    this.contrasena_usr = '';
+    this.usercrea = null;
+    this.usermod = null;
+    this.fechcrea = new Date();
+    this.fechmod = new Date();
   }
 }
+
 export class abogados {
   codabo_abo: number
   nombre_abo: string
@@ -458,7 +476,7 @@ export class especialidades {
 export class expedientes {
   codexp_exp: number
   descri_exp: string
-  fecini_exp: Date
+  fecini_exp: Date | null
   estatu_exp: string
   fecfin_exp: Date | null
   tipexp_exp: number
@@ -474,7 +492,7 @@ export class expedientes {
   constructor() {
     this.codexp_exp = 0
     this.descri_exp = ''
-    this.fecini_exp = new Date()
+    this.fecini_exp = null
     this.estatu_exp = ''
     this.fecfin_exp = null
     this.tipexp_exp = 0
@@ -715,5 +733,62 @@ export class AudienciaDetalle {
     abogados: { id: number; name: string }[],
   ) {
     this.abogados = abogados
+  }
+}
+
+export class login {
+  Name: string;
+  Password: string;
+
+  constructor() {
+    this.Name = '';
+    this.Password = '';
+  }
+}
+
+export class Modules {
+  Name: string;
+  TypePrograms: {
+    Name: string;
+    Programs: {
+      name_pro: string;
+      path_pro: string;
+    }[];
+  }[];
+
+  constructor() {
+    this.Name = "";
+    this.TypePrograms = [
+      {
+        Name: "",
+        Programs: []
+      }
+    ];
+  }
+}
+
+export class movimientos {
+  codmov_movh: number;
+  descri_tmo: string;
+  fecha_movh: Date | null;
+  Debito: number;
+  Credito: number;
+  constructor() {
+    this.codmov_movh = 0;
+    this.descri_tmo = '';
+    this.fecha_movh = null;
+    this.Debito = 0;
+    this.Credito = 0;
+  }
+}
+
+export class BalanceMovimientos {
+  tipgas_tmo: string
+  Debito: number
+  Credito: number
+  constructor() {
+    this.tipgas_tmo = ''
+    this.Debito = 0
+    this.Credito = 0
   }
 }

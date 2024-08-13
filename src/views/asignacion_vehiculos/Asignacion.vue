@@ -62,7 +62,7 @@ function openCreateAsignacion() {
     class="mt-1 mb-5 p-3 text-sm font-medium text-white bg-sky-700 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
     @click="openCreateAsignacion"
   >
-    Crear Nueva Asignacion
+    Asignacion Nueva
   </button>
   <div class="p-6 bg-white rounded-md shadow-md">
     <div class="mb-4">

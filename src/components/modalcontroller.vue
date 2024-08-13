@@ -48,7 +48,6 @@ async function GetTipEvent() {
 }
 
 function addEvent() {
-  // console.log('Evento a agregar:', evento.value);
   axios.post('http://192.168.1.189:3000/eventos', JSON.stringify(evento.value), {
     headers: {
       'Content-type': 'application/json',

@@ -12,14 +12,14 @@ const props = defineProps({
 })
 
 const store = useStore($MonthIndex)
-const NameSelectd = ref<string>(props.event[store.value.index]?.item || '')
+const NameSelectd = ref<string>(props.event[store.value.index] || '')
 
 watch(store, (newVal) => {
-  NameSelectd.value = props.event[newVal.index]?.item || ''
+  NameSelectd.value = props.event[newVal.index] || ''
 })
 
 function CloseDropDowun(index: number) {
-  NameSelectd.value = props.event[index]?.item || ''
+  NameSelectd.value = props.event[index] || ''
   document.querySelector('details')?.removeAttribute('open')
   UpdateMonthIndex(index)
 }
@@ -34,7 +34,7 @@ function CloseDropDowun(index: number) {
     <div class="dropmenu">
       <ul class="data">
         <li v-for="(item, index) in event" :key="index" @click="CloseDropDowun(index)">
-          {{ item.item }}
+          {{ item }}
         </li>
       </ul>
     </div>

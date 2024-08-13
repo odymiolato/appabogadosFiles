@@ -11,7 +11,7 @@ const props = defineProps({
   path: { type: String, default: '' },
 });
 
-const URL: string = 'http://localhost:8081/appabogadosFiles/'
+const URL: string = 'http://localhost/appabogadosFiles/'
 const files = ref<Array<any>>([])
 const filesCopy = ref<Array<any>>([])
 const searchTerm = ref('')
@@ -174,12 +174,15 @@ onMounted(() => {
     <div id="file"
       class="flex bg-gray-200 overflow-y-auto overflow-x-hidden w-full px-4 py-4 rounded-md h-[18em] max-h-[18em] flex-wrap">
       <div v-for="item in filteredFiles" @contextmenu.prevent="onRightClick($event, item)" :key="item.filename"
-        class="file-item text-center w-20 px-2 py-2 ml-2 cursor-pointer hover:bg-gray-300 rounded-md relative">
+        class="file-item text-cente w-20 h-24 max-h-24 px-2 py-2 ml-2 cursor-pointer hover:bg-gray-300 rounded-md relative">
         <a target="_blank" :href="item?.path"><img :src="item.image" alt=""></a>
-        <label class="block w-full text-ellipsis whitespace-nowrap overflow-clip truncate text-sm">
-          {{ item.filename }}
-        </label>
-        <span class="tooltip bg-gray-300">{{ `${item.filename}.${item.extension}` }}</span>
+        <div class="flex flex-row items-end gap-0">
+          <label class="block w-full text-ellipsis whitespace-nowrap overflow-clip truncate text-sm">
+            {{ `${item.filename}.${item.extension}` }}
+          </label>
+          <span class="tooltip bg-gray-300">{{ `${item.filename}.${item.extension}` }}</span>
+        </div>
+
       </div>
       <div v-if="files.length <= 0" class="flex w-full justify-center items-center border-solid font-bold text-2xl">
         <h3>No hay archivos.</h3>
@@ -193,24 +196,32 @@ onMounted(() => {
 <style scoped>
 #file {
   &>div {
-    &>span {
-      position: absolute;
-      visibility: hidden;
-      text-align: center;
-      color: #000;
-      font-weight: bold;
-      padding: 6px 10px 6px 10px;
-      border-radius: 10px;
-      box-shadow: 0 0 6px 0 #8d8d8d;
-      font-size: 13px;
-      translate: 39% -188%;
-      z-index: 10;
+    &>div {
+      &>span.tooltip {
+        display: flex;
+        width: max-content;
+        position: absolute;
+        visibility: hidden;
+        text-align: center;
+        color: #000;
+        font-weight: bold;
+        padding: 6px 10px;
+        border-radius: 10px;
+        box-shadow: 0 0 6px 0 #8d8d8d;
+        font-size: 13px;
+        z-index: 10;
+        top: 50%;
+        left: 105%;
+        transform: translateY(-50%);
+      }
     }
   }
 
   &>div:hover {
-    &>span {
-      visibility: visible;
+    &>div {
+      &>span.tooltip {
+        visibility: visible;
+      }
     }
   }
 }
