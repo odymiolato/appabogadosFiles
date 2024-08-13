@@ -27,6 +27,8 @@ const tiposexpedientesLits = ref<tipos_expedientes[]>([])
 const ExpedientesLits = ref<expedientes[]>([])
 const ExpedienteSelected = ref<expedientes>(new expedientes)
 const MovimientosList = ref<movimientos[]>([]);
+const Debito = ref<number>(0)
+const Credito = ref<number>(0)
 /* @ts-expect-error */
 const URL: string = import.meta.env.VITE_PATH_API
 
@@ -91,16 +93,31 @@ async function GetMovimientosById(id: number) {
       throw new Error('Error al obtener los movimientos');
     }
 
-    MovimientosList.value = await response.json();;
+    MovimientosList.value = await response.json();
+    CalculateTotals();
   } catch (error) {
     console.error(error);
   }
 }
 
+function CalculateTotals() {
+  if (!ExpedienteSelected) {
+    Debito.value = 0
+    Credito.value = 0
+    return;
+  }
+
+  MovimientosList.value.forEach((item) => {
+    Debito.value += item.Debito
+    Credito.value += item.Credito
+  })
+
+}
 
 function SelectExpediente(selected: expedientes) {
   ExpedienteSelected.value = selected
   GetMovimientosById(selected.codexp_exp)
+
 }
 
 onMounted(() => {
@@ -443,20 +460,20 @@ onMounted(() => {
                 </div>
               </div>
               <div class="flex-[40%]">
-                <div class="flex-[60%] flex flex-col gap-4 py-5">
-                  <div class="class-form-total p-6 rounded-md shadow ">
+                <div class="flex-[60%] flex flex-col gap-4 py-5 h-full">
+                  <div class="class-form-total p-6 rounded-md shadow h-full">
                     <h2 class="text-xl tesxt-lg font-semibold text-gray-700 capitalize">
                       Balance Generales
                     </h2>
                     <div class="grid grid-cols-[100px,1fr] items-center mt-3 gap-3">
                       <label class="">Creditos:</label>
-                      <Inputs typeinput="text" :is-readonly="true" />
+                      <Inputs typeinput="text" inputClass="text-end" :Value="String(Credito)" :is-readonly="true" />
 
                       <label class="">Debitos:</label>
-                      <Inputs typeinput="text" :is-readonly="true" />
+                      <Inputs typeinput="text" inputClass="text-end" :Value="String(Debito)" :is-readonly="true" />
 
                       <label class="">Balace:</label>
-                      <Inputs typeinput="text" :is-readonly="true" />
+                      <Inputs typeinput="text" inputClass="text-end" :Value="String((Credito - Debito))" :is-readonly="true" />
                     </div>
                   </div>
                 </div>
