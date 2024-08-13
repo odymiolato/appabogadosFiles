@@ -7,10 +7,26 @@ import Files from '../components/files.vue'
 import { useTableData } from '../composables/useTableData'
 import { expedientes, tipos_expedientes } from '../class/all.class'
 
+class movimientos {
+  codmov_movh: number;
+  descri_tmo: string;
+  fecha_movh: Date | null;
+  Debito: number;
+  Credito: number;
+  constructor() {
+    this.codmov_movh = 0;
+    this.descri_tmo = '';
+    this.fecha_movh = null;
+    this.Debito = 0;
+    this.Credito = 0;
+  }
+}
+
 const tap = ref<number>(1)
 const tiposexpedientesLits = ref<tipos_expedientes[]>([])
 const ExpedientesLits = ref<expedientes[]>([])
 const ExpedienteSelected = ref<expedientes>(new expedientes)
+const MovimientosList = ref<movimientos[]>([]);
 /* @ts-expect-error */
 const URL: string = import.meta.env.VITE_PATH_API
 
@@ -62,8 +78,29 @@ async function GetTipoExpedienteById(id: number) {
   }
 }
 
+async function GetMovimientosById(id: number) {
+  try {
+    const response = await fetch(`${URL}expedientes/movimientos/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Error al obtener los movimientos');
+    }
+
+    MovimientosList.value = await response.json();;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+
 function SelectExpediente(selected: expedientes) {
   ExpedienteSelected.value = selected
+  GetMovimientosById(selected.codexp_exp)
 }
 
 onMounted(() => {
@@ -116,22 +153,18 @@ onMounted(() => {
             <div>
               <Label labeltext="Numero de Expediente:  " labelclass="font-bold" />
 
-              <Label :labeltext="ExpedienteSelected.codexp_exp" labelclass="" />
+              <Label :labeltext="String(ExpedienteSelected.codexp_exp)" labelclass="" />
             </div>
             <div>
               <Label labeltext="Fecha Inicio:   " labelclass="font-bold" />
-              <Label :labeltext="ExpedienteSelected.fecini_exp" labelclass="" />
+              <Label :labeltext="String(ExpedienteSelected.fecini_exp)" labelclass="" />
             </div>
             <div>
               <Label labeltext="Fecha Fin:   " labelclass="font-bold" />
               <Label
-                :labeltext="(ExpedienteSelected.fecfin_exp !== null) ? ExpedienteSelected.fecfin_exp : 'Este espediente no se ha finalizado.'"
+                :labeltext="String((ExpedienteSelected.fecfin_exp !== null) ? ExpedienteSelected.fecfin_exp : 'Este espediente no se ha finalizado.')"
                 labelclass="" />
             </div>
-            <!-- <div>
-              <Label labeltext="Contraparte:  " labelclass="font-bold" />
-              <Label labeltext="Joselito Perla Negra" labelclass="" />
-            </div> -->
           </div>
         </div>
       </div>
@@ -226,12 +259,13 @@ onMounted(() => {
         </div>
         <div id="tap-2"
           :class="`p-6 bg-white text-medium text-gray-500 rounded-lg w-full h-[27em] max-h-[27em] ${+(tap === 2) ? '' : 'hidden'}`">
-          <Files :path="ExpedienteSelected.ubi_exp" />
+          <Files v-if="ExpedienteSelected.ubi_exp !== ''" :path="ExpedienteSelected.ubi_exp" />
+          <Files v-if="ExpedienteSelected.ubi_exp === ''" path="" />
         </div>
 
         <div id="tap-2"
           :class="`p-6 bg-white text-medium text-gray-500 rounded-lg w-full  ${+(tap === 3) ? '' : 'hidden'}`">
-          <Inputs typeinput="search" labeltext="Buscar" />
+          <!-- <Inputs typeinput="search" labeltext="Buscar" /> -->
           <div class="my-6 flex w-full flex-col">
             <div class="">
               <div class="rounded-md shadow bg-white h-[17.9em] max-h-[17.9em] overflow-auto">
@@ -261,38 +295,21 @@ onMounted(() => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(i, index) in simpleTableData" :key="index" class="hover:bg-gray-200">
+                    <tr v-for="(i, index) in MovimientosList" :key="index" class="hover:bg-gray-200">
                       <td class="px-6 py-4 text-lg text-gray-700 border-b">
-                        {{ i.city }}
+                        {{ i.codmov_movh }}
                       </td>
                       <td class="px-6 py-4 text-gray-500 border-b">
-                        {{ i.totalOrders }}
+                        {{ i.descri_tmo }}
                       </td>
                       <td class="px-6 py-4 text-lg text-gray-700 border-b">
-                        {{ i.city }}
+                        {{ i.fecha_movh }}
                       </td>
                       <td class="px-6 py-4 text-gray-500 border-b">
-                        {{ i.totalOrders }}
+                        {{ i.Debito }}
                       </td>
                       <td class="px-6 py-4 text-lg text-gray-700 border-b">
-                        {{ i.city }}
-                      </td>
-                    </tr>
-                    <tr v-for="(i, index) in simpleTableData" :key="index" class="hover:bg-gray-200">
-                      <td class="px-6 py-4 text-lg text-gray-700 border-b">
-                        {{ i.city }}
-                      </td>
-                      <td class="px-6 py-4 text-gray-500 border-b">
-                        {{ i.totalOrders }}
-                      </td>
-                      <td class="px-6 py-4 text-lg text-gray-700 border-b">
-                        {{ i.city }}
-                      </td>
-                      <td class="px-6 py-4 text-gray-500 border-b">
-                        {{ i.totalOrders }}
-                      </td>
-                      <td class="px-6 py-4 text-lg text-gray-700 border-b">
-                        {{ i.city }}
+                        {{ i.Credito }}
                       </td>
                     </tr>
                   </tbody>
