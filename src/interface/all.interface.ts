@@ -18,7 +18,7 @@ interface modulo {
 }
 
 export interface Alerts {
-    index:number;
+    index: number;
     type: number;
     message: string;
 }
@@ -26,4 +26,10 @@ export interface Alerts {
 export interface ContextMenuInstance {
     showMenu: (event: MouseEvent) => void;
     hideMenu: () => void;
-  }
+}
+
+export interface BalanceMovimientos {
+    tipgas_tmo: string
+    Debito: number
+    Credito: number
+}

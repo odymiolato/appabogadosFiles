@@ -730,28 +730,54 @@ export class login {
   Password: string;
 
   constructor() {
-      this.Name = '';
-      this.Password = '';
+    this.Name = '';
+    this.Password = '';
   }
 }
 
 export class Modules {
   Name: string;
   TypePrograms: {
-      Name: string;
-      Programs: {
-          name_pro: string;
-          path_pro: string;
-      }[];
+    Name: string;
+    Programs: {
+      name_pro: string;
+      path_pro: string;
+    }[];
   }[];
 
   constructor() {
-      this.Name = "";
-      this.TypePrograms = [
-          {
-              Name: "",
-              Programs: []
-          }
-      ];
+    this.Name = "";
+    this.TypePrograms = [
+      {
+        Name: "",
+        Programs: []
+      }
+    ];
+  }
+}
+
+export class movimientos {
+  codmov_movh: number;
+  descri_tmo: string;
+  fecha_movh: Date | null;
+  Debito: number;
+  Credito: number;
+  constructor() {
+    this.codmov_movh = 0;
+    this.descri_tmo = '';
+    this.fecha_movh = null;
+    this.Debito = 0;
+    this.Credito = 0;
+  }
+}
+
+export class BalanceMovimientos {
+  tipgas_tmo: string
+  Debito: number
+  Credito: number
+  constructor() {
+    this.tipgas_tmo = ''
+    this.Debito = 0
+    this.Credito = 0
   }
 }

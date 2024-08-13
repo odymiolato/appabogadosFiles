@@ -3,30 +3,20 @@ import { onMounted, ref } from 'vue'
 import Label from '../components/label.vue'
 import Inputs from '../components/Inputs.vue'
 import Files from '../components/files.vue'
-
 import { useTableData } from '../composables/useTableData'
-import { expedientes, tipos_expedientes } from '../class/all.class'
+import { expedientes, tipos_expedientes, movimientos } from '../class/all.class'
+import { BalanceMovimientos } from '../interface/all.interface'
+import { addAlert } from '../stores/alerts'
 
-class movimientos {
-  codmov_movh: number;
-  descri_tmo: string;
-  fecha_movh: Date | null;
-  Debito: number;
-  Credito: number;
-  constructor() {
-    this.codmov_movh = 0;
-    this.descri_tmo = '';
-    this.fecha_movh = null;
-    this.Debito = 0;
-    this.Credito = 0;
-  }
-}
+
 
 const tap = ref<number>(1)
 const tiposexpedientesLits = ref<tipos_expedientes[]>([])
 const ExpedientesLits = ref<expedientes[]>([])
 const ExpedienteSelected = ref<expedientes>(new expedientes)
 const MovimientosList = ref<movimientos[]>([]);
+const BalanceList = ref<BalanceMovimientos[]>([]);
+
 const Debito = ref<number>(0)
 const Credito = ref<number>(0)
 /* @ts-expect-error */
@@ -100,13 +90,35 @@ async function GetMovimientosById(id: number) {
   }
 }
 
+async function GetBalanceOfMovimientosById(id: number) {
+  try {
+    const response = await fetch(`${URL}expedientes/movimientos/balance/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Error al obtener los movimientos');
+    }
+
+    const data: BalanceMovimientos[] = await response.json();
+    BalanceList.value = data;
+  } catch (error) {
+    console.error(error);
+    addAlert(3, JSON.stringify(error));
+  }
+}
+
+
 function CalculateTotals() {
   if (!ExpedienteSelected) {
-    Debito.value = 0
-    Credito.value = 0
+
     return;
   }
-
+  Debito.value = 0
+  Credito.value = 0
   MovimientosList.value.forEach((item) => {
     Debito.value += item.Debito
     Credito.value += item.Credito
@@ -117,6 +129,7 @@ function CalculateTotals() {
 function SelectExpediente(selected: expedientes) {
   ExpedienteSelected.value = selected
   GetMovimientosById(selected.codexp_exp)
+  GetBalanceOfMovimientosById(selected.codexp_exp)
 
 }
 
@@ -340,7 +353,7 @@ onMounted(() => {
                     Totales de los Movimientos
                   </h2>
 
-                  <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
+                  <div v-if="BalanceList.length > 0" class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
                     <div>
                       <h3 class="font-bold" for="username">
                         Honorarios
@@ -350,7 +363,7 @@ onMounted(() => {
                         <Strong>Ingresos:</Strong>
                         <input
                           class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-                          type="text" value="1500.00" readonly>
+                          type="text" :value="BalanceList[0].Credito" readonly>
                       </label>
 
                       <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center "
@@ -358,7 +371,7 @@ onMounted(() => {
                         <Strong>Gastos:</Strong>
                         <input
                           class="text-end w-48 mt-2 font-normal border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-                          type="text" value="1500.00" readonly>
+                          type="text" :value="BalanceList[0].Debito" readonly>
                       </label>
 
                       <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center"
@@ -366,7 +379,7 @@ onMounted(() => {
                         <Strong>Total:</Strong>
                         <input
                           class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-                          type="text" value="1500.00" readonly>
+                          type="text" :value="(BalanceList[0].Credito - BalanceList[0].Debito)" readonly>
                       </label>
                     </div>
 
@@ -379,7 +392,7 @@ onMounted(() => {
                         <Strong>Ingresos:</Strong>
                         <input
                           class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-                          type="text" value="1500.00" readonly>
+                          type="text" :value="BalanceList[1].Credito" readonly>
                       </label>
 
                       <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center "
@@ -387,7 +400,7 @@ onMounted(() => {
                         <Strong>Gastos:</Strong>
                         <input
                           class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-                          type="text" value="1500.00" readonly>
+                          type="text" :value="BalanceList[1].Debito" readonly>
                       </label>
 
                       <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center"
@@ -395,7 +408,7 @@ onMounted(() => {
                         <Strong>Total:</Strong>
                         <input
                           class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-                          type="text" value="1500.00" readonly>
+                          type="text" :value="(BalanceList[1].Credito - BalanceList[1].Debito)" readonly>
                       </label>
                     </div>
 
@@ -408,7 +421,7 @@ onMounted(() => {
                         <Strong>Ingresos:</Strong>
                         <input
                           class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-                          type="text" value="1500.00" readonly>
+                          type="text" :value="BalanceList[2].Credito" readonly>
                       </label>
 
                       <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center "
@@ -416,7 +429,7 @@ onMounted(() => {
                         <Strong>Gastos:</Strong>
                         <input
                           class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-                          type="text" value="1500.00" readonly>
+                          type="text" :value="BalanceList[2].Debito" readonly>
                       </label>
 
                       <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center"
@@ -424,7 +437,7 @@ onMounted(() => {
                         <Strong>Total:</Strong>
                         <input
                           class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-                          type="text" value="1500.00" readonly>
+                          type="text" :value="(BalanceList[2].Credito - BalanceList[2].Debito)" readonly>
                       </label>
                     </div>
 
@@ -437,7 +450,7 @@ onMounted(() => {
                         <Strong>Ingresos:</Strong>
                         <input
                           class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-                          type="text" value="1500.00" readonly>
+                          type="text" :value="BalanceList[3].Credito" readonly>
                       </label>
 
                       <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center "
@@ -445,7 +458,7 @@ onMounted(() => {
                         <Strong>Gastos:</Strong>
                         <input
                           class="text-end w-48 mt-2 border-gray-200 font-normal  rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-                          type="text" value="1500.00" readonly>
+                          type="text" :value="BalanceList[3].Debito" readonly>
                       </label>
 
                       <label class="text-gray-500 font-light text-base grid grid-cols-[100px,1fr] items-center"
@@ -453,11 +466,15 @@ onMounted(() => {
                         <Strong>Total:</Strong>
                         <input
                           class="text-end w-48 mt-2 border-gray-200 font-normal rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
-                          type="text" value="1500.00" readonly>
+                          type="text" :value="(BalanceList[3].Credito - BalanceList[3].Debito)" readonly>
                       </label>
                     </div>
                   </div>
+                  <div v-else>
+                    <p>Cargando o no hay datos disponibles...</p>
+                  </div>
                 </div>
+
               </div>
               <div class="flex-[40%]">
                 <div class="flex-[60%] flex flex-col gap-4 py-5 h-full">
@@ -473,7 +490,8 @@ onMounted(() => {
                       <Inputs typeinput="text" inputClass="text-end" :Value="String(Debito)" :is-readonly="true" />
 
                       <label class="">Balace:</label>
-                      <Inputs typeinput="text" inputClass="text-end" :Value="String((Credito - Debito))" :is-readonly="true" />
+                      <Inputs typeinput="text" inputClass="text-end" :Value="String((Credito - Debito))"
+                        :is-readonly="true" />
                     </div>
                   </div>
                 </div>
