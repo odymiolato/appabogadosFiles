@@ -497,7 +497,7 @@ async function saveExpediente() {
     })
 
     if (response.ok) {
-      const responsePHP = await fetch('http://localhost:8081/appabogadosFiles/createFolder.php', {
+      const responsePHP = await fetch('http://localhost/appabogadosFiles/createFolder.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -585,7 +585,7 @@ onMounted(() => {
             <div>
               <label class="text-gray-700" for="fecini_exp">Fecha de Inicio</label>
               <input
-                id="fecini_exp" v-model="ExpedienteHeader.fecfin_exp"
+                id="fecini_exp" v-model="ExpedienteHeader.fecini_exp"
                 type="date"
                 class="w-full mt-2 border-gray-200 rounded-md focus:border-sky-600 focus:ring focus:ring-opacity-40 focus:ring-sky-500"
               >
