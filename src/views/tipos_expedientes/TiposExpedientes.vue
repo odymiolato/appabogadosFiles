@@ -125,7 +125,12 @@ function clearPage() {
 
 function validate(): boolean {
   if (tipo.value.descri_tip === '') {
-    addAlert(1, 'Debe de completar el campo');
+    addAlert(4, 'Debe de completar el campo');
+    return false
+  }
+
+  if (TipoDoscumentosList.value.length <= 0) {
+    addAlert(4, 'Desbes de agregar como minimo un tipo documento.');
     return false
   }
   return true
@@ -135,13 +140,15 @@ async function saveTipoExpediente() {
   if (!validate()) {
     return false
   }
+
+  const formatRequest = { tipo: tipo.value, documentos: TipoDoscumentosList.value }
   try {
     const response = await fetch(`${URL}tiposexpedientes`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(tipo.value)
+      body: JSON.stringify(formatRequest)
     });
 
     if (response.ok) {
@@ -183,12 +190,7 @@ onMounted(() => {
           </div>
 
         </div>
-        <div class="flex justify-end mt-4">
-          <button type="button" @click="saveTipoExpediente"
-            class="px-4 py-2 text-gray-200 bg-gray-800 rounded-md hover:bg-gray-700 focus:outline-none focus:bg-gray-700">
-            Guardar
-          </button>
-        </div>
+
       </div>
     </div>
   </div>
@@ -267,6 +269,12 @@ onMounted(() => {
             </div>
           </div>
         </div>
+      </div>
+      <div class="flex justify-end mt-4">
+        <button type="button" @click="saveTipoExpediente"
+          class="px-4 py-2 text-gray-200 bg-gray-800 rounded-md hover:bg-gray-700 focus:outline-none focus:bg-gray-700">
+          Guardar
+        </button>
       </div>
     </div>
   </div>
