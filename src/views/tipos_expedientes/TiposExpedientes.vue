@@ -43,6 +43,7 @@ function searchTipoDocumento(value: any) {
 }
 
 function setTipoDocumento(obj: tipos_documentos) {
+  console.log(obj);
   if (TipoDocumentoSelected !== undefined) {
     TipoDocumentoSelected.value.codtdoc_tdoc = String(obj.codtdoc_tdoc);
     TipoDocumentoSelected.value.nombre_tdoc = obj.nombre_tdoc;
@@ -296,10 +297,8 @@ onMounted(() => {
                       {{ value.codtdoc_tdoc }}
                     </td>
                     <td class="px-6 py-4 text-lg text-gray-700 border-b">
-                      {{ value.descri_tdoc }}
+                      {{ value.nombre_tdoc }}
                     </td>
-                    <!-- <input type="radio" name="especialidad" :key="value.code"
-                      class="absolute inset-0 m-auto bg-red-700 z-10 w-full h-full rb-table"> -->
                   </tr>
                 </tbody>
               </table>
