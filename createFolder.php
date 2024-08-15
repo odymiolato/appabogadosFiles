@@ -23,7 +23,7 @@ if (!isset($data['USERID'])) {
 }
 
 $folderName = preg_replace('/[^a-zA-Z0-9_-]/', '', $data['USERID']);
-$types_documents = $data['TYPE_DOCUMENTS'];  // Corregido: acceso directo a la clave del array asociativo
+$types_documents = $data['TYPE_DOCUMENTS'];
 
 $directoryPath = '../abogadosfiles/exp' . $folderName;
 
@@ -37,12 +37,12 @@ if (file_exists($directoryPath)) {
 
 if (mkdir($directoryPath, 0777, true)) {
     foreach ($types_documents as $value) {
-        if (!mkdir($directoryPath . '/' . $value['name'], 0777, true)) {  // Corregido: acceso a la propiedad 'name' del array
+        if (!mkdir($directoryPath . '/' . $value['name'], 0777, true)) {
             echo json_encode([
                 'status' => 3,
                 'message' => 'Error al crear una de las carpetas.'
             ]);
-            exit;  // Corregido: salir del script si hay un error
+            exit;
         }
     }
     echo json_encode([
