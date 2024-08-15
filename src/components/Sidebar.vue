@@ -47,8 +47,7 @@ onMounted(() => {
 
     <!-- <div :class="isOpen ? 'translate-x-0 ease-out w-64' : '-translate-x-full ease-in w-16'" -->
     <div
-      class="inset-y-0 left-0 z-30  transition-transform relative overflow-hidden w-max bg-sky-900 lg:translate-x-0 lg:static lg:inset-0"
-    >
+      class="inset-y-0 left-0 z-30  transition-transform relative overflow-hidden w-max bg-sky-900 lg:translate-x-0 lg:static lg:inset-0">
       <div class="flex items-center justify-center mt-8">
         <div class="flex items-center">
           <img src="/public/img/cumplimiento.png" alt="" class="w-20 ml-[-1]">
@@ -80,6 +79,7 @@ onMounted(() => {
             <MenuItem to="/especialidades" name="Especialidades" label="Especialidades" imagen="dashboard" />
             <MenuItem to="/tipomovimientos" name="TipoMovimientos" label="Tipo Movimientos" imagen="dashboard" />
             <MenuItem to="/tipoexpediente" name="TipoExpediente" label="Tipo Expediente" imagen="dashboard" />
+            <MenuItem to="/tiposdocumentos" name="Tipos Documentos" label="Tipos Documentos" imagen="dashboard" />
           </MenuDesplegable>
 
           <MenuDesplegable label="Procesos" imagen="dashboard">
@@ -98,10 +98,8 @@ onMounted(() => {
           </MenuDesplegable>
 
           <MenuDesplegable label="Procesos" imagen="dashboard">
-            <MenuItem
-              to="/interaccionescliente" name="InteraccionesCliente" label="Interaccion Clientes"
-              imagen="dashboard"
-            />
+            <MenuItem to="/interaccionescliente" name="InteraccionesCliente" label="Interaccion Clientes"
+              imagen="dashboard" />
           </MenuDesplegable>
         </MenuDesplegable>
 
@@ -114,7 +112,8 @@ onMounted(() => {
           </MenuDesplegable>
 
           <MenuDesplegable label="Procesos" imagen="dashboard">
-            <MenuItem to="/asignacionvehiculo" name="AsignacionVehiculo" label="Asignacion de Vehiculos" imagen="dashboard" />
+            <MenuItem to="/asignacionvehiculo" name="AsignacionVehiculo" label="Asignacion de Vehiculos"
+              imagen="dashboard" />
           </MenuDesplegable>
         </MenuDesplegable>
 

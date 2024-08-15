@@ -50,6 +50,8 @@ import Abogados from './views/abogados/Abogados.vue'
 
 import CrearAudiencia from './views/audiencias/CrearAudiencia.vue'
 import Home from './views/home/Home.vue'
+import CrearTiposDocumentos from './views/tipos_documentos/CrearTiposDocumentos.vue'
+import TiposDocumentos from './views/tipos_documentos/TiposDocumentos.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -332,6 +334,21 @@ const routes: RouteRecordRaw[] = [
     path: '/inicio',
     name: 'Inicio',
     component: Home,
+    meta: { requiresAuth: true },
+  },
+
+  {
+    path: '/tiposdocumentos',
+    name: 'Tipos Documentos',
+    component: TiposDocumentos,
+    meta: { requiresAuth: true },
+  },
+
+  {
+    path: '/tipos/documentos/nuevo/:id?',
+    name: 'Tipos Documentos crear',
+    component: CrearTiposDocumentos,
+    props: true,
     meta: { requiresAuth: true },
   },
 ]

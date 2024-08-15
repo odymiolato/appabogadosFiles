@@ -792,3 +792,24 @@ export class BalanceMovimientos {
     this.Credito = 0
   }
 }
+
+
+export class tipos_documentos {
+  codtdoc_tdoc: number;
+  nombre_tdoc: string;
+  descri_tdoc: string;
+  usercrea: number;
+  usermod: number;
+  fechcrea: Date;
+  fechmod: Date;
+
+  constructor() {
+      this.codtdoc_tdoc = 0;
+      this.nombre_tdoc = '';
+      this.descri_tdoc = '';
+      this.usercrea = 0;
+      this.usermod = 0;
+      this.fechcrea = new Date();
+      this.fechmod = new Date();
+  }
+}
