@@ -38,7 +38,7 @@ $test = [];
 foreach ($files as &$value) {
     $c = 0;
     $ext = (explode('.', $value)[1]);
-    $image = "img/" .  (($ext == 'jpg' || $ext == 'png' || $ext == 'gif' || $ext == 'svg') ? 'image' : $ext)  . ".png";
+    $image = "" .  (($ext == 'jpg' || $ext == 'png' || $ext == 'gif' || $ext == 'svg') ? 'image' : $ext);
     // while ($c < 100) {
     //     $test[] = new file((explode('.', $value)[0]), $ext, $baseUrl . $value, $image);
     //     $c += 1;
